@@ -1,8 +1,8 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::Zero;
+use num::{Zero, traits::ConstZero};
 
-use crate::{KVector, WedgeProduct};
+use crate::{AntiwedgeProduct, KVector, WedgeProduct};
 
 use super::{Bivector2D, Scalar2D, Vector2D};
 
@@ -20,6 +20,16 @@ where
     fn is_zero(&self) -> bool {
         self.x.is_zero() == self.y.is_zero()
     }
+}
+
+impl<T> ConstZero for Vector2D<T>
+where
+    T: ConstZero,
+{
+    const ZERO: Self = Vector2D {
+        x: T::ZERO,
+        y: T::ZERO,
+    };
 }
 
 impl<T> Add for Vector2D<T>
@@ -109,6 +119,37 @@ where
     fn wedge(self, rhs: Vector2D<T>) -> Self::Output {
         Bivector2D {
             xy: self.x * rhs.y - self.y * rhs.x,
+        }
+    }
+}
+
+impl<T> AntiwedgeProduct<Vector2D<T>> for Vector2D<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = Scalar2D<T>;
+
+    fn antiwedge(self, rhs: Vector2D<T>) -> Self::Output {
+        Scalar2D(self.x * rhs.y - self.y * rhs.x)
+    }
+}
+
+impl<T> AntiwedgeProduct<Bivector2D<T>> for Vector2D<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = Vector2D<T>;
+
+    fn antiwedge(self, rhs: Bivector2D<T>) -> Self::Output {
+        Vector2D {
+            x: self.x * rhs.xy,
+            y: self.y * rhs.xy,
         }
     }
 }

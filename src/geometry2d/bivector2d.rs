@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{One, Zero};
+use num::{One, Zero, traits::ConstZero};
 
 use crate::{Antiscalar, KVector, WedgeProduct};
 
@@ -17,6 +17,13 @@ where
     fn is_zero(&self) -> bool {
         self.xy.is_zero()
     }
+}
+
+impl<T> ConstZero for Bivector2D<T>
+where
+    T: ConstZero,
+{
+    const ZERO: Self = Bivector2D { xy: T::ZERO };
 }
 
 impl<T> Antiscalar for Bivector2D<T>

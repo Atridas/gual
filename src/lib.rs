@@ -1,7 +1,7 @@
-mod multivector2d;
+mod geometry2d;
 mod multivector3d;
 
-pub use multivector2d::*;
+pub use geometry2d::*;
 //pub use multivector3d::Multivector3D;
 
 pub trait Antiscalar {
@@ -41,4 +41,21 @@ pub trait KVector {
 pub trait WedgeProduct<Rhs> {
     type Output;
     fn wedge(self, rhs: Rhs) -> Self::Output;
+}
+
+pub trait AntiwedgeProduct<Rhs> {
+    type Output;
+    fn antiwedge(self, rhs: Rhs) -> Self::Output;
+}
+
+pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
+where
+    Lhs: KVector,
+    Rhs: KVector,
+    <Lhs as KVector>::AntiKVector: WedgeProduct<<Rhs as KVector>::AntiKVector>,
+    <<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output: KVector,
+{
+    lhs.left_complement()
+        .wedge(rhs.left_complement())
+        .right_complement()
 }

@@ -1,33 +1,13 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{One, Zero};
+use num::{
+    One, Zero,
+    traits::{ConstOne, ConstZero},
+};
 
-use crate::{Antiscalar, KVector, Multivector, WedgeProduct};
+use crate::{Antiscalar, AntiwedgeProduct, KVector, Multivector, WedgeProduct};
 
-mod bivector2d;
-mod scalar2d;
-mod vector2d;
-
-#[derive(Debug, Clone, Copy)]
-pub struct Scalar2D<T>(pub T);
-
-#[derive(Debug, Clone, Copy)]
-pub struct Vector2D<T> {
-    pub x: T,
-    pub y: T,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub struct Bivector2D<T> {
-    pub xy: T,
-}
-
-#[derive(Debug, Clone, Copy)]
-pub struct Multivector2D<T> {
-    pub s: Scalar2D<T>,
-    pub v: Vector2D<T>,
-    pub a: Bivector2D<T>,
-}
+use super::{Bivector2D, Multivector2D, Scalar2D, Vector2D};
 
 impl<T: Copy> Multivector for Multivector2D<T>
 where
@@ -92,6 +72,17 @@ where
     }
 }
 
+impl<T> ConstZero for Multivector2D<T>
+where
+    T: ConstZero,
+{
+    const ZERO: Self = Multivector2D {
+        s: Scalar2D::ZERO,
+        v: Vector2D::ZERO,
+        a: Bivector2D::ZERO,
+    };
+}
+
 impl<T> One for Multivector2D<T>
 where
     T: Zero,
@@ -106,6 +97,19 @@ where
             a: Bivector2D::zero(),
         }
     }
+}
+
+impl<T> ConstOne for Multivector2D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+    Multivector2D<T>: Mul<Output = Multivector2D<T>>, // TODO!
+{
+    const ONE: Self = Multivector2D {
+        s: Scalar2D::ONE,
+        v: Vector2D::ZERO,
+        a: Bivector2D::ZERO,
+    };
 }
 
 impl<T> Add for Multivector2D<T>
@@ -223,5 +227,19 @@ where
             v: v1 + v2,
             a: a1 + a2 + a3,
         }
+    }
+}
+
+impl<T> AntiwedgeProduct<Multivector2D<T>> for Multivector2D<T>
+where
+    Multivector2D<T>: Multivector,
+    Multivector2D<T>: WedgeProduct<Multivector2D<T>, Output = Multivector2D<T>>,
+{
+    type Output = Multivector2D<T>;
+
+    fn antiwedge(self, rhs: Multivector2D<T>) -> Self::Output {
+        self.left_complement()
+            .wedge(rhs.left_complement())
+            .right_complement()
     }
 }

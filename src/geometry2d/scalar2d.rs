@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{One, Zero};
+use num::{
+    One, Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{KVector, WedgeProduct};
 
@@ -19,6 +22,13 @@ where
     }
 }
 
+impl<T> ConstZero for Scalar2D<T>
+where
+    T: ConstZero,
+{
+    const ZERO: Self = Scalar2D(T::ZERO);
+}
+
 impl<T> One for Scalar2D<T>
 where
     T: One,
@@ -27,6 +37,13 @@ where
     fn one() -> Self {
         Scalar2D(T::one())
     }
+}
+
+impl<T> ConstOne for Scalar2D<T>
+where
+    T: ConstOne,
+{
+    const ONE: Self = Scalar2D(T::ONE);
 }
 
 impl<T> Add for Scalar2D<T>
