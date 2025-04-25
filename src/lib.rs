@@ -1,8 +1,8 @@
 mod geometry2d;
-mod multivector3d;
+mod geometry3d;
 
 pub use geometry2d::*;
-//pub use multivector3d::Multivector3D;
+pub use geometry3d::*;
 
 pub trait Antiscalar {
     fn unit_volume() -> Self;
