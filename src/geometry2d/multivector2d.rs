@@ -154,22 +154,6 @@ where
     }
 }
 
-impl<T> WedgeProduct<Scalar2D<T>> for Multivector2D<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Multivector2D<T>;
-
-    fn wedge(self, rhs: Scalar2D<T>) -> Self::Output {
-        Multivector2D {
-            s: self.s.wedge(rhs),
-            v: self.v.wedge(rhs),
-            a: self.a.wedge(rhs),
-        }
-    }
-}
-
 impl<T> WedgeProduct<Vector2D<T>> for Multivector2D<T>
 where
     T: Zero,

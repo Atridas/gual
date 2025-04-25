@@ -1,10 +1,10 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::ops::{Add, Neg, Sub};
 
 use num::{Zero, traits::ConstZero};
 
-use crate::{KVector, WedgeProduct};
+use crate::KVector;
 
-use super::{Bivector3D, Scalar3D, Trivector3D, Vector3D};
+use super::{Bivector3D, Vector3D};
 
 impl<T> Zero for Bivector3D<T>
 where
@@ -85,36 +85,5 @@ impl<T: Clone> KVector for Bivector3D<T> {
 
     fn left_complement(&self) -> Self::AntiKVector {
         unimplemented!()
-    }
-}
-
-impl<T> WedgeProduct<Scalar3D<T>> for Bivector3D<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Bivector3D<T>;
-
-    fn wedge(self, rhs: Scalar3D<T>) -> Self::Output {
-        Bivector3D {
-            yz: self.yz * rhs.0,
-            zx: self.zx * rhs.0,
-            xy: self.xy * rhs.0,
-        }
-    }
-}
-
-impl<T> WedgeProduct<Vector3D<T>> for Bivector3D<T>
-where
-    T: Copy,
-    T: Add<T, Output = T>,
-    T: Mul<T, Output = T>,
-{
-    type Output = Trivector3D<T>;
-
-    fn wedge(self, rhs: Vector3D<T>) -> Self::Output {
-        Trivector3D {
-            xyz: self.yz * rhs.x + self.zx * rhs.y + self.xy * rhs.z,
-        }
     }
 }

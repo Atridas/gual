@@ -2,7 +2,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{One, Zero, traits::ConstZero};
 
-use crate::{Antiscalar, KVector, WedgeProduct};
+use crate::{Antiscalar, KVector};
 
 use super::{Bivector2D, Scalar2D};
 
@@ -79,18 +79,5 @@ impl<T: Clone> KVector for Bivector2D<T> {
 
     fn left_complement(&self) -> Self::AntiKVector {
         Scalar2D(self.xy.clone())
-    }
-}
-
-impl<T> WedgeProduct<Scalar2D<T>> for Bivector2D<T>
-where
-    T: Mul<T, Output = T>,
-{
-    type Output = Bivector2D<T>;
-
-    fn wedge(self, rhs: Scalar2D<T>) -> Self::Output {
-        Bivector2D {
-            xy: self.xy * rhs.0,
-        }
     }
 }

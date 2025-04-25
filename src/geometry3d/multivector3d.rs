@@ -163,23 +163,6 @@ where
     }
 }
 
-impl<T> WedgeProduct<Scalar3D<T>> for Multivector3D<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Multivector3D<T>;
-
-    fn wedge(self, rhs: Scalar3D<T>) -> Self::Output {
-        Multivector3D {
-            s: self.s.wedge(rhs),
-            v: self.v.wedge(rhs),
-            b: self.b.wedge(rhs),
-            a: self.a.wedge(rhs),
-        }
-    }
-}
-
 impl<T> WedgeProduct<Vector3D<T>> for Multivector3D<T>
 where
     T: Zero,

@@ -59,3 +59,51 @@ where
         .wedge(rhs.left_complement())
         .right_complement()
 }
+
+#[macro_export]
+macro_rules! reverse_mul {
+    ($lht:ident, $rht:ident) => {
+        impl<T> Mul<$rht<T>> for $lht<T>
+        where
+            $rht<T>: Mul<$lht<T>>,
+        {
+            type Output = <$rht<T> as Mul<$lht<T>>>::Output;
+
+            fn mul(self, rhs: $rht<T>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_wedge {
+    ($lht:ident, $rht:ident) => {
+        impl<T> WedgeProduct<$rht<T>> for $lht<T>
+        where
+            $rht<T>: WedgeProduct<$lht<T>>,
+        {
+            type Output = <$rht<T> as WedgeProduct<$lht<T>>>::Output;
+
+            fn wedge(self, rhs: $rht<T>) -> Self::Output {
+                rhs.wedge(self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_antiwedge {
+    ($lht:ident, $rht:ident) => {
+        impl<T> AntiwedgeProduct<$rht<T>> for $lht<T>
+        where
+            $rht<T>: AntiwedgeProduct<$lht<T>>,
+        {
+            type Output = <$rht<T> as AntiwedgeProduct<$lht<T>>>::Output;
+
+            fn antiwedge(self, rhs: $rht<T>) -> Self::Output {
+                rhs.antiwedge(self)
+            }
+        }
+    };
+}

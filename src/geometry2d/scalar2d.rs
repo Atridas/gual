@@ -5,7 +5,7 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{KVector, WedgeProduct};
+use crate::{KVector, WedgeProduct, reverse_mul, reverse_wedge};
 
 use super::{Bivector2D, Multivector2D, Scalar2D, Vector2D};
 
@@ -153,3 +153,11 @@ where
         self * rhs
     }
 }
+
+reverse_mul!(Vector2D, Scalar2D);
+reverse_mul!(Bivector2D, Scalar2D);
+reverse_mul!(Multivector2D, Scalar2D);
+
+reverse_wedge!(Vector2D, Scalar2D);
+reverse_wedge!(Bivector2D, Scalar2D);
+reverse_wedge!(Multivector2D, Scalar2D);

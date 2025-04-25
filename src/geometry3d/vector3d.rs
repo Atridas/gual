@@ -2,7 +2,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{Zero, traits::ConstZero};
 
-use crate::{AntiwedgeProduct, KVector, WedgeProduct};
+use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_wedge};
 
 use super::{Bivector3D, Scalar3D, Trivector3D, Vector3D};
 
@@ -92,22 +92,6 @@ where
     }
 }
 
-impl<T> WedgeProduct<Scalar3D<T>> for Vector3D<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Vector3D<T>;
-
-    fn wedge(self, rhs: Scalar3D<T>) -> Self::Output {
-        Vector3D {
-            x: self.x * rhs.0,
-            y: self.y * rhs.0,
-            z: self.z * rhs.0,
-        }
-    }
-}
-
 impl<T> WedgeProduct<Vector3D<T>> for Vector3D<T>
 where
     T: Copy,
@@ -153,3 +137,5 @@ where
         unimplemented!()
     }
 }
+
+reverse_wedge!(Bivector3D, Vector3D);
