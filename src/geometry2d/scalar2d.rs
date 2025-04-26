@@ -5,7 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{KVector, WedgeProduct, reverse_mul, reverse_wedge};
+use crate::{
+    AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_mul, reverse_wedge,
+};
 
 use super::{Bivector2D, Multivector2D, Scalar2D, Vector2D};
 
@@ -154,6 +156,20 @@ where
     }
 }
 
+impl<T> AntiwedgeProduct<Bivector2D<T>> for Scalar2D<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = Scalar2D<T>;
+
+    fn antiwedge(self, rhs: Bivector2D<T>) -> Self::Output {
+        Scalar2D(self.0 * rhs.xy)
+    }
+}
+
 reverse_mul!(Vector2D, Scalar2D);
 reverse_mul!(Bivector2D, Scalar2D);
 reverse_mul!(Multivector2D, Scalar2D);
@@ -161,3 +177,5 @@ reverse_mul!(Multivector2D, Scalar2D);
 reverse_wedge!(Vector2D, Scalar2D);
 reverse_wedge!(Bivector2D, Scalar2D);
 reverse_wedge!(Multivector2D, Scalar2D);
+
+reverse_antiwedge!(Bivector2D, Scalar2D);

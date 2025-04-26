@@ -1,8 +1,10 @@
 mod geometry2d;
 mod geometry3d;
+mod geometry4d;
 
 pub use geometry2d::*;
 pub use geometry3d::*;
+pub use geometry4d::*;
 
 pub trait Antiscalar {
     fn unit_volume() -> Self;
