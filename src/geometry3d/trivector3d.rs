@@ -2,7 +2,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{One, Zero, traits::ConstZero};
 
-use crate::{Antiscalar, KVector};
+use crate::{Antiscalar, AntiwedgeProduct, KVector};
 
 use super::{Scalar3D, Trivector3D};
 
@@ -79,5 +79,18 @@ impl<T: Clone> KVector for Trivector3D<T> {
 
     fn left_complement(&self) -> Self::AntiKVector {
         Scalar3D(self.xyz.clone())
+    }
+}
+
+impl<T> AntiwedgeProduct<Trivector3D<T>> for Trivector3D<T>
+where
+    T: Mul<T, Output = T>,
+{
+    type Output = Trivector3D<T>;
+
+    fn antiwedge(self, rhs: Trivector3D<T>) -> Self::Output {
+        Trivector3D {
+            xyz: self.xyz * rhs.xyz,
+        }
     }
 }

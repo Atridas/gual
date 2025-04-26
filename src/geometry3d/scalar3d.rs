@@ -6,8 +6,7 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, KVector, Scalar2D, WedgeProduct, reverse_antiwedge, reverse_mul,
-    reverse_wedge,
+    AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_mul, reverse_wedge,
 };
 
 use super::{Bivector3D, Multivector3D, Scalar3D, Trivector3D, Vector3D};
@@ -179,7 +178,7 @@ where
     }
 }
 
-impl<T> AntiwedgeProduct<Trivector3D<T>> for Scalar2D<T>
+impl<T> AntiwedgeProduct<Trivector3D<T>> for Scalar3D<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,

@@ -109,3 +109,20 @@ macro_rules! reverse_antiwedge {
         }
     };
 }
+
+#[macro_export]
+macro_rules! reverse_antiwedge_anticommutative {
+    ($lht:ident, $rht:ident) => {
+        impl<T> AntiwedgeProduct<$rht<T>> for $lht<T>
+        where
+            $rht<T>: AntiwedgeProduct<$lht<T>>,
+            $lht<T>: Neg<Output = $lht<T>>,
+        {
+            type Output = <$rht<T> as AntiwedgeProduct<$lht<T>>>::Output;
+
+            fn antiwedge(self, rhs: $rht<T>) -> Self::Output {
+                rhs.antiwedge(-self)
+            }
+        }
+    };
+}

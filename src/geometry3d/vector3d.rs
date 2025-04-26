@@ -79,16 +79,23 @@ where
 impl<T> KVector for Vector3D<T>
 where
     T: Copy,
-    T: Neg<Output = T>,
 {
     type AntiKVector = Bivector3D<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
-        unimplemented!();
+        Bivector3D {
+            yz: self.x,
+            zx: self.y,
+            xy: self.z,
+        }
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
-        unimplemented!();
+        Bivector3D {
+            yz: self.x,
+            zx: self.y,
+            xy: self.z,
+        }
     }
 }
 
@@ -128,13 +135,12 @@ impl<T> AntiwedgeProduct<Bivector3D<T>> for Vector3D<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-    T: Neg<Output = T>,
+    T: Add<T, Output = T>,
 {
     type Output = Scalar3D<T>;
 
-    fn antiwedge(self, _rhs: Bivector3D<T>) -> Self::Output {
-        unimplemented!()
+    fn antiwedge(self, rhs: Bivector3D<T>) -> Self::Output {
+        Scalar3D(self.x * rhs.yz + self.y * rhs.zx + self.z * rhs.xy)
     }
 }
 
@@ -142,13 +148,15 @@ impl<T> AntiwedgeProduct<Trivector3D<T>> for Vector3D<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-    T: Neg<Output = T>,
 {
     type Output = Vector3D<T>;
 
-    fn antiwedge(self, _rhs: Trivector3D<T>) -> Self::Output {
-        unimplemented!()
+    fn antiwedge(self, rhs: Trivector3D<T>) -> Self::Output {
+        Vector3D {
+            x: self.x * rhs.xyz,
+            y: self.y * rhs.xyz,
+            z: self.z * rhs.xyz,
+        }
     }
 }
 
