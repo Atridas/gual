@@ -1,6 +1,15 @@
+use num::{Float, FromPrimitive};
+
 pub mod geometry2d;
 pub mod geometry3d;
 pub mod geometry4d;
+
+pub mod homogeneous3d;
+
+pub trait Epsilon {
+    fn eps() -> Self;
+    fn is_small(&self) -> bool;
+}
 
 pub trait Antiscalar {
     const UNIT_VOLUME: Self;
@@ -42,6 +51,11 @@ pub trait WedgeProduct<Rhs> {
 pub trait AntiwedgeProduct<Rhs> {
     type Output;
     fn antiwedge(self, rhs: Rhs) -> Self::Output;
+}
+
+pub trait Normalizable {
+    type Output;
+    fn normalize(self) -> Option<Self::Output>;
 }
 
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
@@ -119,4 +133,16 @@ macro_rules! reverse_antiwedge_anticommutative {
             }
         }
     };
+}
+
+impl<T: Float + FromPrimitive + Ord> Epsilon for T {
+    #[inline(always)]
+    fn eps() -> Self {
+        T::from_f32(0.001).expect("expected T to be a floating point type")
+    }
+
+    #[inline(always)]
+    fn is_small(&self) -> bool {
+        self.abs() < Self::eps()
+    }
 }

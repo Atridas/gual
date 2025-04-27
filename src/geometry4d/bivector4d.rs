@@ -1,11 +1,11 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{
-    Zero,
+    Float, Zero,
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge};
+use crate::{AntiwedgeProduct, Epsilon, KVector, WedgeProduct, reverse_antiwedge};
 
 use super::{Bivector, Quadvector, Scalar, Trivector, Vector};
 
@@ -106,6 +106,17 @@ where
         zx: T::ZERO,
         xy: T::ONE,
     };
+}
+
+impl<T> Bivector<T>
+where
+    T: Float,
+    T: Epsilon,
+{
+    pub fn is_2_blade(&self) -> bool {
+        let dot = (self.wx * self.yz + self.wy * self.zx + self.wz * self.xy).abs();
+        dot.is_small()
+    }
 }
 
 impl<T> Add for Bivector<T>
