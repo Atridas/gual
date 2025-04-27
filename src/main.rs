@@ -1,21 +1,19 @@
-use gual::{
-    AntiwedgeProduct, Multivector, Multivector2D, Vector2D, WedgeProduct, antiwedge_reference,
-};
+use gual::{AntiwedgeProduct, VectorSpace, WedgeProduct, antiwedge_reference, geometry2d as g2d};
 use num::zero;
 
 fn main() {
-    let a = Multivector2D {
+    let a = g2d::Multivector {
         s: zero(),
-        v: Vector2D { x: 1, y: 2 },
+        v: g2d::Vector { x: 1, y: 2 },
         a: zero(),
     };
-    let b = Multivector2D {
+    let b = g2d::Multivector {
         s: zero(),
-        v: Vector2D { x: 3, y: 4 },
+        v: g2d::Vector { x: 3, y: 4 },
         a: zero(),
     };
 
-    println!("volume: {:?}", Multivector2D::<i32>::UNIT_VOLUME);
+    println!("volume: {:?}", g2d::Multivector::<i32>::UNIT_VOLUME);
     println!("a: {:?}", a);
     println!("b: {:?}", b);
     println!("lc(a): {:?}", a.left_complement());
@@ -26,11 +24,11 @@ fn main() {
     println!("a v b: {:?}", a.antiwedge(b));
     println!(
         "a v I: {:?}",
-        a.vector().antiwedge(Multivector2D::<i32>::UNIT_VOLUME)
+        a.vector().antiwedge(g2d::Multivector::<i32>::UNIT_VOLUME)
     );
     println!(
         "a v I: {:?}",
-        antiwedge_reference(a.vector(), Multivector2D::<i32>::UNIT_VOLUME)
+        antiwedge_reference(a.vector(), g2d::Multivector::<i32>::UNIT_VOLUME)
     );
     println!("a ^ rc(b): {:?}", a.wedge(b.right_complement()));
     println!("lc(a) ^ b: {:?}", a.left_complement().wedge(b));

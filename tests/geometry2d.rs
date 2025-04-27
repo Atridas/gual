@@ -1,6 +1,5 @@
 use gual::{
-    Antiscalar, AntiwedgeProduct, Bivector2D, KVector, Scalar2D, Vector2D, WedgeProduct,
-    antiwedge_reference,
+    Antiscalar, AntiwedgeProduct, KVector, WedgeProduct, antiwedge_reference, geometry2d::*,
 };
 use num::traits::ConstOne;
 
@@ -39,12 +38,12 @@ impl BivectorIt {
 }
 
 impl Iterator for ScalarIt {
-    type Item = Scalar2D<i32>;
+    type Item = Scalar<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.s < self.max {
             let s = self.s;
             self.s += 1;
-            Some(Scalar2D(s))
+            Some(Scalar(s))
         } else {
             None
         }
@@ -52,18 +51,18 @@ impl Iterator for ScalarIt {
 }
 
 impl Iterator for VectorIt {
-    type Item = Vector2D<i32>;
+    type Item = Vector<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.y < self.max {
             if self.x < self.max {
                 let x = self.x;
                 self.x += 1;
-                Some(Vector2D { x, y: self.y })
+                Some(Vector { x, y: self.y })
             } else {
                 let y = self.y;
                 self.x = 0;
                 self.y += 1;
-                Some(Vector2D { x: self.x, y })
+                Some(Vector { x: self.x, y })
             }
         } else {
             None
@@ -72,12 +71,12 @@ impl Iterator for VectorIt {
 }
 
 impl Iterator for BivectorIt {
-    type Item = Bivector2D<i32>;
+    type Item = Bivector<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.xy < self.max {
             let xy = self.xy;
             self.xy += 1;
-            Some(Bivector2D { xy })
+            Some(Bivector { xy })
         } else {
             None
         }
@@ -86,31 +85,31 @@ impl Iterator for BivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
+    let i = Bivector::<i32>::UNIT_VOLUME;
 
-    let s = Scalar2D::ONE;
+    let s = Scalar::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
     assert_eq!(s.left_complement().wedge(s), i);
 }
 
 #[test]
 fn complement_vector() {
-    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
+    let i = Bivector::<i32>::UNIT_VOLUME;
 
-    let v = Vector2D::X;
+    let v = Vector::X;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector2D::Y;
+    let v = Vector::Y;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 }
 
 #[test]
 fn complement_bivector() {
-    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
+    let i = Bivector::<i32>::UNIT_VOLUME;
 
-    let b = Bivector2D::XY;
+    let b = Bivector::XY;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 }

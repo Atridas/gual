@@ -5,10 +5,10 @@ mod scalar4d;
 mod vector4d;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Scalar4D<T>(pub T);
+pub struct Scalar<T>(pub T);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Vector4D<T> {
+pub struct Vector<T> {
     pub x: T,
     pub y: T,
     pub z: T,
@@ -16,7 +16,7 @@ pub struct Vector4D<T> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Bivector4D<T> {
+pub struct Bivector<T> {
     pub wx: T,
     pub wy: T,
     pub wz: T,
@@ -26,7 +26,7 @@ pub struct Bivector4D<T> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Trivector4D<T> {
+pub struct Trivector<T> {
     pub wyz: T,
     pub wzx: T,
     pub wxy: T,
@@ -34,15 +34,15 @@ pub struct Trivector4D<T> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Quadvector4D<T> {
+pub struct Quadvector<T> {
     pub xyzw: T,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Multivector4D<T> {
-    pub s: Scalar4D<T>,
-    pub v: Vector4D<T>,
-    pub b: Bivector4D<T>,
-    pub t: Trivector4D<T>,
-    pub a: Quadvector4D<T>,
+pub struct Multivector<T> {
+    pub s: Scalar<T>,
+    pub v: Vector<T>,
+    pub b: Bivector<T>,
+    pub t: Trivector<T>,
+    pub a: Quadvector<T>,
 }

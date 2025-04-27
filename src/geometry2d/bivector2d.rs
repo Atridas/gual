@@ -7,14 +7,14 @@ use num::{
 
 use crate::{Antiscalar, AntiwedgeProduct, KVector};
 
-use super::{Bivector2D, Scalar2D};
+use super::{Bivector, Scalar};
 
-impl<T> Zero for Bivector2D<T>
+impl<T> Zero for Bivector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Bivector2D { xy: T::zero() }
+        Bivector { xy: T::zero() }
     }
 
     fn is_zero(&self) -> bool {
@@ -22,82 +22,82 @@ where
     }
 }
 
-impl<T> ConstZero for Bivector2D<T>
+impl<T> ConstZero for Bivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Bivector2D { xy: T::ZERO };
+    const ZERO: Self = Bivector { xy: T::ZERO };
 }
 
-impl<T> Antiscalar for Bivector2D<T>
+impl<T> Antiscalar for Bivector<T>
 where
     T: ConstOne,
-    Scalar2D<T>: Mul<Output = Scalar2D<T>>,
+    Scalar<T>: Mul<Output = Scalar<T>>,
 {
-    const UNIT_VOLUME: Self = Bivector2D { xy: T::ONE };
+    const UNIT_VOLUME: Self = Bivector { xy: T::ONE };
 }
 
-impl<T> Bivector2D<T>
+impl<T> Bivector<T>
 where
     T: ConstOne,
 {
-    pub const XY: Self = Bivector2D { xy: T::ONE };
+    pub const XY: Self = Bivector { xy: T::ONE };
 }
 
-impl<T> Add for Bivector2D<T>
+impl<T> Add for Bivector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Bivector2D<T>;
+    type Output = Bivector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Bivector2D {
+        Bivector {
             xy: self.xy + rhs.xy,
         }
     }
 }
 
-impl<T> Sub for Bivector2D<T>
+impl<T> Sub for Bivector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Bivector2D<T>;
+    type Output = Bivector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Bivector2D {
+        Bivector {
             xy: self.xy - rhs.xy,
         }
     }
 }
 
-impl<T> Neg for Bivector2D<T>
+impl<T> Neg for Bivector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Bivector2D<T>;
+    type Output = Bivector<T>;
     fn neg(self) -> Self::Output {
-        Bivector2D { xy: -self.xy }
+        Bivector { xy: -self.xy }
     }
 }
 
-impl<T: Clone> KVector for Bivector2D<T> {
-    type AntiKVector = Scalar2D<T>;
+impl<T: Clone> KVector for Bivector<T> {
+    type AntiKVector = Scalar<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
-        Scalar2D(self.xy.clone())
+        Scalar(self.xy.clone())
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
-        Scalar2D(self.xy.clone())
+        Scalar(self.xy.clone())
     }
 }
 
-impl<T> AntiwedgeProduct<Bivector2D<T>> for Bivector2D<T>
+impl<T> AntiwedgeProduct<Bivector<T>> for Bivector<T>
 where
     T: Mul<T, Output = T>,
 {
-    type Output = Bivector2D<T>;
+    type Output = Bivector<T>;
 
-    fn antiwedge(self, rhs: Bivector2D<T>) -> Self::Output {
-        Bivector2D {
+    fn antiwedge(self, rhs: Bivector<T>) -> Self::Output {
+        Bivector {
             xy: self.xy * rhs.xy,
         }
     }

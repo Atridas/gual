@@ -7,14 +7,14 @@ use num::{
 
 use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge};
 
-use super::{Bivector2D, Scalar2D, Vector2D};
+use super::{Bivector, Scalar, Vector};
 
-impl<T> Zero for Vector2D<T>
+impl<T> Zero for Vector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Vector2D {
+        Vector {
             x: T::zero(),
             y: T::zero(),
         }
@@ -25,137 +25,137 @@ where
     }
 }
 
-impl<T> ConstZero for Vector2D<T>
+impl<T> ConstZero for Vector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Vector2D {
+    const ZERO: Self = Vector {
         x: T::ZERO,
         y: T::ZERO,
     };
 }
 
-impl<T> Vector2D<T>
+impl<T> Vector<T>
 where
     T: ConstZero,
     T: ConstOne,
 {
-    pub const X: Self = Vector2D {
+    pub const X: Self = Vector {
         x: T::ONE,
         y: T::ZERO,
     };
 
-    pub const Y: Self = Vector2D {
+    pub const Y: Self = Vector {
         x: T::ZERO,
         y: T::ONE,
     };
 }
 
-impl<T> Add for Vector2D<T>
+impl<T> Add for Vector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Vector2D<T>;
+    type Output = Vector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Vector2D {
+        Vector {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
         }
     }
 }
 
-impl<T> Sub for Vector2D<T>
+impl<T> Sub for Vector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Vector2D<T>;
+    type Output = Vector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Vector2D {
+        Vector {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
         }
     }
 }
 
-impl<T> Neg for Vector2D<T>
+impl<T> Neg for Vector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Vector2D<T>;
+    type Output = Vector<T>;
     fn neg(self) -> Self::Output {
-        Vector2D {
+        Vector {
             x: -self.x,
             y: -self.y,
         }
     }
 }
 
-impl<T> KVector for Vector2D<T>
+impl<T> KVector for Vector<T>
 where
     T: Copy,
     T: Neg<Output = T>,
 {
-    type AntiKVector = Vector2D<T>;
+    type AntiKVector = Vector<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
-        Vector2D {
+        Vector {
             x: -self.y,
             y: self.x,
         }
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
-        Vector2D {
+        Vector {
             x: self.y,
             y: -self.x,
         }
     }
 }
 
-impl<T> WedgeProduct<Vector2D<T>> for Vector2D<T>
+impl<T> WedgeProduct<Vector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Bivector2D<T>;
+    type Output = Bivector<T>;
 
-    fn wedge(self, rhs: Vector2D<T>) -> Self::Output {
-        Bivector2D {
+    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+        Bivector {
             xy: self.x * rhs.y - self.y * rhs.x,
         }
     }
 }
 
-impl<T> AntiwedgeProduct<Vector2D<T>> for Vector2D<T>
+impl<T> AntiwedgeProduct<Vector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Scalar2D<T>;
+    type Output = Scalar<T>;
 
-    fn antiwedge(self, rhs: Vector2D<T>) -> Self::Output {
-        Scalar2D(self.x * rhs.y - self.y * rhs.x)
+    fn antiwedge(self, rhs: Vector<T>) -> Self::Output {
+        Scalar(self.x * rhs.y - self.y * rhs.x)
     }
 }
 
-impl<T> AntiwedgeProduct<Bivector2D<T>> for Vector2D<T>
+impl<T> AntiwedgeProduct<Bivector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Vector2D<T>;
+    type Output = Vector<T>;
 
-    fn antiwedge(self, rhs: Bivector2D<T>) -> Self::Output {
-        Vector2D {
+    fn antiwedge(self, rhs: Bivector<T>) -> Self::Output {
+        Vector {
             x: self.x * rhs.xy,
             y: self.y * rhs.xy,
         }
     }
 }
 
-reverse_antiwedge!(Bivector2D, Vector2D);
+reverse_antiwedge!(Bivector, Vector);

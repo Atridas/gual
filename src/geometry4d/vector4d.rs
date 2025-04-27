@@ -4,14 +4,14 @@ use num::{Zero, traits::ConstZero};
 
 use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_wedge};
 
-use super::{Bivector4D, Quadvector4D, Scalar4D, Trivector4D, Vector4D};
+use super::{Bivector, Quadvector, Scalar, Trivector, Vector};
 
-impl<T> Zero for Vector4D<T>
+impl<T> Zero for Vector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Vector4D {
+        Vector {
             x: T::zero(),
             y: T::zero(),
             z: T::zero(),
@@ -24,11 +24,11 @@ where
     }
 }
 
-impl<T> ConstZero for Vector4D<T>
+impl<T> ConstZero for Vector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Vector4D {
+    const ZERO: Self = Vector {
         x: T::ZERO,
         y: T::ZERO,
         z: T::ZERO,
@@ -36,13 +36,13 @@ where
     };
 }
 
-impl<T> Add for Vector4D<T>
+impl<T> Add for Vector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Vector4D<T>;
+    type Output = Vector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Vector4D {
+        Vector {
             x: self.x + rhs.x,
             y: self.y + rhs.y,
             z: self.z + rhs.z,
@@ -51,13 +51,13 @@ where
     }
 }
 
-impl<T> Sub for Vector4D<T>
+impl<T> Sub for Vector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Vector4D<T>;
+    type Output = Vector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Vector4D {
+        Vector {
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
@@ -66,13 +66,13 @@ where
     }
 }
 
-impl<T> Neg for Vector4D<T>
+impl<T> Neg for Vector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Vector4D<T>;
+    type Output = Vector<T>;
     fn neg(self) -> Self::Output {
-        Vector4D {
+        Vector {
             x: -self.x,
             y: -self.y,
             z: -self.z,
@@ -81,12 +81,12 @@ where
     }
 }
 
-impl<T> KVector for Vector4D<T>
+impl<T> KVector for Vector<T>
 where
     T: Copy,
     T: Neg<Output = T>,
 {
-    type AntiKVector = Bivector4D<T>;
+    type AntiKVector = Bivector<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
         unimplemented!();
@@ -97,16 +97,16 @@ where
     }
 }
 
-impl<T> WedgeProduct<Vector4D<T>> for Vector4D<T>
+impl<T> WedgeProduct<Vector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Bivector4D<T>;
+    type Output = Bivector<T>;
 
-    fn wedge(self, rhs: Vector4D<T>) -> Self::Output {
-        Bivector4D {
+    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+        Bivector {
             wx: self.w * rhs.x - self.x * rhs.w,
             wy: self.w * rhs.y - self.y * rhs.w,
             wz: self.w * rhs.z - self.z * rhs.w,
@@ -117,7 +117,7 @@ where
     }
 }
 
-impl<T> WedgeProduct<Bivector4D<T>> for Vector4D<T>
+impl<T> WedgeProduct<Bivector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
@@ -125,10 +125,10 @@ where
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Trivector4D<T>;
+    type Output = Trivector<T>;
 
-    fn wedge(self, rhs: Bivector4D<T>) -> Self::Output {
-        Trivector4D {
+    fn wedge(self, rhs: Bivector<T>) -> Self::Output {
+        Trivector {
             wyz: self.w * rhs.yz - self.y * rhs.wz + self.z * rhs.wy,
             wzx: self.w * rhs.zx - self.z * rhs.wx + self.x * rhs.wz,
             wxy: self.w * rhs.xy - self.x * rhs.wy + self.y * rhs.wx,
@@ -137,7 +137,7 @@ where
     }
 }
 
-impl<T> WedgeProduct<Trivector4D<T>> for Vector4D<T>
+impl<T> WedgeProduct<Trivector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
@@ -145,30 +145,30 @@ where
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Quadvector4D<T>;
+    type Output = Quadvector<T>;
 
-    fn wedge(self, rhs: Trivector4D<T>) -> Self::Output {
-        Quadvector4D {
+    fn wedge(self, rhs: Trivector<T>) -> Self::Output {
+        Quadvector {
             xyzw: self.x * rhs.wyz + self.y * rhs.wzx + self.z * rhs.wxy + self.w * rhs.zyx,
         }
     }
 }
 
-impl<T> AntiwedgeProduct<Trivector4D<T>> for Vector4D<T>
+impl<T> AntiwedgeProduct<Trivector<T>> for Vector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Scalar4D<T>;
+    type Output = Scalar<T>;
 
-    fn antiwedge(self, _rhs: Trivector4D<T>) -> Self::Output {
+    fn antiwedge(self, _rhs: Trivector<T>) -> Self::Output {
         unimplemented!()
     }
 }
 
-reverse_wedge!(Bivector4D, Vector4D);
-reverse_wedge!(Trivector4D, Vector4D);
+reverse_wedge!(Bivector, Vector);
+reverse_wedge!(Trivector, Vector);
 
-reverse_antiwedge!(Trivector4D, Vector4D);
+reverse_antiwedge!(Trivector, Vector);

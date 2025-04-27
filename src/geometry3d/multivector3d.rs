@@ -5,22 +5,22 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Antiscalar, AntiwedgeProduct, KVector, Multivector, WedgeProduct};
+use crate::{Antiscalar, AntiwedgeProduct, KVector, VectorSpace, WedgeProduct};
 
-use super::{Bivector3D, Multivector3D, Scalar3D, Trivector3D, Vector3D};
+use super::{Bivector, Multivector, Scalar, Trivector, Vector};
 
-impl<T: Copy> Multivector for Multivector3D<T>
+impl<T: Copy> VectorSpace for Multivector<T>
 where
     T: Neg<Output = T>,
     T: Add<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Mul<T, Output = T>,
-    Trivector3D<T>: Antiscalar,
+    Trivector<T>: Antiscalar,
 {
-    type Scalar = Scalar3D<T>;
-    type Vector = Vector3D<T>;
-    type Antivector = Bivector3D<T>;
-    type Antiscalar = Trivector3D<T>;
+    type Scalar = Scalar<T>;
+    type Vector = Vector<T>;
+    type Antivector = Bivector<T>;
+    type Antiscalar = Trivector<T>;
 
     fn scalar(&self) -> Self::Scalar {
         self.s
@@ -39,7 +39,7 @@ where
     }
 
     fn right_complement(&self) -> Self {
-        Multivector3D {
+        Multivector {
             s: self.a.right_complement(),
             v: self.b.right_complement(),
             b: self.v.right_complement(),
@@ -48,7 +48,7 @@ where
     }
 
     fn left_complement(&self) -> Self {
-        Multivector3D {
+        Multivector {
             s: self.a.left_complement(),
             v: self.b.left_complement(),
             b: self.v.left_complement(),
@@ -57,16 +57,16 @@ where
     }
 }
 
-impl<T> Zero for Multivector3D<T>
+impl<T> Zero for Multivector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Multivector3D {
-            s: Scalar3D::zero(),
-            v: Vector3D::zero(),
-            b: Bivector3D::zero(),
-            a: Trivector3D::zero(),
+        Multivector {
+            s: Scalar::zero(),
+            v: Vector::zero(),
+            b: Bivector::zero(),
+            a: Trivector::zero(),
         }
     }
 
@@ -75,111 +75,111 @@ where
     }
 }
 
-impl<T> ConstZero for Multivector3D<T>
+impl<T> ConstZero for Multivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::ZERO,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::ZERO,
+    const ZERO: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        b: Bivector::ZERO,
+        a: Trivector::ZERO,
     };
 }
 
-impl<T> One for Multivector3D<T>
+impl<T> One for Multivector<T>
 where
     T: Zero,
     T: One,
-    Scalar3D<T>: Mul<Output = Scalar3D<T>>,
-    Multivector3D<T>: Mul<Output = Multivector3D<T>>, // TODO!
+    Scalar<T>: Mul<Output = Scalar<T>>,
+    Multivector<T>: Mul<Output = Multivector<T>>, // TODO!
 {
     fn one() -> Self {
-        Multivector3D {
-            s: Scalar3D::one(),
-            v: Vector3D::zero(),
-            b: Bivector3D::zero(),
-            a: Trivector3D::zero(),
+        Multivector {
+            s: Scalar::one(),
+            v: Vector::zero(),
+            b: Bivector::zero(),
+            a: Trivector::zero(),
         }
     }
 }
 
-impl<T> ConstOne for Multivector3D<T>
+impl<T> ConstOne for Multivector<T>
 where
     T: ConstZero,
     T: ConstOne,
-    Multivector3D<T>: Mul<Output = Multivector3D<T>>, // TODO!
+    Multivector<T>: Mul<Output = Multivector<T>>, // TODO!
 {
-    const ONE: Self = Multivector3D {
-        s: Scalar3D::ONE,
-        v: Vector3D::ZERO,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::ZERO,
+    const ONE: Self = Multivector {
+        s: Scalar::ONE,
+        v: Vector::ZERO,
+        b: Bivector::ZERO,
+        a: Trivector::ZERO,
     };
 }
 
-impl<T> Multivector3D<T>
+impl<T> Multivector<T>
 where
     T: ConstZero,
     T: ConstOne,
 {
-    pub const X: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::X,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::ZERO,
+    pub const X: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::X,
+        b: Bivector::ZERO,
+        a: Trivector::ZERO,
     };
 
-    pub const Y: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::Y,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::ZERO,
+    pub const Y: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::Y,
+        b: Bivector::ZERO,
+        a: Trivector::ZERO,
     };
 
-    pub const Z: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::Z,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::ZERO,
+    pub const Z: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::Z,
+        b: Bivector::ZERO,
+        a: Trivector::ZERO,
     };
 
-    pub const YZ: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::ZERO,
-        b: Bivector3D::YZ,
-        a: Trivector3D::ZERO,
+    pub const YZ: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        b: Bivector::YZ,
+        a: Trivector::ZERO,
     };
 
-    pub const ZX: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::ZERO,
-        b: Bivector3D::ZX,
-        a: Trivector3D::ZERO,
+    pub const ZX: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        b: Bivector::ZX,
+        a: Trivector::ZERO,
     };
 
-    pub const XY: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::ZERO,
-        b: Bivector3D::XY,
-        a: Trivector3D::ZERO,
+    pub const XY: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        b: Bivector::XY,
+        a: Trivector::ZERO,
     };
 
-    pub const XYZ: Self = Multivector3D {
-        s: Scalar3D::ZERO,
-        v: Vector3D::ZERO,
-        b: Bivector3D::ZERO,
-        a: Trivector3D::XYZ,
+    pub const XYZ: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        b: Bivector::ZERO,
+        a: Trivector::XYZ,
     };
 }
 
-impl<T> Add for Multivector3D<T>
+impl<T> Add for Multivector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Multivector3D {
+        Multivector {
             s: self.s + rhs.s,
             v: self.v + rhs.v,
             b: self.b + rhs.b,
@@ -188,13 +188,13 @@ where
     }
 }
 
-impl<T> Sub for Multivector3D<T>
+impl<T> Sub for Multivector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Multivector3D {
+        Multivector {
             s: self.s - rhs.s,
             v: self.v - rhs.v,
             b: self.b - rhs.b,
@@ -203,13 +203,13 @@ where
     }
 }
 
-impl<T> Neg for Multivector3D<T>
+impl<T> Neg for Multivector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
     fn neg(self) -> Self::Output {
-        Multivector3D {
+        Multivector {
             s: -self.s,
             v: -self.v,
             a: -self.a,
@@ -218,18 +218,18 @@ where
     }
 }
 
-impl<T> WedgeProduct<Vector3D<T>> for Multivector3D<T>
+impl<T> WedgeProduct<Vector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Vector3D<T>) -> Self::Output {
-        Multivector3D {
-            s: Scalar3D::zero(),
+    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::zero(),
             v: self.s.wedge(rhs),
             b: self.v.wedge(rhs),
             a: self.b.wedge(rhs),
@@ -237,52 +237,52 @@ where
     }
 }
 
-impl<T> WedgeProduct<Bivector3D<T>> for Multivector3D<T>
+impl<T> WedgeProduct<Bivector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Bivector3D<T>) -> Self::Output {
-        Multivector3D {
-            s: Scalar3D::zero(),
-            v: Vector3D::zero(),
+    fn wedge(self, rhs: Bivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::zero(),
+            v: Vector::zero(),
             b: self.s.wedge(rhs),
             a: self.v.wedge(rhs),
         }
     }
 }
 
-impl<T> WedgeProduct<Trivector3D<T>> for Multivector3D<T>
+impl<T> WedgeProduct<Trivector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Trivector3D<T>) -> Self::Output {
-        Multivector3D {
-            s: Scalar3D::zero(),
-            v: Vector3D::zero(),
-            b: Bivector3D::zero(),
+    fn wedge(self, rhs: Trivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::zero(),
+            v: Vector::zero(),
+            b: Bivector::zero(),
             a: self.s.wedge(rhs),
         }
     }
 }
 
-impl<T> WedgeProduct<Multivector3D<T>> for Multivector3D<T>
+impl<T> WedgeProduct<Multivector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Multivector3D<T>) -> Self::Output {
+    fn wedge(self, rhs: Multivector<T>) -> Self::Output {
         let s = self.s.wedge(rhs.s);
         let v1 = self.s.wedge(rhs.v);
         let b1 = self.s.wedge(rhs.b);
@@ -297,7 +297,7 @@ where
 
         let a4 = self.a.wedge(rhs.s);
 
-        Multivector3D {
+        Multivector {
             s: s,
             v: v1 + v2,
             b: b1 + b2 + b3,
@@ -306,14 +306,14 @@ where
     }
 }
 
-impl<T> AntiwedgeProduct<Multivector3D<T>> for Multivector3D<T>
+impl<T> AntiwedgeProduct<Multivector<T>> for Multivector<T>
 where
-    Multivector3D<T>: Multivector,
-    Multivector3D<T>: WedgeProduct<Multivector3D<T>, Output = Multivector3D<T>>,
+    Multivector<T>: VectorSpace,
+    Multivector<T>: WedgeProduct<Multivector<T>, Output = Multivector<T>>,
 {
-    type Output = Multivector3D<T>;
+    type Output = Multivector<T>;
 
-    fn antiwedge(self, rhs: Multivector3D<T>) -> Self::Output {
+    fn antiwedge(self, rhs: Multivector<T>) -> Self::Output {
         self.left_complement()
             .wedge(rhs.left_complement())
             .right_complement()

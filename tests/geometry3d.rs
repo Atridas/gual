@@ -1,6 +1,5 @@
 use gual::{
-    Antiscalar, AntiwedgeProduct, Bivector3D, KVector, Scalar3D, Trivector3D, Vector3D,
-    WedgeProduct, antiwedge_reference,
+    Antiscalar, AntiwedgeProduct, KVector, WedgeProduct, antiwedge_reference, geometry3d::*,
 };
 use num::traits::ConstOne;
 
@@ -63,12 +62,12 @@ impl TrivectorIt {
 }
 
 impl Iterator for ScalarIt {
-    type Item = Scalar3D<i32>;
+    type Item = Scalar<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.s < self.max {
             let s = self.s;
             self.s += 1;
-            Some(Scalar3D(s))
+            Some(Scalar(s))
         } else {
             None
         }
@@ -76,14 +75,14 @@ impl Iterator for ScalarIt {
 }
 
 impl Iterator for VectorIt {
-    type Item = Vector3D<i32>;
+    type Item = Vector<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.z < self.max {
             if self.y < self.max {
                 if self.x < self.max {
                     let x = self.x;
                     self.x += 1;
-                    Some(Vector3D {
+                    Some(Vector {
                         x,
                         y: self.y,
                         z: self.z,
@@ -92,7 +91,7 @@ impl Iterator for VectorIt {
                     let y = self.y;
                     self.x = 0;
                     self.y += 1;
-                    Some(Vector3D {
+                    Some(Vector {
                         x: self.x,
                         y,
                         z: self.z,
@@ -103,7 +102,7 @@ impl Iterator for VectorIt {
                 self.x = 0;
                 self.y = 0;
                 self.z += 1;
-                Some(Vector3D {
+                Some(Vector {
                     x: self.x,
                     y: self.y,
                     z,
@@ -116,14 +115,14 @@ impl Iterator for VectorIt {
 }
 
 impl Iterator for BivectorIt {
-    type Item = Bivector3D<i32>;
+    type Item = Bivector<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.xy < self.max {
             if self.zx < self.max {
                 if self.yz < self.max {
                     let yz = self.yz;
                     self.yz += 1;
-                    Some(Bivector3D {
+                    Some(Bivector {
                         yz,
                         zx: self.zx,
                         xy: self.xy,
@@ -132,7 +131,7 @@ impl Iterator for BivectorIt {
                     let zx = self.zx;
                     self.yz = 0;
                     self.zx += 1;
-                    Some(Bivector3D {
+                    Some(Bivector {
                         yz: self.yz,
                         zx,
                         xy: self.xy,
@@ -143,7 +142,7 @@ impl Iterator for BivectorIt {
                 self.yz = 0;
                 self.zx = 0;
                 self.xy += 1;
-                Some(Bivector3D {
+                Some(Bivector {
                     yz: self.yz,
                     zx: self.zx,
                     xy,
@@ -156,12 +155,12 @@ impl Iterator for BivectorIt {
 }
 
 impl Iterator for TrivectorIt {
-    type Item = Trivector3D<i32>;
+    type Item = Trivector<i32>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.xyz < self.max {
             let xyz = self.xyz;
             self.xyz += 1;
-            Some(Trivector3D { xyz })
+            Some(Trivector { xyz })
         } else {
             None
         }
@@ -170,52 +169,52 @@ impl Iterator for TrivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
+    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
 
-    let s = Scalar3D::ONE;
+    let s = Scalar::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
     assert_eq!(s.left_complement().wedge(s), i);
 }
 
 #[test]
 fn complement_vector() {
-    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
+    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
 
-    let v = Vector3D::X;
+    let v = Vector::X;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector3D::Y;
+    let v = Vector::Y;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector3D::Z;
+    let v = Vector::Z;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 }
 
 #[test]
 fn complement_bivector() {
-    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
+    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
 
-    let b = Bivector3D::YZ;
+    let b = Bivector::YZ;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 
-    let b = Bivector3D::ZX;
+    let b = Bivector::ZX;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 
-    let b = Bivector3D::XY;
+    let b = Bivector::XY;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 }
 
 #[test]
 fn complement_trivector() {
-    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
+    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
 
-    let t = Trivector3D::XYZ;
+    let t = Trivector::XYZ;
     assert_eq!(t.wedge(t.right_complement()), i);
     assert_eq!(t.left_complement().wedge(t), i);
 }

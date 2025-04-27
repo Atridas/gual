@@ -5,22 +5,22 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Antiscalar, AntiwedgeProduct, KVector, Multivector, WedgeProduct};
+use crate::{Antiscalar, AntiwedgeProduct, KVector, VectorSpace, WedgeProduct};
 
-use super::{Bivector2D, Multivector2D, Scalar2D, Vector2D};
+use super::{Bivector, Multivector, Scalar, Vector};
 
-impl<T: Copy> Multivector for Multivector2D<T>
+impl<T: Copy> VectorSpace for Multivector<T>
 where
     T: Neg<Output = T>,
     T: Add<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Mul<T, Output = T>,
-    Bivector2D<T>: Antiscalar,
+    Bivector<T>: Antiscalar,
 {
-    type Scalar = Scalar2D<T>;
-    type Vector = Vector2D<T>;
-    type Antivector = Vector2D<T>;
-    type Antiscalar = Bivector2D<T>;
+    type Scalar = Scalar<T>;
+    type Vector = Vector<T>;
+    type Antivector = Vector<T>;
+    type Antiscalar = Bivector<T>;
 
     fn scalar(&self) -> Self::Scalar {
         self.s
@@ -39,7 +39,7 @@ where
     }
 
     fn right_complement(&self) -> Self {
-        Multivector2D {
+        Multivector {
             s: self.a.right_complement(),
             v: self.v.right_complement(),
             a: self.s.right_complement(),
@@ -47,7 +47,7 @@ where
     }
 
     fn left_complement(&self) -> Self {
-        Multivector2D {
+        Multivector {
             s: self.a.left_complement(),
             v: self.v.left_complement(),
             a: self.s.left_complement(),
@@ -55,15 +55,15 @@ where
     }
 }
 
-impl<T> Zero for Multivector2D<T>
+impl<T> Zero for Multivector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Multivector2D {
-            s: Scalar2D::zero(),
-            v: Vector2D::zero(),
-            a: Bivector2D::zero(),
+        Multivector {
+            s: Scalar::zero(),
+            v: Vector::zero(),
+            a: Bivector::zero(),
         }
     }
 
@@ -72,77 +72,77 @@ where
     }
 }
 
-impl<T> ConstZero for Multivector2D<T>
+impl<T> ConstZero for Multivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Multivector2D {
-        s: Scalar2D::ZERO,
-        v: Vector2D::ZERO,
-        a: Bivector2D::ZERO,
+    const ZERO: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        a: Bivector::ZERO,
     };
 }
 
-impl<T> One for Multivector2D<T>
+impl<T> One for Multivector<T>
 where
     T: Zero,
     T: One,
-    Scalar2D<T>: Mul<Output = Scalar2D<T>>,
-    Multivector2D<T>: Mul<Output = Multivector2D<T>>, // TODO!
+    Scalar<T>: Mul<Output = Scalar<T>>,
+    Multivector<T>: Mul<Output = Multivector<T>>, // TODO!
 {
     fn one() -> Self {
-        Multivector2D {
-            s: Scalar2D::one(),
-            v: Vector2D::zero(),
-            a: Bivector2D::zero(),
+        Multivector {
+            s: Scalar::one(),
+            v: Vector::zero(),
+            a: Bivector::zero(),
         }
     }
 }
 
-impl<T> ConstOne for Multivector2D<T>
+impl<T> ConstOne for Multivector<T>
 where
     T: ConstZero,
     T: ConstOne,
-    Multivector2D<T>: Mul<Output = Multivector2D<T>>, // TODO!
+    Multivector<T>: Mul<Output = Multivector<T>>, // TODO!
 {
-    const ONE: Self = Multivector2D {
-        s: Scalar2D::ONE,
-        v: Vector2D::ZERO,
-        a: Bivector2D::ZERO,
+    const ONE: Self = Multivector {
+        s: Scalar::ONE,
+        v: Vector::ZERO,
+        a: Bivector::ZERO,
     };
 }
 
-impl<T> Multivector2D<T>
+impl<T> Multivector<T>
 where
     T: ConstZero,
     T: ConstOne,
 {
-    pub const X: Self = Multivector2D {
-        s: Scalar2D::ZERO,
-        v: Vector2D::X,
-        a: Bivector2D::ZERO,
+    pub const X: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::X,
+        a: Bivector::ZERO,
     };
 
-    pub const Y: Self = Multivector2D {
-        s: Scalar2D::ZERO,
-        v: Vector2D::Y,
-        a: Bivector2D::ZERO,
+    pub const Y: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::Y,
+        a: Bivector::ZERO,
     };
 
-    pub const XY: Self = Multivector2D {
-        s: Scalar2D::ZERO,
-        v: Vector2D::ZERO,
-        a: Bivector2D::XY,
+    pub const XY: Self = Multivector {
+        s: Scalar::ZERO,
+        v: Vector::ZERO,
+        a: Bivector::XY,
     };
 }
 
-impl<T> Add for Multivector2D<T>
+impl<T> Add for Multivector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Multivector2D {
+        Multivector {
             s: self.s + rhs.s,
             v: self.v + rhs.v,
             a: self.a + rhs.a,
@@ -150,13 +150,13 @@ where
     }
 }
 
-impl<T> Sub for Multivector2D<T>
+impl<T> Sub for Multivector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Multivector2D {
+        Multivector {
             s: self.s - rhs.s,
             v: self.v - rhs.v,
             a: self.a - rhs.a,
@@ -164,13 +164,13 @@ where
     }
 }
 
-impl<T> Neg for Multivector2D<T>
+impl<T> Neg for Multivector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
     fn neg(self) -> Self::Output {
-        Multivector2D {
+        Multivector {
             s: -self.s,
             v: -self.v,
             a: -self.a,
@@ -178,51 +178,51 @@ where
     }
 }
 
-impl<T> WedgeProduct<Vector2D<T>> for Multivector2D<T>
+impl<T> WedgeProduct<Vector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Vector2D<T>) -> Self::Output {
-        Multivector2D {
-            s: Scalar2D::zero(),
+    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::zero(),
             v: self.s.wedge(rhs),
             a: self.v.wedge(rhs),
         }
     }
 }
 
-impl<T> WedgeProduct<Bivector2D<T>> for Multivector2D<T>
+impl<T> WedgeProduct<Bivector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Bivector2D<T>) -> Self::Output {
-        Multivector2D {
-            s: Scalar2D::zero(),
-            v: Vector2D::zero(),
+    fn wedge(self, rhs: Bivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::zero(),
+            v: Vector::zero(),
             a: self.s.wedge(rhs),
         }
     }
 }
 
-impl<T> WedgeProduct<Multivector2D<T>> for Multivector2D<T>
+impl<T> WedgeProduct<Multivector<T>> for Multivector<T>
 where
     T: Zero,
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Multivector2D<T>) -> Self::Output {
+    fn wedge(self, rhs: Multivector<T>) -> Self::Output {
         let s = self.s.wedge(rhs.s);
         let v1 = self.s.wedge(rhs.v);
         let a1 = self.s.wedge(rhs.a);
@@ -230,7 +230,7 @@ where
         let a2 = self.v.wedge(rhs.v);
         let a3 = self.a.wedge(rhs.s);
 
-        Multivector2D {
+        Multivector {
             s: s,
             v: v1 + v2,
             a: a1 + a2 + a3,
@@ -238,14 +238,14 @@ where
     }
 }
 
-impl<T> AntiwedgeProduct<Multivector2D<T>> for Multivector2D<T>
+impl<T> AntiwedgeProduct<Multivector<T>> for Multivector<T>
 where
-    Multivector2D<T>: Multivector,
-    Multivector2D<T>: WedgeProduct<Multivector2D<T>, Output = Multivector2D<T>>,
+    Multivector<T>: VectorSpace,
+    Multivector<T>: WedgeProduct<Multivector<T>, Output = Multivector<T>>,
 {
-    type Output = Multivector2D<T>;
+    type Output = Multivector<T>;
 
-    fn antiwedge(self, rhs: Multivector2D<T>) -> Self::Output {
+    fn antiwedge(self, rhs: Multivector<T>) -> Self::Output {
         self.left_complement()
             .wedge(rhs.left_complement())
             .right_complement()

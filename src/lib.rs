@@ -1,16 +1,14 @@
-mod geometry2d;
-mod geometry3d;
+pub mod geometry2d;
+pub mod geometry3d;
 mod geometry4d;
 
-pub use geometry2d::*;
-pub use geometry3d::*;
 pub use geometry4d::*;
 
 pub trait Antiscalar {
     const UNIT_VOLUME: Self;
 }
 
-pub trait Multivector {
+pub trait VectorSpace {
     type Scalar;
     type Vector;
     type Antivector;

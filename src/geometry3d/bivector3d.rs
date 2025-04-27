@@ -7,14 +7,14 @@ use num::{
 
 use crate::{AntiwedgeProduct, KVector, reverse_antiwedge};
 
-use super::{Bivector3D, Trivector3D, Vector3D};
+use super::{Bivector, Trivector, Vector};
 
-impl<T> Zero for Bivector3D<T>
+impl<T> Zero for Bivector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Bivector3D {
+        Bivector {
             yz: T::zero(),
             zx: T::zero(),
             xy: T::zero(),
@@ -26,48 +26,48 @@ where
     }
 }
 
-impl<T> ConstZero for Bivector3D<T>
+impl<T> ConstZero for Bivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Bivector3D {
+    const ZERO: Self = Bivector {
         yz: T::ZERO,
         zx: T::ZERO,
         xy: T::ZERO,
     };
 }
 
-impl<T> Bivector3D<T>
+impl<T> Bivector<T>
 where
     T: ConstZero,
     T: ConstOne,
 {
-    pub const YZ: Self = Bivector3D {
+    pub const YZ: Self = Bivector {
         yz: T::ONE,
         zx: T::ZERO,
         xy: T::ZERO,
     };
 
-    pub const ZX: Self = Bivector3D {
+    pub const ZX: Self = Bivector {
         yz: T::ZERO,
         zx: T::ONE,
         xy: T::ZERO,
     };
 
-    pub const XY: Self = Bivector3D {
+    pub const XY: Self = Bivector {
         yz: T::ZERO,
         zx: T::ZERO,
         xy: T::ONE,
     };
 }
 
-impl<T> Add for Bivector3D<T>
+impl<T> Add for Bivector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Bivector3D<T>;
+    type Output = Bivector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Bivector3D {
+        Bivector {
             yz: self.yz + rhs.yz,
             zx: self.zx + rhs.zx,
             xy: self.xy + rhs.xy,
@@ -75,13 +75,13 @@ where
     }
 }
 
-impl<T> Sub for Bivector3D<T>
+impl<T> Sub for Bivector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Bivector3D<T>;
+    type Output = Bivector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Bivector3D {
+        Bivector {
             yz: self.yz - rhs.yz,
             zx: self.zx - rhs.zx,
             xy: self.xy - rhs.xy,
@@ -89,13 +89,13 @@ where
     }
 }
 
-impl<T> Neg for Bivector3D<T>
+impl<T> Neg for Bivector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Bivector3D<T>;
+    type Output = Bivector<T>;
     fn neg(self) -> Self::Output {
-        Bivector3D {
+        Bivector {
             yz: -self.yz,
             zx: -self.zx,
             xy: -self.xy,
@@ -103,11 +103,11 @@ where
     }
 }
 
-impl<T: Copy> KVector for Bivector3D<T> {
-    type AntiKVector = Vector3D<T>;
+impl<T: Copy> KVector for Bivector<T> {
+    type AntiKVector = Vector<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
-        Vector3D {
+        Vector {
             x: self.yz,
             y: self.zx,
             z: self.xy,
@@ -115,7 +115,7 @@ impl<T: Copy> KVector for Bivector3D<T> {
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
-        Vector3D {
+        Vector {
             x: self.yz,
             y: self.zx,
             z: self.xy,
@@ -123,17 +123,17 @@ impl<T: Copy> KVector for Bivector3D<T> {
     }
 }
 
-impl<T> AntiwedgeProduct<Bivector3D<T>> for Bivector3D<T>
+impl<T> AntiwedgeProduct<Bivector<T>> for Bivector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Vector3D<T>;
+    type Output = Vector<T>;
 
-    fn antiwedge(self, rhs: Bivector3D<T>) -> Self::Output {
-        Vector3D {
+    fn antiwedge(self, rhs: Bivector<T>) -> Self::Output {
+        Vector {
             x: self.zx * rhs.xy - self.xy * rhs.zx,
             y: self.xy * rhs.yz - self.yz * rhs.xy,
             z: self.yz * rhs.zx - self.zx * rhs.yz,
@@ -141,17 +141,17 @@ where
     }
 }
 
-impl<T> AntiwedgeProduct<Trivector3D<T>> for Bivector3D<T>
+impl<T> AntiwedgeProduct<Trivector<T>> for Bivector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Neg<Output = T>,
 {
-    type Output = Bivector3D<T>;
+    type Output = Bivector<T>;
 
-    fn antiwedge(self, rhs: Trivector3D<T>) -> Self::Output {
-        Bivector3D {
+    fn antiwedge(self, rhs: Trivector<T>) -> Self::Output {
+        Bivector {
             yz: self.yz * rhs.xyz,
             zx: self.zx * rhs.xyz,
             xy: self.xy * rhs.xyz,
@@ -159,4 +159,4 @@ where
     }
 }
 
-reverse_antiwedge!(Trivector3D, Bivector3D);
+reverse_antiwedge!(Trivector, Bivector);

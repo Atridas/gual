@@ -4,22 +4,22 @@ mod scalar2d;
 mod vector2d;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Scalar2D<T>(pub T);
+pub struct Scalar<T>(pub T);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Vector2D<T> {
+pub struct Vector<T> {
     pub x: T,
     pub y: T,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Bivector2D<T> {
+pub struct Bivector<T> {
     pub xy: T,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Multivector2D<T> {
-    pub s: Scalar2D<T>,
-    pub v: Vector2D<T>,
-    pub a: Bivector2D<T>,
+pub struct Multivector<T> {
+    pub s: Scalar<T>,
+    pub v: Vector<T>,
+    pub a: Bivector<T>,
 }

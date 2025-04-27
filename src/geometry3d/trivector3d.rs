@@ -7,14 +7,14 @@ use num::{
 
 use crate::{Antiscalar, AntiwedgeProduct, KVector};
 
-use super::{Scalar3D, Trivector3D};
+use super::{Scalar, Trivector};
 
-impl<T> Zero for Trivector3D<T>
+impl<T> Zero for Trivector<T>
 where
     T: Zero,
 {
     fn zero() -> Self {
-        Trivector3D { xyz: T::zero() }
+        Trivector { xyz: T::zero() }
     }
 
     fn is_zero(&self) -> bool {
@@ -22,82 +22,82 @@ where
     }
 }
 
-impl<T> ConstZero for Trivector3D<T>
+impl<T> ConstZero for Trivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Trivector3D { xyz: T::ZERO };
+    const ZERO: Self = Trivector { xyz: T::ZERO };
 }
 
-impl<T> Antiscalar for Trivector3D<T>
+impl<T> Antiscalar for Trivector<T>
 where
     T: ConstOne,
-    Scalar3D<T>: Mul<Output = Scalar3D<T>>,
+    Scalar<T>: Mul<Output = Scalar<T>>,
 {
-    const UNIT_VOLUME: Self = Trivector3D { xyz: T::ONE };
+    const UNIT_VOLUME: Self = Trivector { xyz: T::ONE };
 }
 
-impl<T> Trivector3D<T>
+impl<T> Trivector<T>
 where
     T: ConstOne,
 {
-    pub const XYZ: Self = Trivector3D { xyz: T::ONE };
+    pub const XYZ: Self = Trivector { xyz: T::ONE };
 }
 
-impl<T> Add for Trivector3D<T>
+impl<T> Add for Trivector<T>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Trivector3D<T>;
+    type Output = Trivector<T>;
     fn add(self, rhs: Self) -> Self::Output {
-        Trivector3D {
+        Trivector {
             xyz: self.xyz + rhs.xyz,
         }
     }
 }
 
-impl<T> Sub for Trivector3D<T>
+impl<T> Sub for Trivector<T>
 where
     T: Sub<T, Output = T>,
 {
-    type Output = Trivector3D<T>;
+    type Output = Trivector<T>;
     fn sub(self, rhs: Self) -> Self::Output {
-        Trivector3D {
+        Trivector {
             xyz: self.xyz - rhs.xyz,
         }
     }
 }
 
-impl<T> Neg for Trivector3D<T>
+impl<T> Neg for Trivector<T>
 where
     T: Neg<Output = T>,
 {
-    type Output = Trivector3D<T>;
+    type Output = Trivector<T>;
     fn neg(self) -> Self::Output {
-        Trivector3D { xyz: -self.xyz }
+        Trivector { xyz: -self.xyz }
     }
 }
 
-impl<T: Clone> KVector for Trivector3D<T> {
-    type AntiKVector = Scalar3D<T>;
+impl<T: Clone> KVector for Trivector<T> {
+    type AntiKVector = Scalar<T>;
 
     fn right_complement(&self) -> Self::AntiKVector {
-        Scalar3D(self.xyz.clone())
+        Scalar(self.xyz.clone())
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
-        Scalar3D(self.xyz.clone())
+        Scalar(self.xyz.clone())
     }
 }
 
-impl<T> AntiwedgeProduct<Trivector3D<T>> for Trivector3D<T>
+impl<T> AntiwedgeProduct<Trivector<T>> for Trivector<T>
 where
     T: Mul<T, Output = T>,
 {
-    type Output = Trivector3D<T>;
+    type Output = Trivector<T>;
 
-    fn antiwedge(self, rhs: Trivector3D<T>) -> Self::Output {
-        Trivector3D {
+    fn antiwedge(self, rhs: Trivector<T>) -> Self::Output {
+        Trivector {
             xyz: self.xyz * rhs.xyz,
         }
     }
