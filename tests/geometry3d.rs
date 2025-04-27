@@ -3,6 +3,170 @@ use gual::{
     antiwedge_reference,
 };
 
+struct ScalarIt {
+    s: i32,
+    max: i32,
+}
+
+struct VectorIt {
+    x: i32,
+    y: i32,
+    z: i32,
+    max: i32,
+}
+
+struct BivectorIt {
+    yz: i32,
+    zx: i32,
+    xy: i32,
+    max: i32,
+}
+
+struct TrivectorIt {
+    xyz: i32,
+    max: i32,
+}
+
+impl ScalarIt {
+    fn new(max: i32) -> Self {
+        Self { s: 0, max }
+    }
+}
+
+impl VectorIt {
+    fn new(max: i32) -> Self {
+        Self {
+            x: 0,
+            y: 0,
+            z: 0,
+            max,
+        }
+    }
+}
+
+impl BivectorIt {
+    fn new(max: i32) -> Self {
+        Self {
+            yz: 0,
+            zx: 0,
+            xy: 0,
+            max,
+        }
+    }
+}
+
+impl TrivectorIt {
+    fn new(max: i32) -> Self {
+        Self { xyz: 0, max }
+    }
+}
+
+impl Iterator for ScalarIt {
+    type Item = Scalar3D<i32>;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.s < self.max {
+            let s = self.s;
+            self.s += 1;
+            Some(Scalar3D(s))
+        } else {
+            None
+        }
+    }
+}
+
+impl Iterator for VectorIt {
+    type Item = Vector3D<i32>;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.z < self.max {
+            if self.y < self.max {
+                if self.x < self.max {
+                    let x = self.x;
+                    self.x += 1;
+                    Some(Vector3D {
+                        x,
+                        y: self.y,
+                        z: self.z,
+                    })
+                } else {
+                    let y = self.y;
+                    self.x = 0;
+                    self.y += 1;
+                    Some(Vector3D {
+                        x: self.x,
+                        y,
+                        z: self.z,
+                    })
+                }
+            } else {
+                let z = self.z;
+                self.x = 0;
+                self.y = 0;
+                self.z += 1;
+                Some(Vector3D {
+                    x: self.x,
+                    y: self.y,
+                    z,
+                })
+            }
+        } else {
+            None
+        }
+    }
+}
+
+impl Iterator for BivectorIt {
+    type Item = Bivector3D<i32>;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.xy < self.max {
+            if self.zx < self.max {
+                if self.yz < self.max {
+                    let yz = self.yz;
+                    self.yz += 1;
+                    Some(Bivector3D {
+                        yz,
+                        zx: self.zx,
+                        xy: self.xy,
+                    })
+                } else {
+                    let zx = self.zx;
+                    self.yz = 0;
+                    self.zx += 1;
+                    Some(Bivector3D {
+                        yz: self.yz,
+                        zx,
+                        xy: self.xy,
+                    })
+                }
+            } else {
+                let xy = self.xy;
+                self.yz = 0;
+                self.zx = 0;
+                self.xy += 1;
+                Some(Bivector3D {
+                    yz: self.yz,
+                    zx: self.zx,
+                    xy,
+                })
+            }
+        } else {
+            None
+        }
+    }
+}
+
+impl Iterator for TrivectorIt {
+    type Item = Trivector3D<i32>;
+    fn next(&mut self) -> Option<Self::Item> {
+        if self.xyz < self.max {
+            let xyz = self.xyz;
+            self.xyz += 1;
+            Some(Trivector3D { xyz })
+        } else {
+            None
+        }
+    }
+}
+
 #[test]
 fn complement_scalar() {
     let i = Trivector3D { xyz: 1 };
@@ -69,11 +233,8 @@ fn complement_trivector() {
 
 #[test]
 fn wedge_scalar_scalar() {
-    for s in 0..100 {
-        let s = Scalar3D(s);
-        for s2 in 0..100 {
-            let s2 = Scalar3D(s2);
-
+    for s in ScalarIt::new(100) {
+        for s2 in ScalarIt::new(100) {
             // scalars always commute
             assert_eq!(s.wedge(s2), s2.wedge(s));
         }
@@ -82,89 +243,48 @@ fn wedge_scalar_scalar() {
 
 #[test]
 fn wedge_scalar_vector() {
-    for s in 0..100 {
-        let s = Scalar3D(s);
-        for x in 20..40 {
-            for y in 20..40 {
-                for z in 20..40 {
-                    let v = Vector3D { x, y, z };
-
-                    // scalars always commute
-                    assert_eq!(s.wedge(v), v.wedge(s));
-                }
-            }
+    for s in ScalarIt::new(100) {
+        for v in VectorIt::new(20) {
+            // scalars always commute
+            assert_eq!(s.wedge(v), v.wedge(s));
         }
     }
 }
 
 #[test]
 fn wedge_scalar_bivector() {
-    for s in 0..100 {
-        let s = Scalar3D(s);
-        for yz in 20..40 {
-            for zx in 20..40 {
-                for xy in 20..40 {
-                    let b = Bivector3D { yz, zx, xy };
-
-                    // scalars always commute
-                    assert_eq!(s.wedge(b), b.wedge(s));
-                }
-            }
+    for s in ScalarIt::new(100) {
+        for b in BivectorIt::new(20) {
+            // scalars always commute
+            assert_eq!(s.wedge(b), b.wedge(s));
         }
     }
 }
 
 #[test]
 fn wedge_vector_vector() {
-    for x in 20..40 {
-        for y in 20..40 {
-            for z in 20..40 {
-                let v = Vector3D { x, y, z };
-
-                for x in 20..40 {
-                    for y in 20..40 {
-                        for z in 20..40 {
-                            let v2 = Vector3D { x, y, z };
-
-                            // vector - vector anticommute
-                            assert_eq!(v.wedge(v2), -v2.wedge(v));
-                        }
-                    }
-                }
-            }
+    for v in VectorIt::new(20) {
+        for v2 in VectorIt::new(20) {
+            // vector - vector anticommute
+            assert_eq!(v.wedge(v2), -v2.wedge(v));
         }
     }
 }
 
 #[test]
 fn wedge_vector_bivector() {
-    for x in 20..40 {
-        for y in 20..40 {
-            for z in 20..40 {
-                let v = Vector3D { x, y, z };
-
-                for yz in 20..40 {
-                    for zx in 20..40 {
-                        for xy in 20..40 {
-                            let b = Bivector3D { yz, zx, xy };
-
-                            // bivectors always commute
-                            assert_eq!(v.wedge(b), b.wedge(v));
-                        }
-                    }
-                }
-            }
+    for v in VectorIt::new(20) {
+        for b in BivectorIt::new(20) {
+            // bivectors always commute
+            assert_eq!(v.wedge(b), b.wedge(v));
         }
     }
 }
 
 #[test]
 fn antiwedge_scalar_trivector() {
-    for i in 0..100 {
-        let s = Scalar3D(i);
-        for xyz in 0..100 {
-            let t = Trivector3D { xyz };
-
+    for s in ScalarIt::new(100) {
+        for t in TrivectorIt::new(100) {
             // actual implementation matches definition
             assert_eq!(s.antiwedge(t), antiwedge_reference(s, t));
             assert_eq!(t.antiwedge(s), antiwedge_reference(t, s));
@@ -174,90 +294,52 @@ fn antiwedge_scalar_trivector() {
 
 #[test]
 fn antiwedge_vector_bivector() {
-    for x in 20..40 {
-        for y in 20..40 {
-            for z in 20..40 {
-                let v = Vector3D { x, y, z };
-
-                for yz in 20..40 {
-                    for zx in 20..40 {
-                        for xy in 20..40 {
-                            let b = Bivector3D { yz, zx, xy };
-                            // actual implementation matches definition
-                            assert_eq!(v.antiwedge(b), antiwedge_reference(v, b));
-                            assert_eq!(b.antiwedge(v), antiwedge_reference(b, v));
-                        }
-                    }
-                }
-            }
+    for v in VectorIt::new(20) {
+        for b in BivectorIt::new(20) {
+            // actual implementation matches definition
+            assert_eq!(v.antiwedge(b), antiwedge_reference(v, b));
+            assert_eq!(b.antiwedge(v), antiwedge_reference(b, v));
         }
     }
 }
 
 #[test]
 fn antiwedge_vector_trivector() {
-    for x in 20..40 {
-        for y in 20..40 {
-            for z in 20..40 {
-                let v = Vector3D { x, y, z };
-                for xyz in 0..50 {
-                    let t = Trivector3D { xyz };
-                    // actual implementation matches definition
-                    assert_eq!(v.antiwedge(t), antiwedge_reference(v, t));
-                    assert_eq!(t.antiwedge(v), antiwedge_reference(t, v));
-                }
-            }
+    for v in VectorIt::new(20) {
+        for t in TrivectorIt::new(100) {
+            // actual implementation matches definition
+            assert_eq!(v.antiwedge(t), antiwedge_reference(v, t));
+            assert_eq!(t.antiwedge(v), antiwedge_reference(t, v));
         }
     }
 }
 
 #[test]
 fn antiwedge_bivector_bivector() {
-    for yz in 20..40 {
-        for zx in 20..40 {
-            for xy in 20..40 {
-                let b1 = Bivector3D { yz, zx, xy };
-
-                for yz in 20..40 {
-                    for zx in 20..40 {
-                        for xy in 20..40 {
-                            let b2 = Bivector3D { yz, zx, xy };
-                            // actual implementation matches definition
-                            assert_eq!(b1.antiwedge(b2), antiwedge_reference(b1, b2));
-                            assert_eq!(b2.antiwedge(b1), antiwedge_reference(b2, b1));
-                        }
-                    }
-                }
-            }
+    for b1 in BivectorIt::new(20) {
+        for b2 in BivectorIt::new(20) {
+            // actual implementation matches definition
+            assert_eq!(b1.antiwedge(b2), antiwedge_reference(b1, b2));
+            assert_eq!(b2.antiwedge(b1), antiwedge_reference(b2, b1));
         }
     }
 }
 
 #[test]
 fn antiwedge_bivector_trivector() {
-    for yz in 20..40 {
-        for zx in 20..40 {
-            for xy in 20..40 {
-                let b = Bivector3D { yz, zx, xy };
-
-                for xyz in 20..40 {
-                    let t = Trivector3D { xyz };
-                    // actual implementation matches definition
-                    assert_eq!(b.antiwedge(t), antiwedge_reference(b, t));
-                    assert_eq!(t.antiwedge(b), antiwedge_reference(t, b));
-                }
-            }
+    for b in BivectorIt::new(20) {
+        for t in TrivectorIt::new(100) {
+            // actual implementation matches definition
+            assert_eq!(b.antiwedge(t), antiwedge_reference(b, t));
+            assert_eq!(t.antiwedge(b), antiwedge_reference(t, b));
         }
     }
 }
 
 #[test]
 fn antiwedge_trivector_trivector() {
-    for xyz in 20..40 {
-        let t1 = Trivector3D { xyz };
-
-        for xyz in 20..40 {
-            let t2 = Trivector3D { xyz };
+    for t1 in TrivectorIt::new(100) {
+        for t2 in TrivectorIt::new(100) {
             // actual implementation matches definition
             assert_eq!(t1.antiwedge(t2), antiwedge_reference(t1, t2));
             assert_eq!(t2.antiwedge(t1), antiwedge_reference(t2, t1));
