@@ -22,7 +22,7 @@ where
     }
 
     fn is_zero(&self) -> bool {
-        self.x.is_zero() == self.y.is_zero()
+        self.x.is_zero() && self.y.is_zero() && self.z.is_zero()
     }
 }
 

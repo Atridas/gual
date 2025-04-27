@@ -1,7 +1,8 @@
-// mod bivector4d;
-// mod multivector4d;
+mod bivector4d;
+mod multivector4d;
+mod quadvector4d;
 mod scalar4d;
-// mod trivector4d;
+mod trivector4d;
 mod vector4d;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

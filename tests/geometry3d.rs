@@ -169,7 +169,7 @@ impl Iterator for TrivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
+    let i = Trivector::<i32>::UNIT_VOLUME;
 
     let s = Scalar::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
@@ -178,7 +178,7 @@ fn complement_scalar() {
 
 #[test]
 fn complement_vector() {
-    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
+    let i = Trivector::<i32>::UNIT_VOLUME;
 
     let v = Vector::X;
     assert_eq!(v.wedge(v.right_complement()), i);
@@ -195,7 +195,7 @@ fn complement_vector() {
 
 #[test]
 fn complement_bivector() {
-    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
+    let i = Trivector::<i32>::UNIT_VOLUME;
 
     let b = Bivector::YZ;
     assert_eq!(b.wedge(b.right_complement()), i);
@@ -212,7 +212,7 @@ fn complement_bivector() {
 
 #[test]
 fn complement_trivector() {
-    let i: Trivector<i32> = Trivector::UNIT_VOLUME;
+    let i = Trivector::<i32>::UNIT_VOLUME;
 
     let t = Trivector::XYZ;
     assert_eq!(t.wedge(t.right_complement()), i);
@@ -243,6 +243,16 @@ fn wedge_scalar_vector() {
 fn wedge_scalar_bivector() {
     for s in ScalarIt::new(100) {
         for b in BivectorIt::new(20) {
+            // scalars always commute
+            assert_eq!(s.wedge(b), b.wedge(s));
+        }
+    }
+}
+
+#[test]
+fn wedge_scalar_trivector() {
+    for s in ScalarIt::new(100) {
+        for b in TrivectorIt::new(100) {
             // scalars always commute
             assert_eq!(s.wedge(b), b.wedge(s));
         }

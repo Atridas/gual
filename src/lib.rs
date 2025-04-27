@@ -1,8 +1,6 @@
 pub mod geometry2d;
 pub mod geometry3d;
-mod geometry4d;
-
-pub use geometry4d::*;
+pub mod geometry4d;
 
 pub trait Antiscalar {
     const UNIT_VOLUME: Self;

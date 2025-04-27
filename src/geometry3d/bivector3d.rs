@@ -128,7 +128,6 @@ where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Sub<T, Output = T>,
-    T: Neg<Output = T>,
 {
     type Output = Vector<T>;
 
@@ -145,8 +144,6 @@ impl<T> AntiwedgeProduct<Trivector<T>> for Bivector<T>
 where
     T: Copy,
     T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-    T: Neg<Output = T>,
 {
     type Output = Bivector<T>;
 
