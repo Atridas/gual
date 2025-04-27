@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{One, Zero, traits::ConstZero};
+use num::{
+    Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{Antiscalar, AntiwedgeProduct, KVector};
 
@@ -28,12 +31,17 @@ where
 
 impl<T> Antiscalar for Bivector2D<T>
 where
-    T: One,
+    T: ConstOne,
     Scalar2D<T>: Mul<Output = Scalar2D<T>>,
 {
-    fn unit_volume() -> Self {
-        Bivector2D { xy: T::one() }
-    }
+    const UNIT_VOLUME: Self = Bivector2D { xy: T::ONE };
+}
+
+impl<T> Bivector2D<T>
+where
+    T: ConstOne,
+{
+    pub const XY: Self = Bivector2D { xy: T::ONE };
 }
 
 impl<T> Add for Bivector2D<T>

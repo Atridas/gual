@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{Zero, traits::ConstZero};
+use num::{
+    Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{AntiwedgeProduct, KVector, reverse_antiwedge};
 
@@ -31,6 +34,30 @@ where
         yz: T::ZERO,
         zx: T::ZERO,
         xy: T::ZERO,
+    };
+}
+
+impl<T> Bivector3D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const YZ: Self = Bivector3D {
+        yz: T::ONE,
+        zx: T::ZERO,
+        xy: T::ZERO,
+    };
+
+    pub const ZX: Self = Bivector3D {
+        yz: T::ZERO,
+        zx: T::ONE,
+        xy: T::ZERO,
+    };
+
+    pub const XY: Self = Bivector3D {
+        yz: T::ZERO,
+        zx: T::ZERO,
+        xy: T::ONE,
     };
 }
 

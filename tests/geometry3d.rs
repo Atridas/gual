@@ -1,7 +1,8 @@
 use gual::{
-    AntiwedgeProduct, Bivector3D, KVector, Scalar3D, Trivector3D, Vector3D, WedgeProduct,
-    antiwedge_reference,
+    Antiscalar, AntiwedgeProduct, Bivector3D, KVector, Scalar3D, Trivector3D, Vector3D,
+    WedgeProduct, antiwedge_reference,
 };
+use num::traits::ConstOne;
 
 struct ScalarIt {
     s: i32,
@@ -169,64 +170,52 @@ impl Iterator for TrivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i = Trivector3D { xyz: 1 };
+    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
 
-    let s = Scalar3D(1);
+    let s = Scalar3D::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
     assert_eq!(s.left_complement().wedge(s), i);
 }
 
 #[test]
 fn complement_vector() {
-    let i = Trivector3D { xyz: 1 };
+    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
 
-    let v = Vector3D { x: 1, y: 0, z: 0 };
+    let v = Vector3D::X;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector3D { x: 0, y: 1, z: 0 };
+    let v = Vector3D::Y;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector3D { x: 0, y: 0, z: 1 };
+    let v = Vector3D::Z;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 }
 
 #[test]
 fn complement_bivector() {
-    let i = Trivector3D { xyz: 1 };
+    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
 
-    let b = Bivector3D {
-        yz: 1,
-        zx: 0,
-        xy: 0,
-    };
+    let b = Bivector3D::YZ;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 
-    let b = Bivector3D {
-        yz: 0,
-        zx: 1,
-        xy: 0,
-    };
+    let b = Bivector3D::ZX;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 
-    let b = Bivector3D {
-        yz: 0,
-        zx: 0,
-        xy: 1,
-    };
+    let b = Bivector3D::XY;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 }
 
 #[test]
 fn complement_trivector() {
-    let i = Trivector3D { xyz: 1 };
+    let i: Trivector3D<i32> = Trivector3D::UNIT_VOLUME;
 
-    let t = Trivector3D { xyz: 1 };
+    let t = Trivector3D::XYZ;
     assert_eq!(t.wedge(t.right_complement()), i);
     assert_eq!(t.left_complement().wedge(t), i);
 }

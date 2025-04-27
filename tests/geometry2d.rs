@@ -1,6 +1,8 @@
 use gual::{
-    AntiwedgeProduct, Bivector2D, KVector, Scalar2D, Vector2D, WedgeProduct, antiwedge_reference,
+    Antiscalar, AntiwedgeProduct, Bivector2D, KVector, Scalar2D, Vector2D, WedgeProduct,
+    antiwedge_reference,
 };
+use num::traits::ConstOne;
 
 struct ScalarIt {
     s: i32,
@@ -84,31 +86,31 @@ impl Iterator for BivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i = Bivector2D { xy: 1 };
+    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
 
-    let s = Scalar2D(1);
+    let s = Scalar2D::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
     assert_eq!(s.left_complement().wedge(s), i);
 }
 
 #[test]
 fn complement_vector() {
-    let i = Bivector2D { xy: 1 };
+    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
 
-    let v = Vector2D { x: 1, y: 0 };
+    let v = Vector2D::X;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 
-    let v = Vector2D { x: 0, y: 1 };
+    let v = Vector2D::Y;
     assert_eq!(v.wedge(v.right_complement()), i);
     assert_eq!(v.left_complement().wedge(v), i);
 }
 
 #[test]
 fn complement_bivector() {
-    let i = Bivector2D { xy: 1 };
+    let i: Bivector2D<i32> = Bivector2D::UNIT_VOLUME;
 
-    let b = Bivector2D { xy: 1 };
+    let b = Bivector2D::XY;
     assert_eq!(b.wedge(b.right_complement()), i);
     assert_eq!(b.left_complement().wedge(b), i);
 }

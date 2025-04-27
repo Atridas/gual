@@ -118,6 +118,61 @@ where
     };
 }
 
+impl<T> Multivector3D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::X,
+        b: Bivector3D::ZERO,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const Y: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::Y,
+        b: Bivector3D::ZERO,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const Z: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::Z,
+        b: Bivector3D::ZERO,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const YZ: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::ZERO,
+        b: Bivector3D::YZ,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const ZX: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::ZERO,
+        b: Bivector3D::ZX,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const XY: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::ZERO,
+        b: Bivector3D::XY,
+        a: Trivector3D::ZERO,
+    };
+
+    pub const XYZ: Self = Multivector3D {
+        s: Scalar3D::ZERO,
+        v: Vector3D::ZERO,
+        b: Bivector3D::ZERO,
+        a: Trivector3D::XYZ,
+    };
+}
+
 impl<T> Add for Multivector3D<T>
 where
     T: Add<T, Output = T>,

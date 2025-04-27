@@ -15,7 +15,7 @@ fn main() {
         a: zero(),
     };
 
-    println!("volume: {:?}", Multivector2D::<i32>::unit_volume());
+    println!("volume: {:?}", Multivector2D::<i32>::UNIT_VOLUME);
     println!("a: {:?}", a);
     println!("b: {:?}", b);
     println!("lc(a): {:?}", a.left_complement());
@@ -26,11 +26,11 @@ fn main() {
     println!("a v b: {:?}", a.antiwedge(b));
     println!(
         "a v I: {:?}",
-        a.vector().antiwedge(Multivector2D::<i32>::unit_volume())
+        a.vector().antiwedge(Multivector2D::<i32>::UNIT_VOLUME)
     );
     println!(
         "a v I: {:?}",
-        antiwedge_reference(a.vector(), Multivector2D::<i32>::unit_volume())
+        antiwedge_reference(a.vector(), Multivector2D::<i32>::UNIT_VOLUME)
     );
     println!("a ^ rc(b): {:?}", a.wedge(b.right_complement()));
     println!("lc(a) ^ b: {:?}", a.left_complement().wedge(b));

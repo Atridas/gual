@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{Zero, traits::ConstZero};
+use num::{
+    Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_wedge};
 
@@ -31,6 +34,30 @@ where
         x: T::ZERO,
         y: T::ZERO,
         z: T::ZERO,
+    };
+}
+
+impl<T> Vector3D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = Vector3D {
+        x: T::ONE,
+        y: T::ZERO,
+        z: T::ZERO,
+    };
+
+    pub const Y: Self = Vector3D {
+        x: T::ZERO,
+        y: T::ONE,
+        z: T::ZERO,
+    };
+
+    pub const Z: Self = Vector3D {
+        x: T::ZERO,
+        y: T::ZERO,
+        z: T::ONE,
     };
 }
 

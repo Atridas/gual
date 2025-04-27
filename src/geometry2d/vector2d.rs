@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{Zero, traits::ConstZero};
+use num::{
+    Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge};
 
@@ -29,6 +32,22 @@ where
     const ZERO: Self = Vector2D {
         x: T::ZERO,
         y: T::ZERO,
+    };
+}
+
+impl<T> Vector2D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = Vector2D {
+        x: T::ONE,
+        y: T::ZERO,
+    };
+
+    pub const Y: Self = Vector2D {
+        x: T::ZERO,
+        y: T::ONE,
     };
 }
 

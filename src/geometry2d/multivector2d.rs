@@ -112,6 +112,30 @@ where
     };
 }
 
+impl<T> Multivector2D<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = Multivector2D {
+        s: Scalar2D::ZERO,
+        v: Vector2D::X,
+        a: Bivector2D::ZERO,
+    };
+
+    pub const Y: Self = Multivector2D {
+        s: Scalar2D::ZERO,
+        v: Vector2D::Y,
+        a: Bivector2D::ZERO,
+    };
+
+    pub const XY: Self = Multivector2D {
+        s: Scalar2D::ZERO,
+        v: Vector2D::ZERO,
+        a: Bivector2D::XY,
+    };
+}
+
 impl<T> Add for Multivector2D<T>
 where
     T: Add<T, Output = T>,

@@ -1,6 +1,9 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{One, Zero, traits::ConstZero};
+use num::{
+    Zero,
+    traits::{ConstOne, ConstZero},
+};
 
 use crate::{Antiscalar, AntiwedgeProduct, KVector};
 
@@ -28,12 +31,17 @@ where
 
 impl<T> Antiscalar for Trivector3D<T>
 where
-    T: One,
+    T: ConstOne,
     Scalar3D<T>: Mul<Output = Scalar3D<T>>,
 {
-    fn unit_volume() -> Self {
-        Trivector3D { xyz: T::one() }
-    }
+    const UNIT_VOLUME: Self = Trivector3D { xyz: T::ONE };
+}
+
+impl<T> Trivector3D<T>
+where
+    T: ConstOne,
+{
+    pub const XYZ: Self = Trivector3D { xyz: T::ONE };
 }
 
 impl<T> Add for Trivector3D<T>

@@ -7,7 +7,7 @@ pub use geometry3d::*;
 pub use geometry4d::*;
 
 pub trait Antiscalar {
-    fn unit_volume() -> Self;
+    const UNIT_VOLUME: Self;
 }
 
 pub trait Multivector {
@@ -16,14 +16,12 @@ pub trait Multivector {
     type Antivector;
     type Antiscalar: Antiscalar;
 
+    const UNIT_VOLUME: Self::Antiscalar = Self::Antiscalar::UNIT_VOLUME;
+
     fn scalar(&self) -> Self::Scalar;
     fn vector(&self) -> Self::Vector;
     fn antivector(&self) -> Self::Antivector;
     fn antiscalar(&self) -> Self::Antiscalar;
-
-    fn unit_volume() -> Self::Antiscalar {
-        Self::Antiscalar::unit_volume()
-    }
 
     // u ^ right_complement(u) = antiscalar
     fn right_complement(&self) -> Self;
