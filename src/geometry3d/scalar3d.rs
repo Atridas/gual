@@ -170,11 +170,12 @@ where
 
 impl<T, V> WedgeProduct<V> for Scalar<T>
 where
+    T: Copy,
     Scalar<T>: Mul<V, Output = V>,
 {
     type Output = V;
-    fn wedge(self, rhs: V) -> Self::Output {
-        self * rhs
+    fn wedge(&self, rhs: V) -> Self::Output {
+        *self * rhs
     }
 }
 
@@ -187,7 +188,7 @@ where
 {
     type Output = Scalar<T>;
 
-    fn antiwedge(self, rhs: Trivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Trivector<T>) -> Self::Output {
         Scalar(self.0 * rhs.xyz)
     }
 }

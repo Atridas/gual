@@ -92,11 +92,12 @@ impl<T: Clone> KVector for Quadvector<T> {
 
 impl<T> AntiwedgeProduct<Quadvector<T>> for Quadvector<T>
 where
+    T: Copy,
     T: Mul<T, Output = T>,
 {
     type Output = Quadvector<T>;
 
-    fn antiwedge(self, rhs: Quadvector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Quadvector<T>) -> Self::Output {
         Quadvector {
             xyzw: self.xyzw * rhs.xyzw,
         }

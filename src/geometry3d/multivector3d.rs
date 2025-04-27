@@ -227,7 +227,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Vector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: self.s.wedge(rhs),
@@ -245,7 +245,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Bivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Bivector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: Vector::zero(),
@@ -263,7 +263,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Trivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Trivector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: Vector::zero(),
@@ -282,7 +282,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(self, rhs: Multivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Multivector<T>) -> Self::Output {
         let s = self.s.wedge(rhs.s);
         let v1 = self.s.wedge(rhs.v);
         let b1 = self.s.wedge(rhs.b);
@@ -313,7 +313,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn antiwedge(self, rhs: Multivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Multivector<T>) -> Self::Output {
         self.left_complement()
             .wedge(rhs.left_complement())
             .right_complement()

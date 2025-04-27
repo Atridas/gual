@@ -39,7 +39,7 @@ where
     T: Epsilon,
 {
     type Output = NormalizedPoint<T>;
-    fn normalize(self) -> Option<Self::Output> {
+    fn normalize(&self) -> Option<Self::Output> {
         if self.w.is_near_zero() {
             let len2 = self.x * self.x + self.y * self.y + self.z * self.z;
             if len2.is_near_zero() {
@@ -69,7 +69,7 @@ where
     T: Epsilon,
 {
     type Output = NormalizedLine<T>;
-    fn normalize(self) -> Option<Self::Output> {
+    fn normalize(&self) -> Option<Self::Output> {
         if self.is_2_blade() {
             let len2 = self.wx * self.wx + self.wy * self.wy + self.wz * self.wz;
             if len2.is_near_zero() {
@@ -107,7 +107,7 @@ where
     T: Epsilon,
 {
     type Output = NormalizedPlane<T>;
-    fn normalize(self) -> Option<Self::Output> {
+    fn normalize(&self) -> Option<Self::Output> {
         let len2 = self.wyz * self.wyz + self.wzx * self.wzx + self.wxy * self.wxy;
         if len2.is_near_zero() {
             if self.zyx.is_near_zero() {

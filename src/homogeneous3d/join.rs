@@ -22,7 +22,7 @@ where
     d4::Vector<T>: WedgeProduct<d4::Vector<T>, Output = d4::Bivector<T>>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(self, rhs: HomogeneusPoint<T>) -> Self::Output {
+    fn join(&self, rhs: HomogeneusPoint<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -32,7 +32,7 @@ where
     d4::Vector<T>: WedgeProduct<d4::Bivector<T>, Output = d4::Trivector<T>>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(self, rhs: HomogeneusLine<T>) -> Self::Output {
+    fn join(&self, rhs: HomogeneusLine<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -42,7 +42,7 @@ where
     d4::Bivector<T>: WedgeProduct<d4::Vector<T>, Output = d4::Trivector<T>>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(self, rhs: HomogeneusPoint<T>) -> Self::Output {
+    fn join(&self, rhs: HomogeneusPoint<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -80,7 +80,7 @@ where
     T: Epsilon,
 {
     type Output = HomogeneusLine<T>;
-    fn join(self, rhs: d3::Point<T>) -> Self::Output {
+    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
         let dx = rhs.0.x - self.0.x;
         let dy = rhs.0.y - self.0.y;
         let dz = rhs.0.z - self.0.z;
@@ -101,7 +101,7 @@ where
     T: Epsilon,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(self, rhs: Line<T>) -> Self::Output {
+    fn join(&self, rhs: Line<T>) -> Self::Output {
         let yz = rhs.0.yz + self.0.z * rhs.0.wy - self.0.y * rhs.0.wz;
         let zx = rhs.0.zx + self.0.x * rhs.0.wz - self.0.z * rhs.0.wx;
         let xy = rhs.0.xy + self.0.y * rhs.0.wx - self.0.x * rhs.0.wy;
@@ -116,12 +116,13 @@ where
 
 impl<T> Join<d3::Point<T>> for Line<T>
 where
+    Self: Copy,
     T: Float,
     T: Epsilon,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(self, rhs: d3::Point<T>) -> Self::Output {
-        rhs.join(self)
+    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
+        rhs.join(*self)
     }
 }
 

@@ -45,27 +45,27 @@ pub trait KVector {
 
 pub trait WedgeProduct<Rhs> {
     type Output;
-    fn wedge(self, rhs: Rhs) -> Self::Output;
+    fn wedge(&self, rhs: Rhs) -> Self::Output;
 }
 
 pub trait AntiwedgeProduct<Rhs> {
     type Output;
-    fn antiwedge(self, rhs: Rhs) -> Self::Output;
+    fn antiwedge(&self, rhs: Rhs) -> Self::Output;
 }
 
 pub trait Normalizable {
     type Output;
-    fn normalize(self) -> Option<Self::Output>;
+    fn normalize(&self) -> Option<Self::Output>;
 }
 
 pub trait Join<Rhs> {
     type Output;
-    fn join(self, rhs: Rhs) -> Self::Output;
+    fn join(&self, rhs: Rhs) -> Self::Output;
 }
 
 pub trait Meet<Rhs> {
     type Output;
-    fn meet(self, rhs: Rhs) -> Self::Output;
+    fn meet(&self, rhs: Rhs) -> Self::Output;
 }
 
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
@@ -101,12 +101,13 @@ macro_rules! reverse_wedge {
     ($lht:ident, $rht:ident) => {
         impl<T> WedgeProduct<$rht<T>> for $lht<T>
         where
+            $lht<T>: Copy,
             $rht<T>: WedgeProduct<$lht<T>>,
         {
             type Output = <$rht<T> as WedgeProduct<$lht<T>>>::Output;
 
-            fn wedge(self, rhs: $rht<T>) -> Self::Output {
-                rhs.wedge(self)
+            fn wedge(&self, rhs: $rht<T>) -> Self::Output {
+                rhs.wedge(*self)
             }
         }
     };
@@ -117,12 +118,13 @@ macro_rules! reverse_antiwedge {
     ($lht:ident, $rht:ident) => {
         impl<T> AntiwedgeProduct<$rht<T>> for $lht<T>
         where
+            $lht<T>: Copy,
             $rht<T>: AntiwedgeProduct<$lht<T>>,
         {
             type Output = <$rht<T> as AntiwedgeProduct<$lht<T>>>::Output;
 
-            fn antiwedge(self, rhs: $rht<T>) -> Self::Output {
-                rhs.antiwedge(self)
+            fn antiwedge(&self, rhs: $rht<T>) -> Self::Output {
+                rhs.antiwedge(*self)
             }
         }
     };
@@ -138,7 +140,7 @@ macro_rules! reverse_antiwedge_anticommutative {
         {
             type Output = <$rht<T> as AntiwedgeProduct<$lht<T>>>::Output;
 
-            fn antiwedge(self, rhs: $rht<T>) -> Self::Output {
+            fn antiwedge(&self, rhs: $rht<T>) -> Self::Output {
                 rhs.antiwedge(-self)
             }
         }

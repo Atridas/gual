@@ -152,7 +152,7 @@ where
 {
     type Output = Bivector<T>;
 
-    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Vector<T>) -> Self::Output {
         Bivector {
             wx: self.w * rhs.x - self.x * rhs.w,
             wy: self.w * rhs.y - self.y * rhs.w,
@@ -174,7 +174,7 @@ where
 {
     type Output = Trivector<T>;
 
-    fn wedge(self, rhs: Bivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Bivector<T>) -> Self::Output {
         Trivector {
             wyz: self.w * rhs.yz - self.y * rhs.wz + self.z * rhs.wy,
             wzx: self.w * rhs.zx - self.z * rhs.wx + self.x * rhs.wz,
@@ -194,7 +194,7 @@ where
 {
     type Output = Quadvector<T>;
 
-    fn wedge(self, rhs: Trivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Trivector<T>) -> Self::Output {
         Quadvector {
             xyzw: self.x * rhs.wyz + self.y * rhs.wzx + self.z * rhs.wxy + self.w * rhs.zyx,
         }
@@ -211,8 +211,8 @@ where
 {
     type Output = Quadvector<T>;
 
-    fn wedge(self, rhs: Vector<T>) -> Self::Output {
-        -rhs.wedge(self)
+    fn wedge(&self, rhs: Vector<T>) -> Self::Output {
+        -rhs.wedge(*self)
     }
 }
 
@@ -224,7 +224,7 @@ where
 {
     type Output = Scalar<T>;
 
-    fn antiwedge(self, rhs: Trivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Trivector<T>) -> Self::Output {
         Scalar(self.x * rhs.wyz + self.y * rhs.wzx + self.z * rhs.wxy + self.w * rhs.zyx)
     }
 }
@@ -238,8 +238,8 @@ where
 {
     type Output = Scalar<T>;
 
-    fn antiwedge(self, rhs: Vector<T>) -> Self::Output {
-        -rhs.antiwedge(self)
+    fn antiwedge(&self, rhs: Vector<T>) -> Self::Output {
+        -rhs.antiwedge(*self)
     }
 }
 
@@ -250,7 +250,7 @@ where
 {
     type Output = Vector<T>;
 
-    fn antiwedge(self, rhs: Quadvector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Quadvector<T>) -> Self::Output {
         Vector {
             x: self.x * rhs.xyzw,
             y: self.y * rhs.xyzw,

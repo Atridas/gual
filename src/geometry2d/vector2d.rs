@@ -120,7 +120,7 @@ where
 {
     type Output = Bivector<T>;
 
-    fn wedge(self, rhs: Vector<T>) -> Self::Output {
+    fn wedge(&self, rhs: Vector<T>) -> Self::Output {
         Bivector {
             xy: self.x * rhs.y - self.y * rhs.x,
         }
@@ -136,7 +136,7 @@ where
 {
     type Output = Scalar<T>;
 
-    fn antiwedge(self, rhs: Vector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Vector<T>) -> Self::Output {
         Scalar(self.x * rhs.y - self.y * rhs.x)
     }
 }
@@ -150,7 +150,7 @@ where
 {
     type Output = Vector<T>;
 
-    fn antiwedge(self, rhs: Bivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: Bivector<T>) -> Self::Output {
         Vector {
             x: self.x * rhs.xy,
             y: self.y * rhs.xy,
