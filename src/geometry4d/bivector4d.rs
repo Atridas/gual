@@ -115,7 +115,7 @@ where
 {
     pub fn is_2_blade(&self) -> bool {
         let dot = (self.wx * self.yz + self.wy * self.zx + self.wz * self.xy).abs();
-        dot.is_small()
+        dot.is_near_zero()
     }
 }
 

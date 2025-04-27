@@ -6,8 +6,10 @@ use crate::geometry4d as d4;
 
 pub use d4::Bivector as HomogeneusLine;
 pub use d4::Trivector as HomogeneusPlane;
-pub use d4::Vector as Point;
+pub use d4::Vector as HomogeneusPoint;
 use num::Float;
+
+mod join;
 
 pub struct DirVector<T>(d3::Vector<T>);
 
@@ -31,30 +33,31 @@ pub enum NormalizedPlane<T> {
     Horizon,
 }
 
-impl<T> Normalizable for Point<T>
+impl<T> Normalizable for HomogeneusPoint<T>
 where
     T: Float,
     T: Epsilon,
 {
     type Output = NormalizedPoint<T>;
     fn normalize(self) -> Option<Self::Output> {
-        if self.w.is_small() {
-            let len = self.x * self.x + self.y * self.y + self.z * self.z;
-            if len.is_small() {
+        if self.w.is_near_zero() {
+            let len2 = self.x * self.x + self.y * self.y + self.z * self.z;
+            if len2.is_near_zero() {
                 None
             } else {
-                let len = len.sqrt();
+                let invlen = len2.sqrt().recip();
                 Some(NormalizedPoint::DirVector(DirVector(Vector {
-                    x: self.x / len,
-                    y: self.y / len,
-                    z: self.z / len,
+                    x: self.x * invlen,
+                    y: self.y * invlen,
+                    z: self.z * invlen,
                 })))
             }
         } else {
+            let w = self.w.recip();
             Some(NormalizedPoint::Point(d3::Point(Vector {
-                x: self.x / self.w,
-                y: self.y / self.w,
-                z: self.z / self.w,
+                x: self.x * w,
+                y: self.y * w,
+                z: self.z * w,
             })))
         }
     }
@@ -68,28 +71,28 @@ where
     type Output = NormalizedLine<T>;
     fn normalize(self) -> Option<Self::Output> {
         if self.is_2_blade() {
-            let len = self.wx * self.wx + self.wy * self.wy + self.wz * self.wz;
-            if len.is_small() {
-                let len = self.yz * self.yz + self.zx * self.zx + self.xy * self.xy;
-                if len.is_small() {
+            let len2 = self.wx * self.wx + self.wy * self.wy + self.wz * self.wz;
+            if len2.is_near_zero() {
+                let len2 = self.yz * self.yz + self.zx * self.zx + self.xy * self.xy;
+                if len2.is_near_zero() {
                     None
                 } else {
-                    let len = len.sqrt();
+                    let invlen = len2.sqrt().recip();
                     Some(NormalizedLine::HorizonLine(HorizonLine(d3::Bivector {
-                        yz: self.yz / len,
-                        zx: self.zx / len,
-                        xy: self.xy / len,
+                        yz: self.yz * invlen,
+                        zx: self.zx * invlen,
+                        xy: self.xy * invlen,
                     })))
                 }
             } else {
-                let len = len.sqrt();
+                let invlen = len2.sqrt().recip();
                 Some(NormalizedLine::Line(Line(d4::Bivector {
-                    wx: self.wx / len,
-                    wy: self.wy / len,
-                    wz: self.wz / len,
-                    yz: self.yz / len,
-                    zx: self.zx / len,
-                    xy: self.xy / len,
+                    wx: self.wx * invlen,
+                    wy: self.wy * invlen,
+                    wz: self.wz * invlen,
+                    yz: self.yz * invlen,
+                    zx: self.zx * invlen,
+                    xy: self.xy * invlen,
                 })))
             }
         } else {
@@ -105,20 +108,20 @@ where
 {
     type Output = NormalizedPlane<T>;
     fn normalize(self) -> Option<Self::Output> {
-        let len = self.wyz * self.wyz + self.wzx * self.wzx + self.wxy * self.wxy;
-        if len.is_small() {
-            if self.zyx.is_small() {
+        let len2 = self.wyz * self.wyz + self.wzx * self.wzx + self.wxy * self.wxy;
+        if len2.is_near_zero() {
+            if self.zyx.is_near_zero() {
                 Some(NormalizedPlane::Horizon)
             } else {
                 None
             }
         } else {
-            let len = len.sqrt();
+            let invlen = len2.sqrt().recip();
             Some(NormalizedPlane::Plane(Plane(d4::Trivector {
-                wyz: self.wyz / len,
-                wzx: self.wzx / len,
-                wxy: self.wxy / len,
-                zyx: self.zyx / len,
+                wyz: self.wyz * invlen,
+                wzx: self.wzx * invlen,
+                wxy: self.wxy * invlen,
+                zyx: self.zyx * invlen,
             })))
         }
     }

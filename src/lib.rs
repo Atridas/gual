@@ -8,7 +8,7 @@ pub mod homogeneous3d;
 
 pub trait Epsilon {
     fn eps() -> Self;
-    fn is_small(&self) -> bool;
+    fn is_near_zero(&self) -> bool;
 }
 
 pub trait Antiscalar {
@@ -56,6 +56,16 @@ pub trait AntiwedgeProduct<Rhs> {
 pub trait Normalizable {
     type Output;
     fn normalize(self) -> Option<Self::Output>;
+}
+
+pub trait Join<Rhs> {
+    type Output;
+    fn join(self, rhs: Rhs) -> Self::Output;
+}
+
+pub trait Meet<Rhs> {
+    type Output;
+    fn meet(self, rhs: Rhs) -> Self::Output;
 }
 
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
@@ -142,7 +152,7 @@ impl<T: Float + FromPrimitive + Ord> Epsilon for T {
     }
 
     #[inline(always)]
-    fn is_small(&self) -> bool {
+    fn is_near_zero(&self) -> bool {
         self.abs() < Self::eps()
     }
 }
