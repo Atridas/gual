@@ -3,7 +3,8 @@ use std::ops::Mul;
 use std::ops::Neg;
 use std::ops::Sub;
 
-use num::Float;
+use num::Zero;
+use num::traits::ConstZero;
 use num::zero;
 
 use crate::Epsilon;
@@ -76,8 +77,9 @@ where
 
 impl<T> Join<d3::Point<T>> for d3::Point<T>
 where
-    T: Float,
-    T: Epsilon,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
 {
     type Output = HomogeneusLine<T>;
     fn join(&self, rhs: d3::Point<T>) -> Self::Output {
@@ -95,20 +97,80 @@ where
     }
 }
 
+impl<T> Join<d3::Vector<T>> for d3::Point<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+{
+    type Output = HomogeneusLine<T>;
+    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
+        HomogeneusLine {
+            wx: rhs.x,
+            wy: rhs.y,
+            wz: rhs.z,
+            yz: self.0.y * rhs.z - self.0.z * rhs.y,
+            zx: self.0.z * rhs.x - self.0.x * rhs.z,
+            xy: self.0.x * rhs.y - self.0.y * rhs.x,
+        }
+    }
+}
+
+impl<T> Join<d3::Point<T>> for d3::Vector<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = HomogeneusLine<T>;
+    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
+        HomogeneusLine {
+            wx: -self.x,
+            wy: -self.y,
+            wz: -self.z,
+            yz: self.y * rhs.0.z - self.z * rhs.0.y,
+            zx: self.z * rhs.0.x - self.x * rhs.0.z,
+            xy: self.x * rhs.0.y - self.y * rhs.0.x,
+        }
+    }
+}
+
+impl<T> Join<d3::Vector<T>> for d3::Vector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Mul<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = HomogeneusLine<T>;
+    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
+        HomogeneusLine {
+            wx: T::ZERO,
+            wy: T::ZERO,
+            wz: T::ZERO,
+            yz: self.y * rhs.z - self.z * rhs.y,
+            zx: self.z * rhs.x - self.x * rhs.z,
+            xy: self.x * rhs.y - self.y * rhs.x,
+        }
+    }
+}
+
 impl<T> Join<Line<T>> for d3::Point<T>
 where
-    T: Float,
-    T: Epsilon,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
     fn join(&self, rhs: Line<T>) -> Self::Output {
-        let yz = rhs.0.yz + self.0.z * rhs.0.wy - self.0.y * rhs.0.wz;
-        let zx = rhs.0.zx + self.0.x * rhs.0.wz - self.0.z * rhs.0.wx;
-        let xy = rhs.0.xy + self.0.y * rhs.0.wx - self.0.x * rhs.0.wy;
         HomogeneusPlane {
-            wyz: yz,
-            wzx: zx,
-            wxy: xy,
+            wyz: rhs.0.yz + self.0.z * rhs.0.wy - self.0.y * rhs.0.wz,
+            wzx: rhs.0.zx + self.0.x * rhs.0.wz - self.0.z * rhs.0.wx,
+            wxy: rhs.0.xy + self.0.y * rhs.0.wx - self.0.x * rhs.0.wy,
             zyx: -(self.0.x * rhs.0.yz + self.0.y * rhs.0.zx + self.0.z * rhs.0.xy),
         }
     }
@@ -117,8 +179,11 @@ where
 impl<T> Join<d3::Point<T>> for Line<T>
 where
     Self: Copy,
-    T: Float,
-    T: Epsilon,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
     fn join(&self, rhs: d3::Point<T>) -> Self::Output {
@@ -126,10 +191,47 @@ where
     }
 }
 
+impl<T> Join<Line<T>> for d3::Vector<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = HomogeneusPlane<T>;
+    fn join(&self, rhs: Line<T>) -> Self::Output {
+        HomogeneusPlane {
+            wyz: self.z * rhs.0.wy - self.y * rhs.0.wz,
+            wzx: self.x * rhs.0.wz - self.z * rhs.0.wx,
+            wxy: self.y * rhs.0.wx - self.x * rhs.0.wy,
+            zyx: -(self.x * rhs.0.yz + self.y * rhs.0.zx + self.z * rhs.0.xy),
+        }
+    }
+}
+
+impl<T> Join<d3::Vector<T>> for Line<T>
+where
+    Self: Copy,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+{
+    type Output = HomogeneusPlane<T>;
+    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
+        rhs.join(*self)
+    }
+}
+
 impl<T> d3::Point<T>
 where
-    T: Float,
-    T: Epsilon,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
 {
     pub fn join(p: Self, q: Self, r: Self) -> HomogeneusPlane<T> {
         let pq = q - p;
@@ -151,7 +253,11 @@ pub enum Winding {
 
 impl<T> HomogeneusLine<T>
 where
-    T: Float,
+    T: Copy,
+    T: Mul<T, Output = T>,
+    T: Add<T, Output = T>,
+    T: Ord,
+    T: Zero,
     T: Epsilon,
 {
     pub fn get_winding(&self, rhs: HomogeneusLine<T>) -> Option<Winding> {

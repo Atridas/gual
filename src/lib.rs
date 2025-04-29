@@ -68,6 +68,21 @@ pub trait Meet<Rhs> {
     fn meet(&self, rhs: Rhs) -> Self::Output;
 }
 
+pub trait BulkAndWeight {
+    type Bulk;
+    type Weight;
+
+    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self;
+    fn bulk(&self) -> Self::Bulk;
+    fn weight(&self) -> Self::Weight;
+}
+
+pub trait Attitude {
+    type Output;
+
+    fn attitude(&self) -> Self::Output;
+}
+
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
 where
     Lhs: KVector,
