@@ -124,6 +124,12 @@ pub trait Attitude {
     fn attitude(&self) -> Self::Output;
 }
 
+pub trait Distance<Rhs: Dot>: Dot<Scalar = Rhs::Scalar, Antiscalar = Rhs::Antiscalar> {
+    type T;
+    fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
+    fn distance(&self, rhs: &Rhs) -> Self::T;
+}
+
 impl<T> Attitude for T
 where
     T: BulkAndWeight,
