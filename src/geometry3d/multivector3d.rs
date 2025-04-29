@@ -15,6 +15,7 @@ where
     T: Add<T, Output = T>,
     T: Sub<T, Output = T>,
     T: Mul<T, Output = T>,
+    Scalar<T>: crate::Scalar,
     Trivector<T>: Antiscalar,
 {
     type Scalar = Scalar<T>;

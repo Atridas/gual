@@ -1,13 +1,3 @@
-// pub trait Bulk {
-//     type Output;
-//     fn bulk(&self) -> Self::Output;
-// }
-
-// pub trait Weight {
-//     type Output;
-//     fn weight(&self) -> Self::Output;
-// }
-
 use std::ops::{Div, Neg};
 
 use num::{
@@ -15,7 +5,7 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Attitude, BulkAndWeight};
+use crate::BulkAndWeight;
 
 use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint};
 use crate::geometry3d as d3;
@@ -42,14 +32,6 @@ impl<T: Copy> BulkAndWeight for HomogeneusPoint<T> {
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Scalar(self.w)
-    }
-}
-
-impl<T: Copy> Attitude for HomogeneusPoint<T> {
-    type Output = d3::Scalar<T>;
-
-    fn attitude(&self) -> Self::Output {
         d3::Scalar(self.w)
     }
 }
@@ -84,14 +66,6 @@ where
     }
 }
 
-impl<T: ConstOne> Attitude for d3::Point<T> {
-    type Output = d3::Scalar<T>;
-
-    fn attitude(&self) -> Self::Output {
-        d3::Scalar::ONE
-    }
-}
-
 impl<T> BulkAndWeight for d3::Vector<T>
 where
     T: Copy,
@@ -119,14 +93,6 @@ where
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Scalar::ZERO
-    }
-}
-
-impl<T: ConstZero> Attitude for d3::Vector<T> {
-    type Output = d3::Scalar<T>;
-
-    fn attitude(&self) -> Self::Output {
         d3::Scalar::ZERO
     }
 }
@@ -163,18 +129,6 @@ impl<T: Copy> BulkAndWeight for HomogeneusLine<T> {
     }
 }
 
-impl<T: Copy> Attitude for HomogeneusLine<T> {
-    type Output = d3::Vector<T>;
-
-    fn attitude(&self) -> Self::Output {
-        d3::Vector {
-            x: self.wx,
-            y: self.wy,
-            z: self.wz,
-        }
-    }
-}
-
 impl<T> BulkAndWeight for HomogeneusPlane<T>
 where
     T: Copy,
@@ -197,18 +151,6 @@ where
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Bivector {
-            yz: self.wyz,
-            zx: self.wzx,
-            xy: self.wxy,
-        }
-    }
-}
-
-impl<T: Copy> Attitude for HomogeneusPlane<T> {
-    type Output = d3::Bivector<T>;
-
-    fn attitude(&self) -> Self::Output {
         d3::Bivector {
             yz: self.wyz,
             zx: self.wzx,

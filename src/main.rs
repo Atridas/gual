@@ -4,16 +4,16 @@ use num::zero;
 fn main() {
     let a = g2d::Multivector {
         s: zero(),
-        v: g2d::Vector { x: 1, y: 2 },
+        v: g2d::Vector { x: 1.0, y: 2.0 },
         a: zero(),
     };
     let b = g2d::Multivector {
         s: zero(),
-        v: g2d::Vector { x: 3, y: 4 },
+        v: g2d::Vector { x: 3.0, y: 4.0 },
         a: zero(),
     };
 
-    println!("volume: {:?}", g2d::Multivector::<i32>::UNIT_VOLUME);
+    println!("volume: {:?}", g2d::Multivector::<f32>::UNIT_VOLUME);
     println!("a: {:?}", a);
     println!("b: {:?}", b);
     println!("lc(a): {:?}", a.left_complement());
@@ -24,11 +24,11 @@ fn main() {
     println!("a v b: {:?}", a.antiwedge(b));
     println!(
         "a v I: {:?}",
-        a.vector().antiwedge(g2d::Multivector::<i32>::UNIT_VOLUME)
+        a.vector().antiwedge(g2d::Multivector::<f32>::UNIT_VOLUME)
     );
     println!(
         "a v I: {:?}",
-        antiwedge_reference(a.vector(), g2d::Multivector::<i32>::UNIT_VOLUME)
+        antiwedge_reference(a.vector(), g2d::Multivector::<f32>::UNIT_VOLUME)
     );
     println!("a ^ rc(b): {:?}", a.wedge(b.right_complement()));
     println!("lc(a) ^ b: {:?}", a.left_complement().wedge(b));

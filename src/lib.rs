@@ -11,12 +11,17 @@ pub trait Epsilon {
     fn is_near_zero(&self) -> bool;
 }
 
+pub trait Scalar {
+    fn sqrt(&self) -> Self;
+}
+
 pub trait Antiscalar {
     const UNIT_VOLUME: Self;
+    fn sqrt(&self) -> Self;
 }
 
 pub trait VectorSpace {
-    type Scalar;
+    type Scalar: Scalar;
     type Vector;
     type Antivector;
     type Antiscalar: Antiscalar;
@@ -68,6 +73,18 @@ pub trait Meet<Rhs> {
     fn meet(&self, rhs: Rhs) -> Self::Output;
 }
 
+pub trait Dot {
+    type Scalar;
+    type Antiscalar;
+
+    fn dot(&self, rhs: &Self) -> Self::Scalar;
+    fn antidot(&self, rhs: &Self) -> Self::Antiscalar;
+
+    fn geometric_dot(&self, rhs: &Self) -> (Self::Scalar, Self::Antiscalar) {
+        (self.dot(rhs), self.antidot(rhs))
+    }
+}
+
 pub trait BulkAndWeight {
     type Bulk;
     type Weight;
@@ -77,10 +94,45 @@ pub trait BulkAndWeight {
     fn weight(&self) -> Self::Weight;
 }
 
+pub trait Norm: Dot {
+    fn bulk_norm(&self) -> Self::Scalar
+    where
+        Self::Scalar: Scalar,
+    {
+        self.dot(self).sqrt()
+    }
+
+    fn weight_norm(&self) -> Self::Antiscalar
+    where
+        Self::Antiscalar: Antiscalar,
+    {
+        self.antidot(self).sqrt()
+    }
+
+    fn geometric_norm(&self) -> (Self::Scalar, Self::Antiscalar)
+    where
+        Self::Scalar: Scalar,
+        Self::Antiscalar: Antiscalar,
+    {
+        (self.bulk_norm(), self.weight_norm())
+    }
+}
+
 pub trait Attitude {
     type Output;
 
     fn attitude(&self) -> Self::Output;
+}
+
+impl<T> Attitude for T
+where
+    T: BulkAndWeight,
+{
+    type Output = <T as BulkAndWeight>::Weight;
+
+    fn attitude(&self) -> Self::Output {
+        self.weight()
+    }
 }
 
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector

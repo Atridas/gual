@@ -1,7 +1,7 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{
-    Zero,
+    Float, Zero,
     traits::{ConstOne, ConstZero},
 };
 
@@ -31,10 +31,15 @@ where
 
 impl<T> Antiscalar for Bivector<T>
 where
+    T: Float,
     T: ConstOne,
     Scalar<T>: Mul<Output = Scalar<T>>,
 {
     const UNIT_VOLUME: Self = Bivector { xy: T::ONE };
+
+    fn sqrt(&self) -> Self {
+        Bivector { xy: self.xy.sqrt() }
+    }
 }
 
 impl<T> Bivector<T>

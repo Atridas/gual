@@ -1,7 +1,7 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{
-    Zero,
+    Float, Zero,
     traits::{ConstOne, ConstZero},
 };
 
@@ -32,9 +32,16 @@ where
 impl<T> Antiscalar for Trivector<T>
 where
     T: ConstOne,
+    T: Float,
     Scalar<T>: Mul<Output = Scalar<T>>,
 {
     const UNIT_VOLUME: Self = Trivector { xyz: T::ONE };
+
+    fn sqrt(&self) -> Self {
+        Trivector {
+            xyz: self.xyz.sqrt(),
+        }
+    }
 }
 
 impl<T> Trivector<T>

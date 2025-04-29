@@ -1,7 +1,7 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
 use num::{
-    One, Zero,
+    Float, One, Zero,
     traits::{ConstOne, ConstZero},
 };
 
@@ -46,6 +46,12 @@ where
     T: ConstOne,
 {
     const ONE: Self = Scalar(T::ONE);
+}
+
+impl<T: Float> crate::Scalar for Scalar<T> {
+    fn sqrt(&self) -> Self {
+        Scalar(self.0.sqrt())
+    }
 }
 
 impl<T> Add for Scalar<T>

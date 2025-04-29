@@ -172,7 +172,7 @@ impl Iterator for QuadvectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i = Quadvector::<i32>::UNIT_VOLUME;
+    let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let s = Scalar::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
@@ -181,7 +181,7 @@ fn complement_scalar() {
 
 #[test]
 fn complement_vector() {
-    let i = Quadvector::<i32>::UNIT_VOLUME;
+    let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let v = Vector::X;
     assert_eq!(v.wedge(v.right_complement()), i);
@@ -202,7 +202,7 @@ fn complement_vector() {
 
 #[test]
 fn complement_bivector() {
-    let i = Quadvector::<i32>::UNIT_VOLUME;
+    let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let b = Bivector::WX;
     assert_eq!(b.wedge(b.right_complement()), i);
@@ -231,7 +231,7 @@ fn complement_bivector() {
 
 #[test]
 fn complement_trivector() {
-    let i = Quadvector::<i32>::UNIT_VOLUME;
+    let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let t = Trivector::WYZ;
     assert_eq!(t.wedge(t.right_complement()), i);
@@ -252,7 +252,7 @@ fn complement_trivector() {
 
 #[test]
 fn complement_quadvector() {
-    let i = Quadvector::<i32>::UNIT_VOLUME;
+    let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let q = Quadvector::XYZW;
     assert_eq!(q.wedge(q.right_complement()), i);

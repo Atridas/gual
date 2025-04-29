@@ -85,7 +85,7 @@ impl Iterator for BivectorIt {
 
 #[test]
 fn complement_scalar() {
-    let i = Bivector::<i32>::UNIT_VOLUME;
+    let i = Bivector::<f32>::UNIT_VOLUME;
 
     let s = Scalar::ONE;
     assert_eq!(s.wedge(s.right_complement()), i);
@@ -94,7 +94,7 @@ fn complement_scalar() {
 
 #[test]
 fn complement_vector() {
-    let i = Bivector::<i32>::UNIT_VOLUME;
+    let i = Bivector::<f32>::UNIT_VOLUME;
 
     let v = Vector::X;
     assert_eq!(v.wedge(v.right_complement()), i);
@@ -107,7 +107,7 @@ fn complement_vector() {
 
 #[test]
 fn complement_bivector() {
-    let i = Bivector::<i32>::UNIT_VOLUME;
+    let i = Bivector::<f32>::UNIT_VOLUME;
 
     let b = Bivector::XY;
     assert_eq!(b.wedge(b.right_complement()), i);
