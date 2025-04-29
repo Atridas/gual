@@ -118,6 +118,22 @@ pub trait Norm: Dot {
     }
 }
 
+pub trait Dual {
+    type AntiKVector;
+
+    fn right_bulk_dual(&self) -> Self::AntiKVector;
+    fn left_bulk_dual(&self) -> Self::AntiKVector;
+    fn right_weight_dual(&self) -> Self::AntiKVector;
+    fn left_weight_dual(&self) -> Self::AntiKVector;
+
+    fn bulk_dual(&self) -> Self::AntiKVector {
+        self.right_bulk_dual()
+    }
+    fn weight_dual(&self) -> Self::AntiKVector {
+        self.right_weight_dual()
+    }
+}
+
 pub trait Attitude {
     type Output;
 

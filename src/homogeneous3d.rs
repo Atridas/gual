@@ -13,6 +13,7 @@ mod bulk_and_weight;
 mod conversions;
 mod distance;
 mod dot;
+mod dual;
 mod join;
 mod meet;
 mod norm;
