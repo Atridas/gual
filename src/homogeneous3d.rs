@@ -10,6 +10,7 @@ pub use d4::Vector as HomogeneusPoint;
 use num::Float;
 
 mod join;
+mod meet;
 
 pub struct DirVector<T>(d3::Vector<T>);
 
