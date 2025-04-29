@@ -134,6 +134,14 @@ pub trait Dual {
     }
 }
 
+pub trait Contraction<Rhs> {
+    type BulkOutput;
+    type WeightOutput;
+
+    fn bulk_contraction(&self, rhs: &Rhs) -> Self::BulkOutput;
+    fn weight_contraction(&self, rhs: &Rhs) -> Self::WeightOutput;
+}
+
 pub trait Attitude {
     type Output;
 
@@ -144,6 +152,23 @@ pub trait Distance<Rhs: Dot>: Dot<Scalar = Rhs::Scalar, Antiscalar = Rhs::Antisc
     type T;
     fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
     fn distance(&self, rhs: &Rhs) -> Self::T;
+}
+
+impl<T> Contraction<T> for T
+where
+    T: Dot,
+    <T as Dot>::Antiscalar: KVector<AntiKVector = <T as Dot>::Scalar>,
+{
+    type BulkOutput = <T as Dot>::Scalar;
+    type WeightOutput = <T as Dot>::Scalar;
+
+    fn bulk_contraction(&self, rhs: &T) -> Self::BulkOutput {
+        self.dot(rhs)
+    }
+
+    fn weight_contraction(&self, rhs: &T) -> Self::WeightOutput {
+        self.antidot(rhs).right_complement()
+    }
 }
 
 impl<T> Attitude for T
@@ -167,6 +192,28 @@ where
     lhs.left_complement()
         .wedge(rhs.left_complement())
         .right_complement()
+}
+
+pub fn reference_bulk_contraction<Lhs, Rhs>(
+    lhs: Lhs,
+    rhs: Rhs,
+) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+where
+    Rhs: Dual,
+    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
+{
+    lhs.antiwedge(rhs.bulk_dual())
+}
+
+pub fn reference_weight_contraction<Lhs, Rhs>(
+    lhs: Lhs,
+    rhs: Rhs,
+) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+where
+    Rhs: Dual,
+    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
+{
+    lhs.antiwedge(rhs.weight_dual())
 }
 
 #[macro_export]

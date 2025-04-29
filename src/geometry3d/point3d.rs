@@ -7,15 +7,21 @@ use super::{Point, Vector};
 impl<T> Point<T>
 where
     T: ConstZero,
-    T: ConstOne,
 {
     pub const ZERO: Self = Point(Vector::ZERO);
-    pub const X: Self = Point(Vector::X);
-    pub const Y: Self = Point(Vector::Y);
-    pub const Z: Self = Point(Vector::X);
     pub fn zero() -> Self {
         Self::ZERO
     }
+}
+
+impl<T> Point<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = Point(Vector::X);
+    pub const Y: Self = Point(Vector::Y);
+    pub const Z: Self = Point(Vector::X);
 }
 
 impl<T> Add<Vector<T>> for Point<T>

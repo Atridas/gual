@@ -10,6 +10,7 @@ pub use d4::Vector as HomogeneusPoint;
 use num::Float;
 
 mod bulk_and_weight;
+mod contraction;
 mod conversions;
 mod distance;
 mod dot;
