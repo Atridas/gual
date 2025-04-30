@@ -132,13 +132,13 @@ impl<T: Copy> BulkAndWeight for HomogeneusLine<T> {
 
 impl<T: Copy> BulkAndWeight for Line<T> {
     type Bulk = d3::Bivector<T>;
-    type Weight = d3::Vector<T>;
+    type Weight = d3::DirVector<T>;
 
     fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
         Self(d4::Bivector {
-            wx: weight.x,
-            wy: weight.y,
-            wz: weight.z,
+            wx: weight.0.x,
+            wy: weight.0.y,
+            wz: weight.0.z,
             yz: bulk.yz,
             zx: bulk.zx,
             xy: bulk.xy,
@@ -154,11 +154,11 @@ impl<T: Copy> BulkAndWeight for Line<T> {
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Vector {
+        d3::DirVector(d3::Vector {
             x: self.0.wx,
             y: self.0.wy,
             z: self.0.wz,
-        }
+        })
     }
 }
 
@@ -228,13 +228,13 @@ where
     T: Neg<Output = T>,
 {
     type Bulk = d3::Trivector<T>;
-    type Weight = d3::Bivector<T>;
+    type Weight = d3::DirBivector<T>;
 
     fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
         Self(d4::Trivector {
-            wyz: weight.yz,
-            wzx: weight.zx,
-            wxy: weight.xy,
+            wyz: weight.0.yz,
+            wzx: weight.0.zx,
+            wxy: weight.0.xy,
             zyx: -bulk.xyz,
         })
     }
@@ -244,10 +244,10 @@ where
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Bivector {
+        d3::DirBivector(d3::Bivector {
             yz: self.0.wyz,
             zx: self.0.wzx,
             xy: self.0.wxy,
-        }
+        })
     }
 }

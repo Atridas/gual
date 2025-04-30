@@ -83,6 +83,16 @@ where
     }
 }
 
+impl<T> Mul<T> for Bivector<T>
+where
+    T: Mul<T, Output = T>,
+{
+    type Output = Bivector<T>;
+    fn mul(self, rhs: T) -> Self::Output {
+        Bivector { xy: self.xy * rhs }
+    }
+}
+
 impl<T: Clone> KVector for Bivector<T> {
     type AntiKVector = Scalar<T>;
 

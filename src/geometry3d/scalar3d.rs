@@ -84,6 +84,16 @@ where
     }
 }
 
+impl<T> Mul<T> for Scalar<T>
+where
+    T: Mul<T, Output = T>,
+{
+    type Output = Scalar<T>;
+    fn mul(self, rhs: T) -> Self::Output {
+        Scalar(self.0 * rhs)
+    }
+}
+
 impl<T: Clone> KVector for Scalar<T> {
     type AntiKVector = Trivector<T>;
 

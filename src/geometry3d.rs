@@ -1,4 +1,6 @@
+mod angle3d;
 mod bivector3d;
+mod direction3d;
 mod multivector3d;
 mod point3d;
 mod scalar3d;
@@ -19,11 +21,17 @@ pub struct Vector<T> {
 pub struct Point<T>(pub Vector<T>);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DirVector<T>(pub(super) Vector<T>);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Bivector<T> {
     pub yz: T,
     pub zx: T,
     pub xy: T,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct DirBivector<T>(pub(super) Bivector<T>);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Trivector<T> {

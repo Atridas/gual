@@ -9,6 +9,7 @@ pub use d4::Trivector as HomogeneusPlane;
 pub use d4::Vector as HomogeneusPoint;
 use num::Float;
 
+mod angle;
 mod bulk_and_weight;
 mod contraction;
 mod conversions;
@@ -19,11 +20,9 @@ mod join;
 mod meet;
 mod norm;
 
-pub struct DirVector<T>(d3::Vector<T>);
-
 pub enum NormalizedPoint<T> {
     Point(d3::Point<T>),
-    DirVector(DirVector<T>),
+    DirVector(d3::DirVector<T>),
 }
 
 pub struct Line<T>(d4::Bivector<T>);
@@ -54,7 +53,7 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(DirVector(Vector {
+                Some(NormalizedPoint::DirVector(d3::DirVector(Vector {
                     x: self.x * invlen,
                     y: self.y * invlen,
                     z: self.z * invlen,

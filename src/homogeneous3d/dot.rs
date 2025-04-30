@@ -132,8 +132,10 @@ where
         d4::Scalar(self.0.yz * rhs.0.yz + self.0.zx * rhs.0.zx + self.0.xy * rhs.0.xy)
     }
 
-    fn antidot(&self, _rhs: &Self) -> Self::Antiscalar {
-        d4::Quadvector { xyzw: T::ONE }
+    fn antidot(&self, rhs: &Self) -> Self::Antiscalar {
+        d4::Quadvector {
+            xyzw: self.0.wx * rhs.0.wx + self.0.wy * rhs.0.wy + self.0.wz * rhs.0.wz,
+        }
     }
 }
 

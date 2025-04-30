@@ -1,8 +1,8 @@
-use num::Float;
+use num::{Float, traits::ConstOne};
 
 use crate::{Antiscalar, Dot, Norm, Scalar};
 
-use super::{HomogeneusPlane, HomogeneusPoint};
+use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint};
 
 use crate::geometry4d as d4;
 
@@ -15,6 +15,13 @@ where
     fn weight_norm(&self) -> d4::Quadvector<T> {
         d4::Quadvector { xyzw: self.w.abs() }
     }
+}
+
+impl<T> Norm for HomogeneusLine<T>
+where
+    T: Float,
+    T: ConstOne,
+{
 }
 
 impl<T> Norm for HomogeneusPlane<T>

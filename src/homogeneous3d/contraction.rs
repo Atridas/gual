@@ -12,7 +12,6 @@ use crate::Epsilon;
 use crate::geometry3d as d3;
 use crate::geometry4d as d4;
 
-use super::DirVector;
 use super::HomogeneusLine;
 use super::HomogeneusPlane;
 use super::HomogeneusPoint;
@@ -213,7 +212,7 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(DirVector(d3::Vector {
+                Some(NormalizedPoint::DirVector(d3::DirVector(d3::Vector {
                     x: x * invlen,
                     y: y * invlen,
                     z: z * invlen,

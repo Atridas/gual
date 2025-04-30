@@ -142,16 +142,31 @@ pub trait Contraction<Rhs> {
     fn weight_contraction(&self, rhs: &Rhs) -> Self::WeightOutput;
 }
 
+pub trait Projection<Rhs> {
+    fn projection(&self, rhs: &Rhs) -> Self;
+    fn rejection(&self, rhs: &Rhs) -> Self;
+}
+
+pub trait Angle<Rhs> {
+    type Scalar;
+    type Antiscalar;
+
+    fn geometric_cosine(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
+    fn cosine(&self, rhs: &Rhs) -> Self::Scalar;
+}
+
 pub trait Attitude {
     type Output;
 
     fn attitude(&self) -> Self::Output;
 }
 
-pub trait Distance<Rhs: Dot>: Dot<Scalar = Rhs::Scalar, Antiscalar = Rhs::Antiscalar> {
-    type T;
+pub trait Distance<Rhs> {
+    type Scalar;
+    type Antiscalar;
+
     fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
-    fn distance(&self, rhs: &Rhs) -> Self::T;
+    fn distance(&self, rhs: &Rhs) -> Self::Scalar;
 }
 
 impl<T> Contraction<T> for T
