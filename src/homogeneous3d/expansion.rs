@@ -886,3 +886,74 @@ where
         }
     }
 }
+
+impl<T> HomogeneusPoint<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    pub fn line_throught_orthogonal_to(&self, plane: &HomogeneusPlane<T>) -> HomogeneusLine<T> {
+        self.weight_expansion(plane)
+    }
+
+    pub fn plane_throught_orthogonal_to(&self, line: &HomogeneusLine<T>) -> HomogeneusPlane<T> {
+        self.weight_expansion(line)
+    }
+}
+
+impl<T> d3::Point<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    pub fn line_throught_orthogonal_to(&self, plane: &Plane<T>) -> Line<T> {
+        Line(HomogeneusLine {
+            wx: -plane.0.wyz,
+            wy: -plane.0.wzx,
+            wz: -plane.0.wxy,
+            yz: self.0.z * plane.0.wzx - self.0.y * plane.0.wxy,
+            zx: self.0.x * plane.0.wxy - self.0.z * plane.0.wyz,
+            xy: self.0.y * plane.0.wyz - self.0.x * plane.0.wzx,
+        })
+    }
+
+    pub fn plane_throught_orthogonal_to(&self, line: &Line<T>) -> Plane<T> {
+        Plane(d4::Trivector {
+            wyz: -line.0.wx,
+            wzx: -line.0.wy,
+            wxy: -line.0.wz,
+            zyx: self.0.x * line.0.wx + self.0.y * line.0.wy + self.0.z * line.0.wz,
+        })
+    }
+}
+
+impl<T> HomogeneusLine<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    pub fn plane_throught_orthogonal_to(&self, line: &HomogeneusPlane<T>) -> HomogeneusPlane<T> {
+        self.weight_expansion(line)
+    }
+}
+
+impl<T> Line<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Float,
+    T: Epsilon,
+{
+    pub fn plane_throught_orthogonal_to(&self, line: &Plane<T>) -> Option<Plane<T>> {
+        self.weight_expansion(line)
+    }
+}
