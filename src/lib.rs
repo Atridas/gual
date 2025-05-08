@@ -150,33 +150,6 @@ pub trait Expansion<Rhs> {
     fn weight_expansion(&self, rhs: &Rhs) -> Self::WeightOutput;
 }
 
-pub trait Projection<Rhs> {
-    fn projection(&self, rhs: &Rhs) -> Self;
-    fn rejection(&self, rhs: &Rhs) -> Self;
-}
-
-pub trait Angle<Rhs> {
-    type Scalar;
-    type Antiscalar;
-
-    fn geometric_cosine(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
-    fn cosine(&self, rhs: &Rhs) -> Self::Scalar;
-}
-
-pub trait Attitude {
-    type Output;
-
-    fn attitude(&self) -> Self::Output;
-}
-
-pub trait Distance<Rhs> {
-    type Scalar;
-    type Antiscalar;
-
-    fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
-    fn distance(&self, rhs: &Rhs) -> Self::Scalar;
-}
-
 impl<T> Contraction<T> for T
 where
     T: Dot,
@@ -209,6 +182,33 @@ where
     fn weight_expansion(&self, rhs: &T) -> Self::WeightOutput {
         self.antidot(rhs)
     }
+}
+
+pub trait OrthogonalProjection<Rhs> {
+    type Output;
+    fn orthogonal_projection(&self, rhs: &Rhs) -> Self::Output;
+}
+
+pub trait Angle<Rhs> {
+    type Scalar;
+    type Antiscalar;
+
+    fn geometric_cosine(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
+    fn cosine(&self, rhs: &Rhs) -> Self::Scalar;
+}
+
+pub trait Attitude {
+    type Output;
+
+    fn attitude(&self) -> Self::Output;
+}
+
+pub trait Distance<Rhs> {
+    type Scalar;
+    type Antiscalar;
+
+    fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
+    fn distance(&self, rhs: &Rhs) -> Self::Scalar;
 }
 
 impl<T> Attitude for T

@@ -20,6 +20,7 @@ mod expansion;
 mod join;
 mod meet;
 mod norm;
+mod orthogonal_projection;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NormalizedPoint<T> {
