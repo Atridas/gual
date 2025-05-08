@@ -142,6 +142,14 @@ pub trait Contraction<Rhs> {
     fn weight_contraction(&self, rhs: &Rhs) -> Self::WeightOutput;
 }
 
+pub trait Expansion<Rhs> {
+    type BulkOutput;
+    type WeightOutput;
+
+    fn bulk_expansion(&self, rhs: &Rhs) -> Self::BulkOutput;
+    fn weight_expansion(&self, rhs: &Rhs) -> Self::WeightOutput;
+}
+
 pub trait Projection<Rhs> {
     fn projection(&self, rhs: &Rhs) -> Self;
     fn rejection(&self, rhs: &Rhs) -> Self;
@@ -183,6 +191,23 @@ where
 
     fn weight_contraction(&self, rhs: &T) -> Self::WeightOutput {
         self.antidot(rhs).right_complement()
+    }
+}
+
+impl<T> Expansion<T> for T
+where
+    T: Dot,
+    <T as Dot>::Scalar: KVector<AntiKVector = <T as Dot>::Antiscalar>,
+{
+    type BulkOutput = <T as Dot>::Antiscalar;
+    type WeightOutput = <T as Dot>::Antiscalar;
+
+    fn bulk_expansion(&self, rhs: &T) -> Self::BulkOutput {
+        self.dot(rhs).right_complement()
+    }
+
+    fn weight_expansion(&self, rhs: &T) -> Self::WeightOutput {
+        self.antidot(rhs)
     }
 }
 

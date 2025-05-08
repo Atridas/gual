@@ -16,25 +16,33 @@ mod conversions;
 mod distance;
 mod dot;
 mod dual;
+mod expansion;
 mod join;
 mod meet;
 mod norm;
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NormalizedPoint<T> {
     Point(d3::Point<T>),
     DirVector(d3::DirVector<T>),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Line<T>(d4::Bivector<T>);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct HorizonLine<T>(d3::Bivector<T>);
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NormalizedLine<T> {
     Line(Line<T>),
     HorizonLine(HorizonLine<T>),
 }
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct Plane<T>(d4::Trivector<T>);
 
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NormalizedPlane<T> {
     Plane(Plane<T>),
     Horizon,
