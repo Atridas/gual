@@ -1,8 +1,8 @@
-use std::ops::{Add, Mul, Sub};
+use std::ops::{Add, Mul, Neg, Sub};
 
 use num::Float;
 
-use crate::{Epsilon, OrthogonalProjection};
+use crate::{Epsilon, OrthogonalProjection, Support};
 
 use super::{HomogeneusLine, Line};
 use super::{HomogeneusPlane, HomogeneusPoint, Plane};
@@ -145,5 +145,79 @@ where
                     * invlen,
             }))
         }
+    }
+}
+
+impl<T> Support for HomogeneusLine<T>
+where
+    T: Copy,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Point = HomogeneusPoint<T>;
+
+    fn support(&self) -> Self::Point {
+        HomogeneusPoint {
+            x: self.wy * self.xy - self.wz * self.zx,
+            y: self.wz * self.yz - self.wx * self.xy,
+            z: self.wx * self.zx - self.wy * self.yz,
+            w: self.wx * self.wx + self.wy * self.wy + self.wz * self.wz,
+        }
+    }
+}
+
+impl<T> Support for Line<T>
+where
+    T: Copy,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Point = d3::Point<T>;
+
+    fn support(&self) -> Self::Point {
+        d3::Point(d3::Vector {
+            x: self.0.wy * self.0.xy - self.0.wz * self.0.zx,
+            y: self.0.wz * self.0.yz - self.0.wx * self.0.xy,
+            z: self.0.wx * self.0.zx - self.0.wy * self.0.yz,
+        })
+    }
+}
+
+impl<T> Support for HomogeneusPlane<T>
+where
+    T: Copy,
+    T: Add<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Point = HomogeneusPoint<T>;
+
+    fn support(&self) -> Self::Point {
+        HomogeneusPoint {
+            x: -self.zyx * self.wyz,
+            y: -self.zyx * self.wzx,
+            z: -self.zyx * self.wxy,
+            w: self.wyz * self.wyz + self.wzx * self.wzx + self.wxy * self.wxy,
+        }
+    }
+}
+
+impl<T> Support for Plane<T>
+where
+    T: Copy,
+    T: Add<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Point = d3::Point<T>;
+
+    fn support(&self) -> Self::Point {
+        d3::Point(d3::Vector {
+            x: -self.0.zyx * self.0.wyz,
+            y: -self.0.zyx * self.0.wzx,
+            z: -self.0.zyx * self.0.wxy,
+        })
     }
 }

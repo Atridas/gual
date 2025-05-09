@@ -189,6 +189,11 @@ pub trait OrthogonalProjection<Rhs> {
     fn orthogonal_projection(&self, rhs: &Rhs) -> Self::Output;
 }
 
+pub trait CentralProjection<Rhs> {
+    type Output;
+    fn central_projection(&self, rhs: &Rhs) -> Self::Output;
+}
+
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;
@@ -209,6 +214,12 @@ pub trait Distance<Rhs> {
 
     fn geometric_distance(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
     fn distance(&self, rhs: &Rhs) -> Self::Scalar;
+}
+
+pub trait Support {
+    type Point;
+
+    fn support(&self) -> Self::Point;
 }
 
 impl<T> Attitude for T
