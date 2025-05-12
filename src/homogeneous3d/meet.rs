@@ -16,7 +16,7 @@ where
     d4::Trivector<T>: AntiwedgeProduct<d4::Trivector<T>, Output = d4::Bivector<T>>,
 {
     type Output = HomogeneusLine<T>;
-    fn meet(&self, rhs: HomogeneusPlane<T>) -> Self::Output {
+    fn meet(&self, rhs: &HomogeneusPlane<T>) -> Self::Output {
         self.antiwedge(rhs)
     }
 }
@@ -26,7 +26,7 @@ where
     d4::Trivector<T>: AntiwedgeProduct<d4::Bivector<T>, Output = d4::Vector<T>>,
 {
     type Output = HomogeneusPoint<T>;
-    fn meet(&self, rhs: HomogeneusLine<T>) -> Self::Output {
+    fn meet(&self, rhs: &HomogeneusLine<T>) -> Self::Output {
         self.antiwedge(rhs)
     }
 }
@@ -36,7 +36,7 @@ where
     d4::Bivector<T>: AntiwedgeProduct<d4::Trivector<T>, Output = d4::Vector<T>>,
 {
     type Output = HomogeneusPoint<T>;
-    fn meet(&self, rhs: HomogeneusPlane<T>) -> Self::Output {
+    fn meet(&self, rhs: &HomogeneusPlane<T>) -> Self::Output {
         self.antiwedge(rhs)
     }
 }

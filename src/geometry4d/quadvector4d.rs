@@ -104,7 +104,7 @@ where
 {
     type Output = Quadvector<T>;
 
-    fn antiwedge(&self, rhs: Quadvector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: &Quadvector<T>) -> Self::Output {
         Quadvector {
             xyzw: self.xyzw * rhs.xyzw,
         }

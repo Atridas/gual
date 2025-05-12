@@ -175,8 +175,8 @@ fn complement_scalar() {
     let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let s = Scalar::ONE;
-    assert_eq!(s.wedge(s.right_complement()), i);
-    assert_eq!(s.left_complement().wedge(s), i);
+    assert_eq!(s.wedge(&s.right_complement()), i);
+    assert_eq!(s.left_complement().wedge(&s), i);
 }
 
 #[test]
@@ -184,20 +184,20 @@ fn complement_vector() {
     let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let v = Vector::X;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 
     let v = Vector::Y;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 
     let v = Vector::Z;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 
     let v = Vector::W;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 }
 
 #[test]
@@ -205,28 +205,28 @@ fn complement_bivector() {
     let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let b = Bivector::WX;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 
     let b = Bivector::WY;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 
     let b = Bivector::WZ;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 
     let b = Bivector::YZ;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 
     let b = Bivector::ZX;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 
     let b = Bivector::XY;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 }
 
 #[test]
@@ -234,20 +234,20 @@ fn complement_trivector() {
     let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let t = Trivector::WYZ;
-    assert_eq!(t.wedge(t.right_complement()), i);
-    assert_eq!(t.left_complement().wedge(t), i);
+    assert_eq!(t.wedge(&t.right_complement()), i);
+    assert_eq!(t.left_complement().wedge(&t), i);
 
     let t = Trivector::WZX;
-    assert_eq!(t.wedge(t.right_complement()), i);
-    assert_eq!(t.left_complement().wedge(t), i);
+    assert_eq!(t.wedge(&t.right_complement()), i);
+    assert_eq!(t.left_complement().wedge(&t), i);
 
     let t = Trivector::WXY;
-    assert_eq!(t.wedge(t.right_complement()), i);
-    assert_eq!(t.left_complement().wedge(t), i);
+    assert_eq!(t.wedge(&t.right_complement()), i);
+    assert_eq!(t.left_complement().wedge(&t), i);
 
     let t = Trivector::ZYX;
-    assert_eq!(t.wedge(t.right_complement()), i);
-    assert_eq!(t.left_complement().wedge(t), i);
+    assert_eq!(t.wedge(&t.right_complement()), i);
+    assert_eq!(t.left_complement().wedge(&t), i);
 }
 
 #[test]
@@ -255,8 +255,8 @@ fn complement_quadvector() {
     let i = Quadvector::<f32>::UNIT_VOLUME;
 
     let q = Quadvector::XYZW;
-    assert_eq!(q.wedge(q.right_complement()), i);
-    assert_eq!(q.left_complement().wedge(q), i);
+    assert_eq!(q.wedge(&q.right_complement()), i);
+    assert_eq!(q.left_complement().wedge(&q), i);
 }
 
 #[test]
@@ -264,7 +264,7 @@ fn wedge_scalar_scalar() {
     for s in ScalarIt::new(100) {
         for s2 in ScalarIt::new(100) {
             // scalars always commute
-            assert_eq!(s.wedge(s2), s2.wedge(s));
+            assert_eq!(s.wedge(&s2), s2.wedge(&s));
         }
     }
 }
@@ -274,7 +274,7 @@ fn wedge_scalar_vector() {
     for s in ScalarIt::new(100) {
         for v in VectorIt::new(20) {
             // scalars always commute
-            assert_eq!(s.wedge(v), v.wedge(s));
+            assert_eq!(s.wedge(&v), v.wedge(&s));
         }
     }
 }
@@ -284,7 +284,7 @@ fn wedge_scalar_bivector() {
     for s in ScalarIt::new(100) {
         for b in BivectorIt::new(10) {
             // scalars always commute
-            assert_eq!(s.wedge(b), b.wedge(s));
+            assert_eq!(s.wedge(&b), b.wedge(&s));
         }
     }
 }
@@ -294,7 +294,7 @@ fn wedge_scalar_trivector() {
     for s in ScalarIt::new(100) {
         for t in TrivectorIt::new(20) {
             // scalars always commute
-            assert_eq!(s.wedge(t), t.wedge(s));
+            assert_eq!(s.wedge(&t), t.wedge(&s));
         }
     }
 }
@@ -304,7 +304,7 @@ fn wedge_scalar_quadvector() {
     for s in ScalarIt::new(100) {
         for q in QuadvectorIt::new(100) {
             // scalars always commute
-            assert_eq!(s.wedge(q), q.wedge(s));
+            assert_eq!(s.wedge(&q), q.wedge(&s));
         }
     }
 }
@@ -314,7 +314,7 @@ fn wedge_vector_vector() {
     for v in VectorIt::new(10) {
         for v2 in VectorIt::new(10) {
             // vector - vector anticommute
-            assert_eq!(v.wedge(v2), -v2.wedge(v));
+            assert_eq!(v.wedge(&v2), -v2.wedge(&v));
         }
     }
 }
@@ -324,7 +324,7 @@ fn wedge_vector_bivector() {
     for v in VectorIt::new(7) {
         for b in BivectorIt::new(5) {
             // bivectors always commute
-            assert_eq!(v.wedge(b), b.wedge(v));
+            assert_eq!(v.wedge(&b), b.wedge(&v));
         }
     }
 }
@@ -334,7 +334,7 @@ fn wedge_vector_trivector() {
     for v in VectorIt::new(10) {
         for t in TrivectorIt::new(10) {
             // vectors and trivectors anticommute
-            assert_eq!(v.wedge(t), -t.wedge(v));
+            assert_eq!(v.wedge(&t), -t.wedge(&v));
         }
     }
 }
@@ -344,8 +344,8 @@ fn antiwedge_scalar_quadvector() {
     for s in ScalarIt::new(100) {
         for q in QuadvectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(s.antiwedge(q), antiwedge_reference(s, q));
-            assert_eq!(q.antiwedge(s), antiwedge_reference(q, s));
+            assert_eq!(s.antiwedge(&q), antiwedge_reference(s, q));
+            assert_eq!(q.antiwedge(&s), antiwedge_reference(q, s));
         }
     }
 }
@@ -355,8 +355,8 @@ fn antiwedge_vector_trivector() {
     for v in VectorIt::new(10) {
         for t in TrivectorIt::new(10) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(t), antiwedge_reference(v, t));
-            assert_eq!(t.antiwedge(v), antiwedge_reference(t, v));
+            assert_eq!(v.antiwedge(&t), antiwedge_reference(v, t));
+            assert_eq!(t.antiwedge(&v), antiwedge_reference(t, v));
         }
     }
 }
@@ -366,8 +366,8 @@ fn antiwedge_vector_quadvector() {
     for v in VectorIt::new(10) {
         for q in QuadvectorIt::new(10) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(q), antiwedge_reference(v, q));
-            assert_eq!(q.antiwedge(v), antiwedge_reference(q, v));
+            assert_eq!(v.antiwedge(&q), antiwedge_reference(v, q));
+            assert_eq!(q.antiwedge(&v), antiwedge_reference(q, v));
         }
     }
 }
@@ -377,8 +377,8 @@ fn antiwedge_bivector_bivector() {
     for b1 in BivectorIt::new(5) {
         for b2 in BivectorIt::new(5) {
             // actual implementation matches definition
-            assert_eq!(b1.antiwedge(b2), antiwedge_reference(b1, b2));
-            assert_eq!(b2.antiwedge(b1), antiwedge_reference(b2, b1));
+            assert_eq!(b1.antiwedge(&b2), antiwedge_reference(b1, b2));
+            assert_eq!(b2.antiwedge(&b1), antiwedge_reference(b2, b1));
         }
     }
 }
@@ -388,8 +388,8 @@ fn antiwedge_bivector_trivector() {
     for b in BivectorIt::new(5) {
         for t in TrivectorIt::new(10) {
             // actual implementation matches definition
-            assert_eq!(b.antiwedge(t), antiwedge_reference(b, t));
-            assert_eq!(t.antiwedge(b), antiwedge_reference(t, b));
+            assert_eq!(b.antiwedge(&t), antiwedge_reference(b, t));
+            assert_eq!(t.antiwedge(&b), antiwedge_reference(t, b));
         }
     }
 }
@@ -399,8 +399,8 @@ fn antiwedge_bivector_quadvector() {
     for b in VectorIt::new(20) {
         for q in QuadvectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(b.antiwedge(q), antiwedge_reference(b, q));
-            assert_eq!(q.antiwedge(b), antiwedge_reference(q, b));
+            assert_eq!(b.antiwedge(&q), antiwedge_reference(b, q));
+            assert_eq!(q.antiwedge(&b), antiwedge_reference(q, b));
         }
     }
 }
@@ -410,8 +410,8 @@ fn antiwedge_trivector_quadvector() {
     for q1 in QuadvectorIt::new(100) {
         for q2 in QuadvectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(q1.antiwedge(q2), antiwedge_reference(q1, q2));
-            assert_eq!(q2.antiwedge(q1), antiwedge_reference(q2, q1));
+            assert_eq!(q1.antiwedge(&q2), antiwedge_reference(q1, q2));
+            assert_eq!(q2.antiwedge(&q1), antiwedge_reference(q2, q1));
         }
     }
 }

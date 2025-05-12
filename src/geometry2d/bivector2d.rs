@@ -112,7 +112,7 @@ where
 {
     type Output = Bivector<T>;
 
-    fn antiwedge(&self, rhs: Bivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: &Bivector<T>) -> Self::Output {
         Bivector {
             xy: self.xy * rhs.xy,
         }

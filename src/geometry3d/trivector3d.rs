@@ -116,7 +116,7 @@ where
 {
     type Output = Trivector<T>;
 
-    fn antiwedge(&self, rhs: Trivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: &Trivector<T>) -> Self::Output {
         Trivector {
             xyz: self.xyz * rhs.xyz,
         }

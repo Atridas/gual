@@ -50,12 +50,12 @@ pub trait KVector {
 
 pub trait WedgeProduct<Rhs> {
     type Output;
-    fn wedge(&self, rhs: Rhs) -> Self::Output;
+    fn wedge(&self, rhs: &Rhs) -> Self::Output;
 }
 
 pub trait AntiwedgeProduct<Rhs> {
     type Output;
-    fn antiwedge(&self, rhs: Rhs) -> Self::Output;
+    fn antiwedge(&self, rhs: &Rhs) -> Self::Output;
 }
 
 pub trait Normalizable {
@@ -65,12 +65,12 @@ pub trait Normalizable {
 
 pub trait Join<Rhs> {
     type Output;
-    fn join(&self, rhs: Rhs) -> Self::Output;
+    fn join(&self, rhs: &Rhs) -> Self::Output;
 }
 
 pub trait Meet<Rhs> {
     type Output;
-    fn meet(&self, rhs: Rhs) -> Self::Output;
+    fn meet(&self, rhs: &Rhs) -> Self::Output;
 }
 
 pub trait Dot {
@@ -262,7 +262,7 @@ where
     <<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output: KVector,
 {
     lhs.left_complement()
-        .wedge(rhs.left_complement())
+        .wedge(&rhs.left_complement())
         .right_complement()
 }
 
@@ -274,7 +274,7 @@ where
     Rhs: Dual,
     Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
 {
-    lhs.antiwedge(rhs.bulk_dual())
+    lhs.antiwedge(&rhs.bulk_dual())
 }
 
 pub fn reference_weight_contraction<Lhs, Rhs>(
@@ -285,7 +285,7 @@ where
     Rhs: Dual,
     Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
 {
-    lhs.antiwedge(rhs.weight_dual())
+    lhs.antiwedge(&rhs.weight_dual())
 }
 
 #[macro_export]
@@ -314,8 +314,8 @@ macro_rules! reverse_wedge {
         {
             type Output = <$rht<T> as WedgeProduct<$lht<T>>>::Output;
 
-            fn wedge(&self, rhs: $rht<T>) -> Self::Output {
-                rhs.wedge(*self)
+            fn wedge(&self, rhs: &$rht<T>) -> Self::Output {
+                rhs.wedge(self)
             }
         }
     };
@@ -331,8 +331,8 @@ macro_rules! reverse_antiwedge {
         {
             type Output = <$rht<T> as AntiwedgeProduct<$lht<T>>>::Output;
 
-            fn antiwedge(&self, rhs: $rht<T>) -> Self::Output {
-                rhs.antiwedge(*self)
+            fn antiwedge(&self, rhs: &$rht<T>) -> Self::Output {
+                rhs.antiwedge(self)
             }
         }
     };

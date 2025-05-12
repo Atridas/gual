@@ -68,10 +68,10 @@ where
     type Antiscalar = d4::Quadvector<T>;
 
     fn geometric_distance(&self, rhs: &HomogeneusLine<T>) -> (Self::Scalar, Self::Antiscalar) {
-        let a = self.bulk().wedge(rhs.weight());
-        let b = self.weight().wedge(rhs.bulk());
+        let a = self.bulk().wedge(&rhs.weight());
+        let b = self.weight().wedge(&rhs.bulk());
         let bulk = a + b;
-        let weight = self.weight().wedge(rhs.weight());
+        let weight = self.weight().wedge(&rhs.weight());
         let bulk_norm = (bulk.yz * bulk.yz + bulk.zx * bulk.zx + bulk.xy * bulk.xy).sqrt();
         let weight_norm = (weight.x * weight.x + weight.y * weight.y + weight.z * weight.z).sqrt();
         (d4::Scalar(bulk_norm), d4::Quadvector { xyzw: weight_norm })
@@ -116,8 +116,8 @@ where
 
     fn geometric_distance(&self, rhs: &Line<T>) -> (Self::Scalar, Self::Antiscalar) {
         let line_dir: d3::Vector<T> = rhs.weight().into();
-        let a = self.bulk().wedge(line_dir);
-        let b = self.weight().wedge(rhs.bulk());
+        let a = self.bulk().wedge(&line_dir);
+        let b = self.weight().wedge(&rhs.bulk());
         let bulk = a + b;
         let bulk_norm = (bulk.yz * bulk.yz + bulk.zx * bulk.zx + bulk.xy * bulk.xy).sqrt();
         (d4::Scalar(bulk_norm), d4::Quadvector { xyzw: T::ONE })
@@ -259,7 +259,7 @@ where
             + self.yz * rhs.wx
             + self.zx * rhs.wy
             + self.xy * rhs.wz);
-        let weight = self.weight().wedge(rhs.weight());
+        let weight = self.weight().wedge(&rhs.weight());
         let weight_norm =
             (weight.yz * weight.yz + weight.zx * weight.zx + weight.xy * weight.xy).sqrt();
 

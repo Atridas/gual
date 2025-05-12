@@ -18,20 +18,20 @@ fn main() {
     println!("b: {:?}", b);
     println!("lc(a): {:?}", a.left_complement());
     println!("rc(a): {:?}", a.right_complement());
-    println!("a ^ b: {:?}", a.wedge(b));
-    println!("a v b: {:?}", a.vector().antiwedge(b.vector()));
+    println!("a ^ b: {:?}", a.wedge(&b));
+    println!("a v b: {:?}", a.vector().antiwedge(&b.vector()));
     println!("a v b: {:?}", antiwedge_reference(a.vector(), b.vector()));
-    println!("a v b: {:?}", a.antiwedge(b));
+    println!("a v b: {:?}", a.antiwedge(&b));
     println!(
         "a v I: {:?}",
-        a.vector().antiwedge(g2d::Multivector::<f32>::UNIT_VOLUME)
+        a.vector().antiwedge(&g2d::Multivector::<f32>::UNIT_VOLUME)
     );
     println!(
         "a v I: {:?}",
         antiwedge_reference(a.vector(), g2d::Multivector::<f32>::UNIT_VOLUME)
     );
-    println!("a ^ rc(b): {:?}", a.wedge(b.right_complement()));
-    println!("lc(a) ^ b: {:?}", a.left_complement().wedge(b));
+    println!("a ^ rc(b): {:?}", a.wedge(&b.right_complement()));
+    println!("lc(a) ^ b: {:?}", a.left_complement().wedge(&b));
 
     // let m3 = Multivector3D {
     //     s: 0,

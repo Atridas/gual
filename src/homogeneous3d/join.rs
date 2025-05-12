@@ -23,7 +23,7 @@ where
     d4::Vector<T>: WedgeProduct<d4::Vector<T>, Output = d4::Bivector<T>>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(&self, rhs: HomogeneusPoint<T>) -> Self::Output {
+    fn join(&self, rhs: &HomogeneusPoint<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -33,7 +33,7 @@ where
     d4::Vector<T>: WedgeProduct<d4::Bivector<T>, Output = d4::Trivector<T>>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: HomogeneusLine<T>) -> Self::Output {
+    fn join(&self, rhs: &HomogeneusLine<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -43,7 +43,7 @@ where
     d4::Bivector<T>: WedgeProduct<d4::Vector<T>, Output = d4::Trivector<T>>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: HomogeneusPoint<T>) -> Self::Output {
+    fn join(&self, rhs: &HomogeneusPoint<T>) -> Self::Output {
         self.wedge(rhs)
     }
 }
@@ -82,7 +82,7 @@ where
     T: Sub<T, Output = T>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
+    fn join(&self, rhs: &d3::Point<T>) -> Self::Output {
         let dx = rhs.0.x - self.0.x;
         let dy = rhs.0.y - self.0.y;
         let dz = rhs.0.z - self.0.z;
@@ -104,7 +104,7 @@ where
     T: Sub<T, Output = T>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
+    fn join(&self, rhs: &d3::Vector<T>) -> Self::Output {
         HomogeneusLine {
             wx: rhs.x,
             wy: rhs.y,
@@ -124,7 +124,7 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
+    fn join(&self, rhs: &d3::Point<T>) -> Self::Output {
         HomogeneusLine {
             wx: -self.x,
             wy: -self.y,
@@ -145,7 +145,7 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusLine<T>;
-    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
+    fn join(&self, rhs: &d3::Vector<T>) -> Self::Output {
         HomogeneusLine {
             wx: T::ZERO,
             wy: T::ZERO,
@@ -166,7 +166,7 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: Line<T>) -> Self::Output {
+    fn join(&self, rhs: &Line<T>) -> Self::Output {
         HomogeneusPlane {
             wyz: rhs.0.yz + self.0.z * rhs.0.wy - self.0.y * rhs.0.wz,
             wzx: rhs.0.zx + self.0.x * rhs.0.wz - self.0.z * rhs.0.wx,
@@ -186,8 +186,8 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: d3::Point<T>) -> Self::Output {
-        rhs.join(*self)
+    fn join(&self, rhs: &d3::Point<T>) -> Self::Output {
+        rhs.join(self)
     }
 }
 
@@ -200,7 +200,7 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: Line<T>) -> Self::Output {
+    fn join(&self, rhs: &Line<T>) -> Self::Output {
         HomogeneusPlane {
             wyz: self.z * rhs.0.wy - self.y * rhs.0.wz,
             wzx: self.x * rhs.0.wz - self.z * rhs.0.wx,
@@ -220,8 +220,8 @@ where
     T: Neg<Output = T>,
 {
     type Output = HomogeneusPlane<T>;
-    fn join(&self, rhs: d3::Vector<T>) -> Self::Output {
-        rhs.join(*self)
+    fn join(&self, rhs: &d3::Vector<T>) -> Self::Output {
+        rhs.join(self)
     }
 }
 
@@ -236,7 +236,7 @@ where
     pub fn join(p: Self, q: Self, r: Self) -> HomogeneusPlane<T> {
         let pq = q - p;
         let pr = r - p;
-        let n = pq.wedge(pr);
+        let n = pq.wedge(&pr);
         HomogeneusPlane {
             wyz: n.yz,
             wzx: n.zx,

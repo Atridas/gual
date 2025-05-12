@@ -88,8 +88,8 @@ fn complement_scalar() {
     let i = Bivector::<f32>::UNIT_VOLUME;
 
     let s = Scalar::ONE;
-    assert_eq!(s.wedge(s.right_complement()), i);
-    assert_eq!(s.left_complement().wedge(s), i);
+    assert_eq!(s.wedge(&s.right_complement()), i);
+    assert_eq!(s.left_complement().wedge(&s), i);
 }
 
 #[test]
@@ -97,12 +97,12 @@ fn complement_vector() {
     let i = Bivector::<f32>::UNIT_VOLUME;
 
     let v = Vector::X;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 
     let v = Vector::Y;
-    assert_eq!(v.wedge(v.right_complement()), i);
-    assert_eq!(v.left_complement().wedge(v), i);
+    assert_eq!(v.wedge(&v.right_complement()), i);
+    assert_eq!(v.left_complement().wedge(&v), i);
 }
 
 #[test]
@@ -110,8 +110,8 @@ fn complement_bivector() {
     let i = Bivector::<f32>::UNIT_VOLUME;
 
     let b = Bivector::XY;
-    assert_eq!(b.wedge(b.right_complement()), i);
-    assert_eq!(b.left_complement().wedge(b), i);
+    assert_eq!(b.wedge(&b.right_complement()), i);
+    assert_eq!(b.left_complement().wedge(&b), i);
 }
 
 #[test]
@@ -119,7 +119,7 @@ fn wedge_scalar_scalar() {
     for s in ScalarIt::new(100) {
         for s2 in ScalarIt::new(100) {
             // scalars always commute
-            assert_eq!(s.wedge(s2), s2.wedge(s));
+            assert_eq!(s.wedge(&s2), s2.wedge(&s));
         }
     }
 }
@@ -129,7 +129,7 @@ fn wedge_scalar_vector() {
     for s in ScalarIt::new(100) {
         for v in VectorIt::new(50) {
             // scalars always commute
-            assert_eq!(s.wedge(v), v.wedge(s));
+            assert_eq!(s.wedge(&v), v.wedge(&s));
         }
     }
 }
@@ -139,7 +139,7 @@ fn wedge_scalar_bivector() {
     for s in ScalarIt::new(100) {
         for b in BivectorIt::new(100) {
             // scalars always commute
-            assert_eq!(s.wedge(b), b.wedge(s));
+            assert_eq!(s.wedge(&b), b.wedge(&s));
         }
     }
 }
@@ -149,7 +149,7 @@ fn wedge_vector_bivector() {
     for v in VectorIt::new(50) {
         for v2 in VectorIt::new(50) {
             // vector - vector anticommute
-            assert_eq!(v.wedge(v2), -v2.wedge(v));
+            assert_eq!(v.wedge(&v2), -v2.wedge(&v));
         }
     }
 }
@@ -159,8 +159,8 @@ fn antiwedge_scalar_bivector() {
     for s in ScalarIt::new(100) {
         for b in BivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(s.antiwedge(b), antiwedge_reference(s, b));
-            assert_eq!(b.antiwedge(s), antiwedge_reference(b, s));
+            assert_eq!(s.antiwedge(&b), antiwedge_reference(s, b));
+            assert_eq!(b.antiwedge(&s), antiwedge_reference(b, s));
         }
     }
 }
@@ -170,8 +170,8 @@ fn antiwedge_vector_vector() {
     for a in VectorIt::new(50) {
         for b in VectorIt::new(50) {
             // actual implementation matches definition
-            assert_eq!(a.antiwedge(b), antiwedge_reference(a, b));
-            assert_eq!(b.antiwedge(a), antiwedge_reference(b, a));
+            assert_eq!(a.antiwedge(&b), antiwedge_reference(a, b));
+            assert_eq!(b.antiwedge(&a), antiwedge_reference(b, a));
         }
     }
 }
@@ -181,8 +181,8 @@ fn antiwedge_vector_bivector() {
     for v in VectorIt::new(50) {
         for b in BivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(b), antiwedge_reference(v, b));
-            assert_eq!(b.antiwedge(v), antiwedge_reference(b, v));
+            assert_eq!(v.antiwedge(&b), antiwedge_reference(v, b));
+            assert_eq!(b.antiwedge(&v), antiwedge_reference(b, v));
         }
     }
 }
@@ -192,8 +192,8 @@ fn antiwedge_bivector_bivector() {
     for a in BivectorIt::new(100) {
         for b in BivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(a.antiwedge(b), antiwedge_reference(a, b));
-            assert_eq!(b.antiwedge(a), antiwedge_reference(b, a));
+            assert_eq!(a.antiwedge(&b), antiwedge_reference(a, b));
+            assert_eq!(b.antiwedge(&a), antiwedge_reference(b, a));
         }
     }
 }

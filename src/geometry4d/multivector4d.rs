@@ -314,7 +314,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(&self, rhs: Vector<T>) -> Self::Output {
+    fn wedge(&self, rhs: &Vector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: self.s.wedge(rhs),
@@ -335,7 +335,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(&self, rhs: Bivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: &Bivector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: Vector::zero(),
@@ -356,7 +356,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(&self, rhs: Trivector<T>) -> Self::Output {
+    fn wedge(&self, rhs: &Trivector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: Vector::zero(),
@@ -375,7 +375,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(&self, rhs: Quadvector<T>) -> Self::Output {
+    fn wedge(&self, rhs: &Quadvector<T>) -> Self::Output {
         Multivector {
             s: Scalar::zero(),
             v: Vector::zero(),
@@ -397,26 +397,26 @@ where
 {
     type Output = Multivector<T>;
 
-    fn wedge(&self, rhs: Multivector<T>) -> Self::Output {
-        let s = self.s.wedge(rhs.s);
-        let v1 = self.s.wedge(rhs.v);
-        let b1 = self.s.wedge(rhs.b);
-        let t1 = self.s.wedge(rhs.t);
-        let a1 = self.s.wedge(rhs.a);
+    fn wedge(&self, rhs: &Multivector<T>) -> Self::Output {
+        let s = self.s.wedge(&rhs.s);
+        let v1 = self.s.wedge(&rhs.v);
+        let b1 = self.s.wedge(&rhs.b);
+        let t1 = self.s.wedge(&rhs.t);
+        let a1 = self.s.wedge(&rhs.a);
 
-        let v2 = self.v.wedge(rhs.s);
-        let b2 = self.v.wedge(rhs.v);
-        let t2 = self.v.wedge(rhs.b);
-        let a2 = self.v.wedge(rhs.t);
+        let v2 = self.v.wedge(&rhs.s);
+        let b2 = self.v.wedge(&rhs.v);
+        let t2 = self.v.wedge(&rhs.b);
+        let a2 = self.v.wedge(&rhs.t);
 
-        let b3 = self.b.wedge(rhs.s);
-        let t3 = self.b.wedge(rhs.v);
-        let a3 = self.b.wedge(rhs.b);
+        let b3 = self.b.wedge(&rhs.s);
+        let t3 = self.b.wedge(&rhs.v);
+        let a3 = self.b.wedge(&rhs.b);
 
-        let t4 = self.t.wedge(rhs.s);
-        let a4 = self.t.wedge(rhs.v);
+        let t4 = self.t.wedge(&rhs.s);
+        let a4 = self.t.wedge(&rhs.v);
 
-        let a5 = self.a.wedge(rhs.s);
+        let a5 = self.a.wedge(&rhs.s);
 
         Multivector {
             s: s,
@@ -435,9 +435,9 @@ where
 {
     type Output = Multivector<T>;
 
-    fn antiwedge(&self, rhs: Multivector<T>) -> Self::Output {
+    fn antiwedge(&self, rhs: &Multivector<T>) -> Self::Output {
         self.left_complement()
-            .wedge(rhs.left_complement())
+            .wedge(&rhs.left_complement())
             .right_complement()
     }
 }
