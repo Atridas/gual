@@ -11,6 +11,7 @@ use num::Float;
 
 mod angle;
 mod bulk_and_weight;
+mod central_antiprojection;
 mod central_projection;
 mod contraction;
 mod conversions;
@@ -21,6 +22,7 @@ mod expansion;
 mod join;
 mod meet;
 mod norm;
+mod orthogonal_antiprojection;
 mod orthogonal_projection;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

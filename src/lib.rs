@@ -194,6 +194,16 @@ pub trait CentralProjection<Rhs> {
     fn central_projection(&self, rhs: &Rhs) -> Self::Output;
 }
 
+pub trait OrthogonalAntiprojection<Rhs> {
+    type Output;
+    fn orthogonal_antiprojection(&self, rhs: &Rhs) -> Self::Output;
+}
+
+pub trait CentralAntiprojection<Rhs> {
+    type Output;
+    fn central_antiprojection(&self, rhs: &Rhs) -> Self::Output;
+}
+
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;
@@ -220,6 +230,12 @@ pub trait Support {
     type Point;
 
     fn support(&self) -> Self::Point;
+}
+
+pub trait Antisupport {
+    type Plane;
+
+    fn antisupport(&self) -> Self::Plane;
 }
 
 impl<T> Attitude for T
