@@ -60,7 +60,7 @@ pub trait AntiwedgeProduct<Rhs> {
 
 pub trait Normalizable {
     type Output;
-    fn normalize(&self) -> Option<Self::Output>;
+    fn normalized(&self) -> Option<Self::Output>;
 }
 
 pub trait Join<Rhs> {
