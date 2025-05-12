@@ -6,7 +6,8 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_mul, reverse_wedge,
+    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_mul,
+    reverse_wedge,
 };
 
 use super::{Bivector, Multivector, Quadvector, Scalar, Trivector, Vector};
@@ -218,6 +219,18 @@ where
 
     fn antiwedge(&self, rhs: Quadvector<T>) -> Self::Output {
         Scalar(self.0 * rhs.xyzw)
+    }
+}
+
+impl<T, V> GeometricProduct<V> for Scalar<T>
+where
+    T: Copy,
+    V: Copy,
+    Scalar<T>: Mul<V, Output = V>,
+{
+    type Output = V;
+    fn geometric_product(&self, rhs: &V) -> Self::Output {
+        *self * *rhs
     }
 }
 

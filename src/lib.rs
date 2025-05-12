@@ -204,6 +204,11 @@ pub trait CentralAntiprojection<Rhs> {
     fn central_antiprojection(&self, rhs: &Rhs) -> Self::Output;
 }
 
+pub trait GeometricProduct<Rhs> {
+    type Output;
+    fn geometric_product(&self, rhs: &Rhs) -> Self::Output;
+}
+
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;
@@ -345,6 +350,23 @@ macro_rules! reverse_antiwedge_anticommutative {
 
             fn antiwedge(&self, rhs: $rht<T>) -> Self::Output {
                 rhs.antiwedge(-self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_geometric {
+    ($lht:ident, $rht:ident) => {
+        impl<T> GeometricProduct<$rht<T>> for $lht<T>
+        where
+            $lht<T>: Copy,
+            $rht<T>: GeometricProduct<$lht<T>>,
+        {
+            type Output = <$rht<T> as GeometricProduct<$lht<T>>>::Output;
+
+            fn geometric_product(&self, rhs: &$rht<T>) -> Self::Output {
+                rhs.geometric_product(self)
             }
         }
     };

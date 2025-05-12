@@ -45,3 +45,9 @@ pub struct Multivector<T> {
     pub b: Bivector<T>,
     pub a: Trivector<T>,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Evenvector<T> {
+    pub s: Scalar<T>,
+    pub b: Bivector<T>,
+}
