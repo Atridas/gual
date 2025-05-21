@@ -5,9 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Antiscalar, AntiwedgeProduct, KVector};
+use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, KVector};
 
-use super::{Quadvector, Scalar};
+use super::{Bivector, Quadvector, Scalar, Trivector, Vector};
 
 impl<T> Zero for Quadvector<T>
 where
@@ -107,6 +107,77 @@ where
     fn antiwedge(&self, rhs: &Quadvector<T>) -> Self::Output {
         Quadvector {
             xyzw: self.xyzw * rhs.xyzw,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Vector<T>> for Quadvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Trivector<T>;
+
+    fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
+        Trivector {
+            wyz: -self.xyzw * rhs.x,
+            wzx: -self.xyzw * rhs.y,
+            wxy: -self.xyzw * rhs.z,
+            zyx: T::ZERO,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Bivector<T>> for Quadvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Bivector<T>;
+
+    fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
+        Bivector {
+            wx: self.xyzw * rhs.yz,
+            wy: self.xyzw * rhs.zx,
+            wz: self.xyzw * rhs.xy,
+            yz: T::ZERO,
+            zx: T::ZERO,
+            xy: T::ZERO,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Quadvector<T>> for Quadvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = ();
+
+    fn geometric_product(&self, _rhs: &Quadvector<T>) -> Self::Output {}
+}
+
+impl<T> GeometricProduct<Trivector<T>> for Quadvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Vector<T>;
+
+    fn geometric_product(&self, rhs: &Trivector<T>) -> Self::Output {
+        Vector {
+            x: T::ZERO,
+            y: T::ZERO,
+            z: T::ZERO,
+            w: -self.xyzw * rhs.zyx,
         }
     }
 }

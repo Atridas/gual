@@ -6,11 +6,11 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_mul,
-    reverse_wedge,
+    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge,
+    reverse_geometric, reverse_mul, reverse_wedge,
 };
 
-use super::{Bivector, Multivector, Quadvector, Scalar, Trivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
 
 impl<T> Zero for Scalar<T>
 where
@@ -179,6 +179,22 @@ where
     }
 }
 
+impl<T> Mul<Evenvector<T>> for Scalar<T>
+where
+    T: Copy,
+    T: Mul<T, Output = T>,
+{
+    type Output = Evenvector<T>;
+
+    fn mul(self, rhs: Evenvector<T>) -> Self::Output {
+        Evenvector {
+            s: self * rhs.s,
+            b: self * rhs.b,
+            a: self * rhs.a,
+        }
+    }
+}
+
 impl<T> Mul<Multivector<T>> for Scalar<T>
 where
     T: Copy,
@@ -248,3 +264,10 @@ reverse_wedge!(Quadvector, Scalar);
 reverse_wedge!(Multivector, Scalar);
 
 reverse_antiwedge!(Quadvector, Scalar);
+
+reverse_geometric!(Vector, Scalar);
+reverse_geometric!(Bivector, Scalar);
+reverse_geometric!(Trivector, Scalar);
+reverse_geometric!(Quadvector, Scalar);
+reverse_geometric!(Evenvector, Scalar);
+reverse_geometric!(Multivector, Scalar);

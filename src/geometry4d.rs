@@ -1,4 +1,5 @@
 mod bivector4d;
+mod evenvector4d;
 mod multivector4d;
 mod quadvector4d;
 mod scalar4d;
@@ -37,6 +38,13 @@ pub struct Trivector<T> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Quadvector<T> {
     pub xyzw: T,
+}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Evenvector<T> {
+    pub s: Scalar<T>,
+    pub b: Bivector<T>,
+    pub a: Quadvector<T>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

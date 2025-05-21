@@ -5,9 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Antiscalar, AntiwedgeProduct, KVector, VectorSpace, WedgeProduct};
+use crate::{Antiscalar, AntiwedgeProduct, KVector, VectorSpace, WedgeProduct, reverse_add};
 
-use super::{Bivector, Multivector, Quadvector, Scalar, Trivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
 
 impl<T: Copy> VectorSpace for Multivector<T>
 where
@@ -271,6 +271,102 @@ where
     }
 }
 
+impl<T> Add<Scalar<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Scalar<T>) -> Self::Output {
+        Multivector {
+            s: self.s + rhs,
+            v: self.v,
+            b: self.b,
+            t: self.t,
+            a: self.a,
+        }
+    }
+}
+
+impl<T> Add<Vector<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Vector<T>) -> Self::Output {
+        Multivector {
+            s: self.s,
+            v: self.v + rhs,
+            b: self.b,
+            t: self.t,
+            a: self.a,
+        }
+    }
+}
+
+impl<T> Add<Bivector<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Bivector<T>) -> Self::Output {
+        Multivector {
+            s: self.s,
+            v: self.v,
+            b: self.b + rhs,
+            t: self.t,
+            a: self.a,
+        }
+    }
+}
+
+impl<T> Add<Trivector<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Trivector<T>) -> Self::Output {
+        Multivector {
+            s: self.s,
+            v: self.v,
+            b: self.b,
+            t: self.t + rhs,
+            a: self.a,
+        }
+    }
+}
+
+impl<T> Add<Quadvector<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Quadvector<T>) -> Self::Output {
+        Multivector {
+            s: self.s,
+            v: self.v,
+            b: self.b,
+            t: self.t,
+            a: self.a + rhs,
+        }
+    }
+}
+
+impl<T> Add<Evenvector<T>> for Multivector<T>
+where
+    T: Add<T, Output = T>,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Evenvector<T>) -> Self::Output {
+        Multivector {
+            s: self.s + rhs.s,
+            v: self.v,
+            b: self.b + rhs.b,
+            t: self.t,
+            a: self.a + rhs.a,
+        }
+    }
+}
+
 impl<T> Sub for Multivector<T>
 where
     T: Sub<T, Output = T>,
@@ -441,3 +537,10 @@ where
             .right_complement()
     }
 }
+
+reverse_add!(Scalar, Multivector);
+reverse_add!(Vector, Multivector);
+reverse_add!(Bivector, Multivector);
+reverse_add!(Trivector, Multivector);
+reverse_add!(Quadvector, Multivector);
+reverse_add!(Evenvector, Multivector);

@@ -289,6 +289,22 @@ where
 }
 
 #[macro_export]
+macro_rules! reverse_add {
+    ($lht:ident, $rht:ident) => {
+        impl<T> Add<$rht<T>> for $lht<T>
+        where
+            $rht<T>: Add<$lht<T>>,
+        {
+            type Output = <$rht<T> as Add<$lht<T>>>::Output;
+
+            fn add(self, rhs: $rht<T>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! reverse_mul {
     ($lht:ident, $rht:ident) => {
         impl<T> Mul<$rht<T>> for $lht<T>
