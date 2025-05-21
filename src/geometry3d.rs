@@ -1,6 +1,7 @@
 mod angle3d;
 mod bivector3d;
 mod direction3d;
+mod evenvector;
 mod multivector3d;
 mod point3d;
 mod scalar3d;

@@ -5,9 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{AntiwedgeProduct, KVector, reverse_antiwedge};
+use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
 
-use super::{Bivector, Trivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
 impl<T> Zero for Bivector<T>
 where
@@ -167,6 +167,95 @@ where
             yz: self.yz * rhs.xyz,
             zx: self.zx * rhs.xyz,
             xy: self.xy * rhs.xyz,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Vector<T>> for Bivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: Vector {
+                x: self.xy * rhs.y - self.zx * rhs.z,
+                y: self.yz * rhs.z - self.xy * rhs.x,
+                z: self.zx * rhs.x - self.yz * rhs.y,
+            },
+            b: Bivector::ZERO,
+            a: rhs.wedge(self),
+        }
+    }
+}
+
+impl<T> GeometricProduct<Bivector<T>> for Bivector<T>
+where
+    T: Copy,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Evenvector<T>;
+
+    fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
+        Evenvector {
+            s: -Scalar(self.yz * rhs.yz + self.zx * rhs.zx + self.xy * rhs.xy),
+            b: Bivector {
+                yz: self.xy * rhs.zx - self.zx * rhs.xy,
+                zx: self.yz * rhs.xy - self.xy * rhs.yz,
+                xy: self.zx * rhs.yz - self.yz * rhs.zx,
+            },
+        }
+    }
+}
+
+impl<T> GeometricProduct<Trivector<T>> for Bivector<T>
+where
+    T: Copy,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Vector<T>;
+
+    fn geometric_product(&self, rhs: &Trivector<T>) -> Self::Output {
+        Vector {
+            x: self.yz * -rhs.xyz,
+            y: self.zx * -rhs.xyz,
+            z: self.xy * -rhs.xyz,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Multivector<T>> for Bivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
+        let b = self.geometric_product(&rhs.s);
+        let vt = self.geometric_product(&rhs.v);
+        let sb = self.geometric_product(&rhs.b);
+        let v = self.geometric_product(&rhs.a);
+
+        Multivector {
+            s: sb.s,
+            v: v + vt.v,
+            b: sb.b + b,
+            a: vt.a,
         }
     }
 }

@@ -5,7 +5,7 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{Antiscalar, AntiwedgeProduct, KVector, VectorSpace, WedgeProduct};
+use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, KVector, VectorSpace, WedgeProduct};
 
 use super::{Bivector, Multivector, Scalar, Trivector, Vector};
 
@@ -318,5 +318,93 @@ where
         self.left_complement()
             .wedge(&rhs.left_complement())
             .right_complement()
+    }
+}
+
+impl<T> GeometricProduct<Vector<T>> for Multivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
+        let v = self.s.geometric_product(rhs);
+        let sb = self.v.geometric_product(rhs);
+        let vt = self.b.geometric_product(rhs);
+        let b = self.a.geometric_product(rhs);
+
+        Multivector {
+            s: sb.s,
+            v: v + vt.v,
+            b: sb.b + b,
+            a: vt.a,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Bivector<T>> for Multivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
+        let b = self.s.geometric_product(rhs);
+        let vt = self.v.geometric_product(rhs);
+        let sb = self.b.geometric_product(rhs);
+        let v = self.a.geometric_product(rhs);
+
+        Multivector {
+            s: sb.s,
+            v: v + vt.v,
+            b: sb.b + b,
+            a: vt.a,
+        }
+    }
+}
+
+impl<T> GeometricProduct<Trivector<T>> for Multivector<T>
+where
+    T: Copy,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Trivector<T>) -> Self::Output {
+        Multivector {
+            s: self.a.geometric_product(rhs),
+            v: self.b.geometric_product(rhs),
+            b: self.v.geometric_product(rhs),
+            a: self.s.geometric_product(rhs),
+        }
+    }
+}
+
+impl<T> GeometricProduct<Multivector<T>> for Multivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
+        self.geometric_product(&rhs.s)
+            + self.geometric_product(&rhs.v)
+            + self.geometric_product(&rhs.b)
+            + self.geometric_product(&rhs.a)
     }
 }
