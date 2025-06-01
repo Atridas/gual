@@ -3,7 +3,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 use num::Float;
 use num::traits::ConstOne;
 
-use crate::{Antisupport, CentralAntiprojection, Epsilon, Normalizable};
+use crate::{Antisupport, CentralAntiprojection, Epsilon, Unitizable};
 
 use super::{HomogeneusLine, Line, NormalizedLine, NormalizedPlane};
 use super::{HomogeneusPlane, HomogeneusPoint, Plane};
@@ -60,7 +60,7 @@ where
             wxy: (x2 + y2) * self.0.wxy - (xx + yy + T::ONE) * rhs.0.z,
             zyx: (x2 + y2 + z2) * self.0.zyx,
         }
-        .normalized()
+        .unitize()
     }
 }
 
@@ -110,7 +110,7 @@ where
             zx: (z2 + x2) * self.0.zx - (rhs.0.z * self.0.xy + rhs.0.x * self.0.yz) * rhs.0.y,
             xy: (x2 + y2) * self.0.xy - (rhs.0.x * self.0.yz + rhs.0.y * self.0.zx) * rhs.0.z,
         }
-        .normalized()
+        .unitize()
     }
 }
 
@@ -150,7 +150,7 @@ where
             wxy: a * rhs.0.xy + (rhs.0.yz * rhs.0.wy - rhs.0.zx * rhs.0.wx) * self.0.zyx,
             zyx: (rhs.0.yz * rhs.0.yz + rhs.0.zx * rhs.0.zx + rhs.0.xy * rhs.0.xy) * self.0.zyx,
         }
-        .normalized()
+        .unitize()
     }
 }
 
@@ -232,6 +232,6 @@ where
             wxy: self.0.yz * self.0.wy - self.0.zx * self.0.wx,
             zyx: self.0.yz * self.0.yz + self.0.zx * self.0.zx + self.0.xy * self.0.xy,
         }
-        .normalized()
+        .unitize()
     }
 }

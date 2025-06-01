@@ -61,8 +61,10 @@ where
     T: Float,
     T: ConstZero,
     T: ConstOne,
-    HomogeneusPoint<T>: Norm<Scalar = d4::Scalar<T>, Antiscalar = d4::Quadvector<T>>,
-    HomogeneusLine<T>: Norm<Scalar = d4::Scalar<T>, Antiscalar = d4::Quadvector<T>>,
+    HomogeneusPoint<T>: Dot<Scalar = d4::Scalar<T>, Antiscalar = d4::Quadvector<T>>,
+    HomogeneusLine<T>: Dot<Scalar = d4::Scalar<T>, Antiscalar = d4::Quadvector<T>>,
+    HomogeneusPoint<T>: Norm,
+    HomogeneusLine<T>: Norm,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;

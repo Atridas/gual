@@ -1,5 +1,5 @@
 use crate::Epsilon;
-use crate::Normalizable;
+use crate::Unitizable;
 use crate::geometry3d as d3;
 use crate::geometry3d::Vector;
 use crate::geometry4d as d4;
@@ -52,13 +52,13 @@ pub enum NormalizedPlane<T> {
     Horizon,
 }
 
-impl<T> Normalizable for HomogeneusPoint<T>
+impl<T> Unitizable for HomogeneusPoint<T>
 where
     T: Float,
     T: Epsilon,
 {
     type Output = NormalizedPoint<T>;
-    fn normalized(&self) -> Option<Self::Output> {
+    fn unitize(&self) -> Option<Self::Output> {
         if self.w.is_near_zero() {
             let len2 = self.x * self.x + self.y * self.y + self.z * self.z;
             if len2.is_near_zero() {
@@ -82,13 +82,13 @@ where
     }
 }
 
-impl<T> Normalizable for HomogeneusLine<T>
+impl<T> Unitizable for HomogeneusLine<T>
 where
     T: Float,
     T: Epsilon,
 {
     type Output = NormalizedLine<T>;
-    fn normalized(&self) -> Option<Self::Output> {
+    fn unitize(&self) -> Option<Self::Output> {
         if self.is_2_blade() {
             let len2 = self.wx * self.wx + self.wy * self.wy + self.wz * self.wz;
             if len2.is_near_zero() {
@@ -120,13 +120,13 @@ where
     }
 }
 
-impl<T> Normalizable for HomogeneusPlane<T>
+impl<T> Unitizable for HomogeneusPlane<T>
 where
     T: Float,
     T: Epsilon,
 {
     type Output = NormalizedPlane<T>;
-    fn normalized(&self) -> Option<Self::Output> {
+    fn unitize(&self) -> Option<Self::Output> {
         let len2 = self.wyz * self.wyz + self.wzx * self.wzx + self.wxy * self.wxy;
         if len2.is_near_zero() {
             if self.zyx.is_near_zero() {

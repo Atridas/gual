@@ -4,8 +4,10 @@ use crate::Euclidean;
 
 mod add;
 mod antiwedge;
+mod bulkweight;
 mod complement;
 mod copyclone;
+mod dot;
 mod initialization;
 mod mul;
 mod neg;

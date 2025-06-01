@@ -2,7 +2,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 
 use num::Float;
 
-use crate::{CentralProjection, Epsilon, Normalizable};
+use crate::{CentralProjection, Epsilon, Unitizable};
 
 use super::{HomogeneusLine, Line, NormalizedLine};
 use super::{HomogeneusPlane, HomogeneusPoint, Plane};
@@ -190,6 +190,6 @@ where
             zx: w2 * self.0.wy,
             xy: w2 * self.0.wz,
         }
-        .normalized()
+        .unitize()
     }
 }

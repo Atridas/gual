@@ -9,23 +9,42 @@ mod scalar;
 
 pub mod homogeneous3d;
 
+/// Marker type used to define an Euclidean metric.
+///
+/// Euclidean metrics are those whose all basis vectors square to 1
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Euclidean {}
 
+/// Marker type used to define a Projective metric.
+///
+/// A Projective metric is build on top of an euclidean metric, with an additional vector
+/// that squares to 0. This is used to build projective geometries.
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Projective {}
 
+/// Wrapper type for scalars so we can overwrite + and * (and other) operators
 pub struct Scalar<T>(pub T);
 
+/// Helper trait to avoid division by (nearly) zero
 pub trait Epsilon {
+    /// Returns an arbitrarily small positive number
     fn eps() -> Self;
+    /// Returns true if the absolute value of the number is smaller than [`Epsilon::eps`]
     fn is_near_zero(&self) -> bool;
 }
 
+/// Marks the element with the largest dimensionality of a geometry.
 pub trait Antiscalar {
+    /// Element representing the unit volume
     const UNIT_VOLUME: Self;
+
+    /// Usually the type that represents the scalar of the geometry
     type T;
+
+    /// Gets the volume value as a scalar
     fn volume(&self) -> Self::T;
+
+    /// Constructs the volume element from a scalar
     fn from_volume(volume: Self::T) -> Self;
 }
 
@@ -48,12 +67,32 @@ pub trait VectorSpace {
     fn left_complement(&self) -> Self;
 }
 
+/// Complement operation for a geometric algebra.
+///
+/// This is one of the "arbitrary" operations for a geometric algebra, it needs
+/// a canonical unit volume to be defined (Usually through [`Antiscalar`] and [`VectorSpace`]).
+/// Then all "anti" operations should be consistent with this.
+///
+/// A right complement is usually written with a line over the element: u̅
+///
+/// It is defined so that: `u ^ u̅` = positive volume
+///
+/// A right complement is usually written with a line over the element: u̲
+///
+/// It is defined so that: `u̲ ^ u` = positive volume
+///
+/// Each operation has a dual counterpart, it's defined with this identity: `a antiop b = left_component(a̅ op b̅) = right_component(a̲ op b̲)`
 pub trait Complement {
     type Output;
 
-    // u ^ right_complement(u) = antiscalar
+    /// Computes the right complement operation: u̅
+    ///
+    /// It is defined so that: u ^ u̅ = positive volume
     fn right_complement(&self) -> Self::Output;
-    // left_complement(u) ^ u = antiscalar
+
+    /// Computes the left complement operation: u̲
+    ///
+    /// It is defined so that: u̲ ^ u = positive volume
     fn left_complement(&self) -> Self::Output;
 }
 
@@ -66,19 +105,27 @@ pub trait KVector {
     fn left_complement(&self) -> Self::AntiKVector;
 }
 
+/// Geometric algebra Wedge product.
+///
+/// This operation joints the dimensionality of 2 elements, so 2 vectors create a bivector,
+/// a vector and a bivector create a trivector, etc. It's usually denoted with a wedge `^` symbol.
 pub trait WedgeProduct<Rhs> {
+    /// Resulting type of the wedge operation
     type Output;
+
+    /// Wedges 2 operators
     fn wedge(&self, rhs: &Rhs) -> Self::Output;
 }
 
+/// Dual operation of the [`WedgeProduct`]
+///
+/// This operation makes the union or intersection of 2 elements, so 2 bivectors give a vector.
+///
+/// Being a dual operation, it is defined with respect a volume element [`Antiscalar`] and the corresponding
+/// [`Complement`] operations
 pub trait AntiwedgeProduct<Rhs> {
     type Output;
     fn antiwedge(&self, rhs: &Rhs) -> Self::Output;
-}
-
-pub trait Normalizable {
-    type Output;
-    fn normalized(&self) -> Option<Self::Output>;
 }
 
 pub trait Join<Rhs> {
@@ -91,51 +138,105 @@ pub trait Meet<Rhs> {
     fn meet(&self, rhs: &Rhs) -> Self::Output;
 }
 
+/// Basic operation from the metric.
+///
+/// Toguether with [`Antiscalar`] this defines the behaviour of the algebra.
+///
+/// The metric defines a scalar for each pair of same-dimenstion vectors. This must be
+/// a bilinear operation. If the result of the dot product between two elements is zero they are said
+/// to be orthogonal. In euclidean space all basis vectors `dot` with themseleves to `1`, but they can
+/// give `0` in some metrics (projective) or even `-1` in minkowski metrics.
+///
+/// The dual of the metric is the antimetric and is created with a process similar to that described
+/// in [`Complement`] for dual operations. It is the same as the metric in euclidean space, but swaps the
+/// roles of null and non-null vectors in the other metric spaces.
 pub trait Dot {
+    /// Type used as a scalar in the algebra
     type Scalar;
+
+    /// Type that represents the full space in the algebra
     type Antiscalar;
 
+    /// Full dot operation
     fn dot(&self, rhs: &Self) -> Self::Scalar;
+
+    /// Dual dot operation
     fn antidot(&self, rhs: &Self) -> Self::Antiscalar;
 
+    /// Returns the addition of the dot and the antidot. This is useful in non-euclidean algebras.
     fn geometric_dot(&self, rhs: &Self) -> (Self::Scalar, Self::Antiscalar) {
         (self.dot(rhs), self.antidot(rhs))
     }
 }
 
+/// Separates the vector elements in a bulk and a weight.
+///
+/// This needs a metric consistent with [`Dot`]. This is not an interesting operation in
+/// euclidean space (both bulk and weight return the full input) but becomes useful in other spaces.
+///
+/// In projective space the bulk is the part of the element whose dot product with themself whould not become
+/// `0`, and the weight the part that whould become `0`.
 pub trait BulkAndWeight {
+    /// Part left after applying the Metric
     type Bulk;
+
+    /// Part left after applying the Antimetric
     type Weight;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self;
+    /// Part left after applying the Metric
     fn bulk(&self) -> Self::Bulk;
+
+    /// Part left after applying the Antimetric
     fn weight(&self) -> Self::Weight;
+
+    /// Constructs an element from its bulk
+    fn from_bulk(bulk: &Self::Bulk) -> Self;
+
+    /// Constructs an element from its weight
+    fn from_weight(weight: &Self::Weight) -> Self;
+
+    /// Constructs an element from its bulk and weight
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self;
 }
 
-pub trait Norm: Dot {
-    fn bulk_norm(&self) -> Self::Scalar
-    where
-        Self::Scalar: Float,
-    {
-        self.dot(self).sqrt()
-    }
+/// Computes the different norms available in an element
+///
+/// A norm is the square root of the element dotted with itself. The bulk norm uses the
+/// [`Dot::dot`] and the weight norm uses the [`Dot::antidot`]
+pub trait Norm {
+    /// Type used as a scalar in the algebra
+    type Scalar;
 
-    fn weight_norm(&self) -> Self::Antiscalar
-    where
-        Self::Antiscalar: Antiscalar,
-        <Self::Antiscalar as Antiscalar>::T: Float,
-    {
-        Self::Antiscalar::from_volume(self.antidot(self).volume().sqrt())
-    }
+    /// Type that represents the full space in the algebra
+    type Antiscalar;
 
-    fn geometric_norm(&self) -> (Self::Scalar, Self::Antiscalar)
-    where
-        Self::Scalar: Float,
-        Self::Antiscalar: Antiscalar,
-        <Self::Antiscalar as Antiscalar>::T: Float,
-    {
+    /// norm of the bulk
+    fn bulk_norm(&self) -> Self::Scalar;
+
+    /// norm of the weight
+    fn weight_norm(&self) -> Self::Antiscalar;
+
+    /// addition of the bulk and weight norms
+    fn geometric_norm(&self) -> (Self::Scalar, Self::Antiscalar) {
         (self.bulk_norm(), self.weight_norm())
     }
+}
+
+/// Makes the weight of an element `1`
+///
+/// Also known as "normalizing" something, it is always in reference to the weight of it.
+///
+/// In euclidean space it gives rise to unit vectors, etc. In projective space is what gives the point
+/// a given vector represents (you take the bulk of a unitized vector to get it).
+///
+/// Sometimes special types can be leveraged that always contain a unitized element and can do some operations
+/// more optimally.
+pub trait Unitizable {
+    type Output;
+
+    /// Gives a version of itself whose weight norm is equal to `1`.
+    /// Returns null if the original weight is too close to `0`.
+    fn unitize(&self) -> Option<Self::Output>;
 }
 
 pub trait Dual {

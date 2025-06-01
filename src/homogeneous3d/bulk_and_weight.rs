@@ -11,11 +11,29 @@ use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint, HorizonLine, Line,
 use crate::geometry3d as d3;
 use crate::geometry4d as d4;
 
-impl<T: Copy> BulkAndWeight for HomogeneusPoint<T> {
+impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusPoint<T> {
     type Bulk = d3::Vector<T>;
     type Weight = d3::Scalar<T>;
 
-    fn from_bulk_and_weight(bulk: d3::Vector<T>, weight: d3::Scalar<T>) -> Self {
+    fn from_bulk(bulk: &d3::Vector<T>) -> Self {
+        Self {
+            x: bulk.x,
+            y: bulk.y,
+            z: bulk.z,
+            w: T::ZERO,
+        }
+    }
+
+    fn from_weight(weight: &d3::Scalar<T>) -> Self {
+        Self {
+            x: T::ZERO,
+            y: T::ZERO,
+            z: T::ZERO,
+            w: weight.0,
+        }
+    }
+
+    fn from_bulk_and_weight(bulk: &d3::Vector<T>, weight: &d3::Scalar<T>) -> Self {
         Self {
             x: bulk.x,
             y: bulk.y,
@@ -40,13 +58,27 @@ impl<T: Copy> BulkAndWeight for HomogeneusPoint<T> {
 impl<T> BulkAndWeight for d3::Point<T>
 where
     T: Copy,
+    T: ConstZero,
     T: ConstOne,
     T: Div<T, Output = T>,
 {
     type Bulk = d3::Vector<T>;
     type Weight = d3::Scalar<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        d3::Point(d3::Vector {
+            x: bulk.x,
+            y: bulk.y,
+            z: bulk.z,
+        })
+    }
+
+    fn from_weight(bulk: &Self::Weight) -> Self {
+        assert!(!bulk.is_zero());
+        d3::Point::ZERO
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         d3::Point(d3::Vector {
             x: bulk.x / weight.0,
             y: bulk.y / weight.0,
@@ -76,7 +108,20 @@ where
     type Bulk = d3::Vector<T>;
     type Weight = d3::Scalar<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        d3::Vector {
+            x: bulk.x,
+            y: bulk.y,
+            z: bulk.z,
+        }
+    }
+
+    fn from_weight(bulk: &Self::Weight) -> Self {
+        assert!(bulk.is_zero());
+        d3::Vector::ZERO
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         assert!(weight.is_zero());
         d3::Vector {
             x: bulk.x,
@@ -98,11 +143,33 @@ where
     }
 }
 
-impl<T: Copy> BulkAndWeight for HomogeneusLine<T> {
+impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusLine<T> {
     type Bulk = d3::Bivector<T>;
     type Weight = d3::Vector<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        Self {
+            wx: T::ZERO,
+            wy: T::ZERO,
+            wz: T::ZERO,
+            yz: bulk.yz,
+            zx: bulk.zx,
+            xy: bulk.xy,
+        }
+    }
+
+    fn from_weight(weight: &Self::Weight) -> Self {
+        Self {
+            wx: weight.x,
+            wy: weight.y,
+            wz: weight.z,
+            yz: T::ZERO,
+            zx: T::ZERO,
+            xy: T::ZERO,
+        }
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         Self {
             wx: weight.x,
             wy: weight.y,
@@ -130,11 +197,33 @@ impl<T: Copy> BulkAndWeight for HomogeneusLine<T> {
     }
 }
 
-impl<T: Copy> BulkAndWeight for Line<T> {
+impl<T: Copy + ConstZero> BulkAndWeight for Line<T> {
     type Bulk = d3::Bivector<T>;
     type Weight = d3::DirVector<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        Self(d4::Bivector {
+            wx: T::ZERO,
+            wy: T::ZERO,
+            wz: T::ZERO,
+            yz: bulk.yz,
+            zx: bulk.zx,
+            xy: bulk.xy,
+        })
+    }
+
+    fn from_weight(weight: &Self::Weight) -> Self {
+        Self(d4::Bivector {
+            wx: weight.0.x,
+            wy: weight.0.y,
+            wz: weight.0.z,
+            yz: T::ZERO,
+            zx: T::ZERO,
+            xy: T::ZERO,
+        })
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         Self(d4::Bivector {
             wx: weight.0.x,
             wy: weight.0.y,
@@ -170,8 +259,22 @@ where
     type Bulk = d3::Bivector<T>;
     type Weight = d3::Vector<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        // @TODO(Atridas): Normalize
+        Self(d3::Bivector {
+            yz: bulk.yz,
+            zx: bulk.zx,
+            xy: bulk.xy,
+        })
+    }
+
+    fn from_weight(_weight: &Self::Weight) -> Self {
+        unreachable!();
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         assert!(weight.is_zero());
+        // @TODO(Atridas): Normalize
         Self(d3::Bivector {
             yz: bulk.yz,
             zx: bulk.zx,
@@ -195,12 +298,31 @@ where
 impl<T> BulkAndWeight for HomogeneusPlane<T>
 where
     T: Copy,
+    T: ConstZero,
     T: Neg<Output = T>,
 {
     type Bulk = d3::Trivector<T>;
     type Weight = d3::Bivector<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(bulk: &Self::Bulk) -> Self {
+        Self {
+            wyz: T::ZERO,
+            wzx: T::ZERO,
+            wxy: T::ZERO,
+            zyx: -bulk.xyz,
+        }
+    }
+
+    fn from_weight(weight: &Self::Weight) -> Self {
+        Self {
+            wyz: weight.yz,
+            wzx: weight.zx,
+            wxy: weight.xy,
+            zyx: T::ZERO,
+        }
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         Self {
             wyz: weight.yz,
             wzx: weight.zx,
@@ -225,12 +347,28 @@ where
 impl<T> BulkAndWeight for Plane<T>
 where
     T: Copy,
+    T: ConstZero,
     T: Neg<Output = T>,
 {
     type Bulk = d3::Trivector<T>;
     type Weight = d3::DirBivector<T>;
 
-    fn from_bulk_and_weight(bulk: Self::Bulk, weight: Self::Weight) -> Self {
+    fn from_bulk(_bulk: &Self::Bulk) -> Self {
+        unreachable!();
+    }
+
+    fn from_weight(weight: &Self::Weight) -> Self {
+        // @TODO(Atridas): Normalize
+        Self(d4::Trivector {
+            wyz: weight.0.yz,
+            wzx: weight.0.zx,
+            wxy: weight.0.xy,
+            zyx: T::ZERO,
+        })
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
+        // @TODO(Atridas): Normalize
         Self(d4::Trivector {
             wyz: weight.0.yz,
             wzx: weight.0.zx,
