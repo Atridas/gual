@@ -209,6 +209,11 @@ pub trait GeometricProduct<Rhs> {
     fn geometric_product(&self, rhs: &Rhs) -> Self::Output;
 }
 
+pub trait GeometricAntiproduct<Rhs> {
+    type Output;
+    fn geometric_antiproduct(&self, rhs: &Rhs) -> Self::Output;
+}
+
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;
@@ -383,6 +388,23 @@ macro_rules! reverse_geometric {
 
             fn geometric_product(&self, rhs: &$rht<T>) -> Self::Output {
                 rhs.geometric_product(self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_antigeometric {
+    ($lht:ident, $rht:ident) => {
+        impl<T> GeometricAntiproduct<$rht<T>> for $lht<T>
+        where
+            $lht<T>: Copy,
+            $rht<T>: GeometricAntiproduct<$lht<T>>,
+        {
+            type Output = <$rht<T> as GeometricAntiproduct<$lht<T>>>::Output;
+
+            fn geometric_antiproduct(&self, rhs: &$rht<T>) -> Self::Output {
+                rhs.geometric_antiproduct(self)
             }
         }
     };

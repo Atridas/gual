@@ -5,7 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
+use crate::{
+    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_add, reverse_antiwedge,
+};
 
 use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
 
@@ -84,6 +86,22 @@ where
             wzx: self.wzx + rhs.wzx,
             wxy: self.wxy + rhs.wxy,
             zyx: self.zyx + rhs.zyx,
+        }
+    }
+}
+
+impl<T> Add<Quadvector<T>> for Trivector<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Quadvector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: Vector::ZERO,
+            b: Bivector::ZERO,
+            t: self,
+            a: rhs,
         }
     }
 }
@@ -237,5 +255,25 @@ where
         }
     }
 }
+
+impl<T> GeometricProduct<Evenvector<T>> for Trivector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Evenvector<T>) -> Self::Output {
+        self.geometric_product(&rhs.s)
+            + self.geometric_product(&rhs.b)
+            + self.geometric_product(&rhs.a)
+    }
+}
+
+reverse_add!(Quadvector, Trivector);
 
 reverse_antiwedge!(Quadvector, Trivector);

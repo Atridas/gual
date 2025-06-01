@@ -7,7 +7,7 @@ use num::{
 
 use crate::{GeometricProduct, reverse_add};
 
-use super::{Bivector, Evenvector, Quadvector, Scalar};
+use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
 
 impl<T> Zero for Evenvector<T>
 where
@@ -159,6 +159,60 @@ where
 
     fn mul(self, rhs: Evenvector<T>) -> Self::Output {
         self.geometric_product(&rhs)
+    }
+}
+
+impl<T> GeometricProduct<Vector<T>> for Evenvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
+        self.s.geometric_product(rhs)
+            + self.b.geometric_product(rhs)
+            + self.a.geometric_product(rhs)
+    }
+}
+
+impl<T> GeometricProduct<Bivector<T>> for Evenvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Evenvector<T>;
+
+    fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
+        self.s.geometric_product(rhs)
+            + self.b.geometric_product(rhs)
+            + self.a.geometric_product(rhs)
+    }
+}
+
+impl<T> GeometricProduct<Trivector<T>> for Evenvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Multivector<T>;
+
+    fn geometric_product(&self, rhs: &Trivector<T>) -> Self::Output {
+        self.s.geometric_product(rhs)
+            + self.b.geometric_product(rhs)
+            + self.a.geometric_product(rhs)
     }
 }
 

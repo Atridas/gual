@@ -6,7 +6,7 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge,
+    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_add, reverse_antiwedge,
     reverse_geometric, reverse_mul, reverse_wedge,
 };
 
@@ -62,6 +62,66 @@ where
     type Output = Scalar<T>;
     fn add(self, rhs: Self) -> Self::Output {
         Scalar(self.0 + rhs.0)
+    }
+}
+
+impl<T> Add<Vector<T>> for Scalar<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Vector<T>) -> Self::Output {
+        Multivector {
+            s: self,
+            v: rhs,
+            b: Bivector::ZERO,
+            t: Trivector::ZERO,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Bivector<T>> for Scalar<T>
+where
+    T: ConstZero,
+{
+    type Output = Evenvector<T>;
+    fn add(self, rhs: Bivector<T>) -> Self::Output {
+        Evenvector {
+            s: self,
+            b: rhs,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Trivector<T>> for Scalar<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Trivector<T>) -> Self::Output {
+        Multivector {
+            s: self,
+            v: Vector::ZERO,
+            b: Bivector::ZERO,
+            t: rhs,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Quadvector<T>> for Scalar<T>
+where
+    T: ConstZero,
+{
+    type Output = Evenvector<T>;
+    fn add(self, rhs: Quadvector<T>) -> Self::Output {
+        Evenvector {
+            s: self,
+            b: Bivector::ZERO,
+            a: rhs,
+        }
     }
 }
 
@@ -251,16 +311,23 @@ where
     }
 }
 
+reverse_add!(Vector, Scalar);
+reverse_add!(Bivector, Scalar);
+reverse_add!(Trivector, Scalar);
+reverse_add!(Quadvector, Scalar);
+
 reverse_mul!(Vector, Scalar);
 reverse_mul!(Bivector, Scalar);
 reverse_mul!(Trivector, Scalar);
 reverse_mul!(Quadvector, Scalar);
+reverse_mul!(Evenvector, Scalar);
 reverse_mul!(Multivector, Scalar);
 
 reverse_wedge!(Vector, Scalar);
 reverse_wedge!(Bivector, Scalar);
 reverse_wedge!(Trivector, Scalar);
 reverse_wedge!(Quadvector, Scalar);
+reverse_wedge!(Evenvector, Scalar);
 reverse_wedge!(Multivector, Scalar);
 
 reverse_antiwedge!(Quadvector, Scalar);

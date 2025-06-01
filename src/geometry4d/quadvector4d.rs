@@ -7,7 +7,7 @@ use num::{
 
 use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, KVector};
 
-use super::{Bivector, Quadvector, Scalar, Trivector, Vector};
+use super::{Bivector, Evenvector, Quadvector, Scalar, Trivector, Vector};
 
 impl<T> Zero for Quadvector<T>
 where
@@ -179,5 +179,21 @@ where
             z: T::ZERO,
             w: -self.xyzw * rhs.zyx,
         }
+    }
+}
+
+impl<T> GeometricProduct<Evenvector<T>> for Quadvector<T>
+where
+    T: Copy,
+    T: ConstZero,
+    T: Add<T, Output = T>,
+    T: Sub<T, Output = T>,
+    T: Neg<Output = T>,
+    T: Mul<T, Output = T>,
+{
+    type Output = Evenvector<T>;
+
+    fn geometric_product(&self, rhs: &Evenvector<T>) -> Self::Output {
+        self.geometric_product(&rhs.s) + self.geometric_product(&rhs.b)
     }
 }

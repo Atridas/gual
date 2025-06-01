@@ -6,7 +6,8 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, Epsilon, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge,
+    AntiwedgeProduct, Epsilon, GeometricProduct, KVector, WedgeProduct, reverse_add,
+    reverse_antiwedge,
 };
 
 use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
@@ -134,6 +135,36 @@ where
             yz: self.yz + rhs.yz,
             zx: self.zx + rhs.zx,
             xy: self.xy + rhs.xy,
+        }
+    }
+}
+
+impl<T> Add<Trivector<T>> for Bivector<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Trivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: Vector::ZERO,
+            b: self,
+            t: rhs,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Quadvector<T>> for Bivector<T>
+where
+    T: ConstZero,
+{
+    type Output = Evenvector<T>;
+    fn add(self, rhs: Quadvector<T>) -> Self::Output {
+        Evenvector {
+            s: Scalar::ZERO,
+            b: self,
+            a: rhs,
         }
     }
 }
@@ -423,6 +454,9 @@ where
             + self.geometric_product(&rhs.t)
     }
 }
+
+reverse_add!(Trivector, Bivector);
+reverse_add!(Quadvector, Bivector);
 
 reverse_antiwedge!(Trivector, Bivector);
 reverse_antiwedge!(Quadvector, Bivector);

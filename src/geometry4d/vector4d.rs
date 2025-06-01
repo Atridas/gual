@@ -6,7 +6,8 @@ use num::{
 };
 
 use crate::{
-    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_wedge,
+    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_add, reverse_antiwedge,
+    reverse_wedge,
 };
 
 use super::{Bivector, Evenvector, Multivector, Quadvector, Scalar, Trivector, Vector};
@@ -86,6 +87,54 @@ where
             y: self.y + rhs.y,
             z: self.z + rhs.z,
             w: self.w + rhs.w,
+        }
+    }
+}
+
+impl<T> Add<Bivector<T>> for Vector<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Bivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: self,
+            b: rhs,
+            t: Trivector::ZERO,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Trivector<T>> for Vector<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Trivector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: self,
+            b: Bivector::ZERO,
+            t: rhs,
+            a: Quadvector::ZERO,
+        }
+    }
+}
+
+impl<T> Add<Quadvector<T>> for Vector<T>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T>;
+    fn add(self, rhs: Quadvector<T>) -> Self::Output {
+        Multivector {
+            s: Scalar::ZERO,
+            v: self,
+            b: Bivector::ZERO,
+            t: Trivector::ZERO,
+            a: rhs,
         }
     }
 }
@@ -396,6 +445,10 @@ where
         }
     }
 }
+
+reverse_add!(Bivector, Vector);
+reverse_add!(Trivector, Vector);
+reverse_add!(Quadvector, Vector);
 
 reverse_wedge!(Bivector, Vector);
 
