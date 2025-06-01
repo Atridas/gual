@@ -2,7 +2,7 @@ use std::ops::{Add, Div, Mul, Neg};
 
 use num::traits::{ConstOne, ConstZero};
 
-use crate::{Antiscalar, Dot, Scalar};
+use crate::{Antiscalar, Dot};
 
 use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint, Plane};
 use super::{HorizonLine, Line};
@@ -14,7 +14,6 @@ where
     T: Copy,
     T: ConstZero,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -34,7 +33,6 @@ where
     T: Copy,
     T: Mul<T, Output = T>,
     T: Add<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -58,7 +56,6 @@ where
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
     T: Div<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -79,7 +76,6 @@ where
     T: ConstZero,
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -99,7 +95,6 @@ where
     T: Copy,
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -122,7 +117,6 @@ where
     T: ConstOne,
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -144,7 +138,6 @@ where
     T: Copy,
     T: ConstOne,
     d4::Quadvector<T>: ConstZero,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -164,7 +157,6 @@ where
     T: Copy,
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -188,7 +180,6 @@ where
     T: Neg<Output = T>,
     T: Add<T, Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;
@@ -209,7 +200,6 @@ where
     T: ConstZero,
     T: Neg<Output = T>,
     T: Mul<T, Output = T>,
-    d4::Scalar<T>: Scalar,
     d4::Quadvector<T>: Antiscalar,
 {
     type Scalar = d4::Scalar<T>;

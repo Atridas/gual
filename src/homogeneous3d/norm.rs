@@ -1,6 +1,6 @@
 use num::{Float, traits::ConstOne};
 
-use crate::{Antiscalar, Dot, Norm, Scalar};
+use crate::{Antiscalar, Dot, Norm};
 
 use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint};
 
@@ -28,7 +28,6 @@ impl<T> Norm for HomogeneusPlane<T>
 where
     T: Float,
     Self: Dot<Scalar = d4::Scalar<T>>,
-    d4::Scalar<T>: Scalar,
 {
     fn bulk_norm(&self) -> d4::Scalar<T> {
         d4::Scalar(self.zyx.abs())

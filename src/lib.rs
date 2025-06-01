@@ -4,24 +4,33 @@ pub mod geometry2d;
 pub mod geometry3d;
 pub mod geometry4d;
 
+mod macros;
+mod scalar;
+
 pub mod homogeneous3d;
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Euclidean {}
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub enum Projective {}
+
+pub struct Scalar<T>(pub T);
 
 pub trait Epsilon {
     fn eps() -> Self;
     fn is_near_zero(&self) -> bool;
 }
 
-pub trait Scalar {
-    fn sqrt(&self) -> Self;
-}
-
 pub trait Antiscalar {
     const UNIT_VOLUME: Self;
-    fn sqrt(&self) -> Self;
+    type T;
+    fn volume(&self) -> Self::T;
+    fn from_volume(volume: Self::T) -> Self;
 }
 
 pub trait VectorSpace {
-    type Scalar: Scalar;
+    type Scalar;
     type Vector;
     type Antivector;
     type Antiscalar: Antiscalar;
@@ -37,6 +46,15 @@ pub trait VectorSpace {
     fn right_complement(&self) -> Self;
     // left_complement(u) ^ u = antiscalar
     fn left_complement(&self) -> Self;
+}
+
+pub trait Complement {
+    type Output;
+
+    // u ^ right_complement(u) = antiscalar
+    fn right_complement(&self) -> Self::Output;
+    // left_complement(u) ^ u = antiscalar
+    fn left_complement(&self) -> Self::Output;
 }
 
 pub trait KVector {
@@ -97,7 +115,7 @@ pub trait BulkAndWeight {
 pub trait Norm: Dot {
     fn bulk_norm(&self) -> Self::Scalar
     where
-        Self::Scalar: Scalar,
+        Self::Scalar: Float,
     {
         self.dot(self).sqrt()
     }
@@ -105,14 +123,16 @@ pub trait Norm: Dot {
     fn weight_norm(&self) -> Self::Antiscalar
     where
         Self::Antiscalar: Antiscalar,
+        <Self::Antiscalar as Antiscalar>::T: Float,
     {
-        self.antidot(self).sqrt()
+        Self::Antiscalar::from_volume(self.antidot(self).volume().sqrt())
     }
 
     fn geometric_norm(&self) -> (Self::Scalar, Self::Antiscalar)
     where
-        Self::Scalar: Scalar,
+        Self::Scalar: Float,
         Self::Antiscalar: Antiscalar,
+        <Self::Antiscalar as Antiscalar>::T: Float,
     {
         (self.bulk_norm(), self.weight_norm())
     }
