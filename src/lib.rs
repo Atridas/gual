@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use num::{Float, FromPrimitive};
 
 pub mod geometry2d;
@@ -23,7 +25,8 @@ pub enum Euclidean {}
 pub enum Projective {}
 
 /// Wrapper type for scalars so we can overwrite + and * (and other) operators
-pub struct Scalar<T>(pub T);
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Scalar<const D: u32, T, M = Euclidean>(pub T, PhantomData<M>);
 
 /// Helper trait to avoid division by (nearly) zero
 pub trait Epsilon {
@@ -119,7 +122,8 @@ pub trait WedgeProduct<Rhs> {
 
 /// Dual operation of the [`WedgeProduct`]
 ///
-/// This operation makes the union or intersection of 2 elements, so 2 bivectors give a vector.
+/// This operation makes the union or intersection of 2 elements, so 2 bivectors give a vector. It's usually
+/// denoted with an inverse wedge `v` symbol
 ///
 /// Being a dual operation, it is defined with respect a volume element [`Antiscalar`] and the corresponding
 /// [`Complement`] operations
@@ -184,9 +188,14 @@ pub trait Metric {
     type Weight;
 
     /// Part left after applying the Metric
+    ///
+    /// Usually denoted with a star `a*`
     fn bulk(&self) -> Self::Bulk;
 
     /// Part left after applying the Antimetric
+    ///
+    /// Whould be denoted with an empty star but standard ascii does
+    /// not have that
     fn weight(&self) -> Self::Weight;
 
     /// Constructs an element from its bulk
@@ -292,12 +301,33 @@ pub trait Dual {
     }
 }
 
+/// Contraction operation: `a v b*`
+///
+/// Comes with 2 variants: bulk and weight one. In euclidean space there is no difference.
+///
+/// It conceptually "substracts" one element from another, so `a.contraction(b)` will have the dimension
+/// of `dimension(a) - dimension(b)`. If both have the same dimensions the result is a scalar equivalent to
+/// the dot product.
+///
+/// The resulting object is contained within the first object and orthogonal to the second one.
 pub trait Contraction<Rhs> {
     type BulkOutput;
     type WeightOutput;
 
+    /// Substracts the bulk of `rhs` from `self`.
+    ///
+    /// The resulting object is contained within `self` and orthogonal to the bulk of `rhs`
     fn bulk_contraction(&self, rhs: &Rhs) -> Self::BulkOutput;
+
+    /// Substracts the weigth of `rhs` from `self`.
+    ///
+    /// The resulting object is contained within `self` and orthogonal to the weigth of `rhs`
     fn weight_contraction(&self, rhs: &Rhs) -> Self::WeightOutput;
+
+    /// Equivalent to [`Contraction::bulk_contraction`]
+    fn contraction(&self, rhs: &Rhs) -> Self::BulkOutput {
+        self.bulk_contraction(rhs)
+    }
 }
 
 pub trait Expansion<Rhs> {
@@ -306,6 +336,10 @@ pub trait Expansion<Rhs> {
 
     fn bulk_expansion(&self, rhs: &Rhs) -> Self::BulkOutput;
     fn weight_expansion(&self, rhs: &Rhs) -> Self::WeightOutput;
+
+    fn expansion(&self, rhs: &Rhs) -> Self::BulkOutput {
+        self.bulk_expansion(rhs)
+    }
 }
 
 impl<T> Contraction<T> for T

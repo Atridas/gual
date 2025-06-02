@@ -5,7 +5,7 @@ use std::{
 
 use num::traits::ConstZero;
 
-use crate::{WedgeProduct, null_wedge, reverse_wedge_metric, wedge_scalar};
+use crate::{Scalar, WedgeProduct, null_wedge, reverse_wedge_metric, wedge_scalar};
 
 use super::{Bivector, Evenvector, Multivector, Vector};
 
@@ -13,10 +13,10 @@ use super::{Bivector, Evenvector, Multivector, Vector};
 // Scalar
 // ----------------------------------------------------------------------------------------------------
 
-wedge_scalar!(Vector);
-wedge_scalar!(Bivector);
-wedge_scalar!(Evenvector);
-wedge_scalar!(Multivector);
+wedge_scalar!(Vector, 2);
+wedge_scalar!(Bivector, 2);
+wedge_scalar!(Evenvector, 2);
+wedge_scalar!(Multivector, 2);
 
 // ----------------------------------------------------------------------------------------------------
 // Vector

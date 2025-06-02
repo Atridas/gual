@@ -2,7 +2,7 @@ use std::{marker::PhantomData, ops::Add};
 
 use num::traits::ConstZero;
 
-use crate::reverse_add_metric;
+use crate::{Scalar, reverse_add_metric};
 
 use super::{Bivector, Evenvector, Multivector, Point, Vector};
 
@@ -18,6 +18,20 @@ where
     fn add(self, rhs: T) -> Self::Output {
         Multivector {
             s: rhs,
+            v: self,
+            b: Bivector::ZERO,
+        }
+    }
+}
+
+impl<T, M> Add<Scalar<2, T, M>> for Vector<T, M>
+where
+    T: ConstZero,
+{
+    type Output = Multivector<T, M>;
+    fn add(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Multivector {
+            s: rhs.0,
             v: self,
             b: Bivector::ZERO,
         }
@@ -106,6 +120,13 @@ impl<T, M> Add<T> for Bivector<T, M> {
     }
 }
 
+impl<T, M> Add<Scalar<2, T, M>> for Bivector<T, M> {
+    type Output = Evenvector<T, M>;
+    fn add(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Evenvector { s: rhs.0, b: self }
+    }
+}
+
 reverse_add_metric!(Bivector, Vector);
 
 impl<T, M> Add<Bivector<T, M>> for Bivector<T, M>
@@ -165,6 +186,19 @@ where
     }
 }
 
+impl<T, M> Add<Scalar<2, T, M>> for Evenvector<T, M>
+where
+    T: Add<Output = T>,
+{
+    type Output = Evenvector<T, M>;
+    fn add(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Evenvector {
+            s: self.s + rhs.0,
+            b: self.b,
+        }
+    }
+}
+
 reverse_add_metric!(Evenvector, Vector);
 
 reverse_add_metric!(Evenvector, Bivector);
@@ -208,6 +242,20 @@ where
     fn add(self, rhs: T) -> Self::Output {
         Multivector {
             s: self.s + rhs,
+            v: self.v,
+            b: self.b,
+        }
+    }
+}
+
+impl<T, M> Add<Scalar<2, T, M>> for Multivector<T, M>
+where
+    T: Add<Output = T>,
+{
+    type Output = Multivector<T, M>;
+    fn add(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Multivector {
+            s: self.s + rhs.0,
             v: self.v,
             b: self.b,
         }

@@ -2,9 +2,31 @@ use std::{marker::PhantomData, ops::Neg};
 
 use num::traits::ConstOne;
 
-use crate::{Antiscalar, Complement};
+use crate::{Antiscalar, Complement, Scalar};
 
 use super::{Bivector, Evenvector, Multivector, Vector};
+
+impl<T, M> Complement for Scalar<2, T, M>
+where
+    T: Copy,
+    T: Neg<Output = T>,
+{
+    type Output = Bivector<T, M>;
+
+    fn right_complement(&self) -> Self::Output {
+        Bivector {
+            xy: self.0,
+            _metric: PhantomData,
+        }
+    }
+
+    fn left_complement(&self) -> Self::Output {
+        Bivector {
+            xy: self.0,
+            _metric: PhantomData,
+        }
+    }
+}
 
 impl<T, M> Complement for Vector<T, M>
 where

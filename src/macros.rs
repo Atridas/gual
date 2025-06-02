@@ -34,7 +34,7 @@ macro_rules! default_sub {
 
 #[macro_export]
 macro_rules! wedge_scalar {
-    ($v:ident) => {
+    ($v:ident, $d:literal) => {
         impl<T, M> WedgeProduct<$v<T, M>> for T
         where
             T: Copy,
@@ -56,6 +56,30 @@ macro_rules! wedge_scalar {
             type Output = $v<T, M>;
             fn wedge(&self, rhs: &T) -> Self::Output {
                 *self * *rhs
+            }
+        }
+
+        impl<T, M> WedgeProduct<$v<T, M>> for Scalar<$d, T, M>
+        where
+            T: Copy,
+            $v<T, M>: Copy,
+            $v<T, M>: Mul<T, Output = $v<T, M>>,
+        {
+            type Output = $v<T, M>;
+            fn wedge(&self, rhs: &$v<T, M>) -> Self::Output {
+                *rhs * self.0
+            }
+        }
+
+        impl<T, M> WedgeProduct<Scalar<$d, T, M>> for $v<T, M>
+        where
+            T: Copy,
+            $v<T, M>: Copy,
+            $v<T, M>: Mul<T, Output = $v<T, M>>,
+        {
+            type Output = $v<T, M>;
+            fn wedge(&self, rhs: &Scalar<$d, T, M>) -> Self::Output {
+                *self * rhs.0
             }
         }
     };

@@ -1,6 +1,6 @@
 use std::{marker::PhantomData, ops::Mul};
 
-use crate::GeometricProduct;
+use crate::{GeometricProduct, Scalar};
 
 use super::{Bivector, Evenvector, Multivector, Point, UnitVector, Vector};
 
@@ -22,6 +22,20 @@ where
     }
 }
 
+impl<T: Copy, M> Mul<Scalar<2, T, M>> for Vector<T, M>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Vector {
+            x: self.x * rhs.0,
+            y: self.y * rhs.0,
+            _metric: PhantomData,
+        }
+    }
+}
+
 // ----------------------------------------------------------------------------------------------------
 // UnitVector
 // ----------------------------------------------------------------------------------------------------
@@ -36,6 +50,16 @@ where
     }
 }
 
+impl<T: Copy> Mul<Scalar<2, T>> for UnitVector<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Vector<T>;
+    fn mul(self, rhs: Scalar<2, T>) -> Self::Output {
+        self.0 * rhs.0
+    }
+}
+
 // ----------------------------------------------------------------------------------------------------
 // Point
 // ----------------------------------------------------------------------------------------------------
@@ -47,6 +71,16 @@ where
     type Output = Self;
     fn mul(self, rhs: T) -> Self::Output {
         Point(self.0 * rhs)
+    }
+}
+
+impl<T: Copy> Mul<Scalar<2, T>> for Point<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Scalar<2, T>) -> Self::Output {
+        Point(self.0 * rhs.0)
     }
 }
 
@@ -67,6 +101,19 @@ where
     }
 }
 
+impl<T, M> Mul<Scalar<2, T, M>> for Bivector<T, M>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Bivector {
+            xy: self.xy * rhs.0,
+            _metric: PhantomData,
+        }
+    }
+}
+
 // ----------------------------------------------------------------------------------------------------
 // Evenvector
 // ----------------------------------------------------------------------------------------------------
@@ -80,6 +127,19 @@ where
         Evenvector {
             s: self.s * rhs,
             b: self.b * rhs,
+        }
+    }
+}
+
+impl<T: Copy, M> Mul<Scalar<2, T, M>> for Evenvector<T, M>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Evenvector {
+            s: self.s * rhs.0,
+            b: self.b * rhs.0,
         }
     }
 }
@@ -138,6 +198,20 @@ where
             s: self.s * rhs,
             v: self.v * rhs,
             b: self.b * rhs,
+        }
+    }
+}
+
+impl<T: Copy, M> Mul<Scalar<2, T, M>> for Multivector<T, M>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: Scalar<2, T, M>) -> Self::Output {
+        Multivector {
+            s: self.s * rhs.0,
+            v: self.v * rhs.0,
+            b: self.b * rhs.0,
         }
     }
 }

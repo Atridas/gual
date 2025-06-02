@@ -1,34 +1,50 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Mul},
+};
+
+use num::traits::{ConstOne, ConstZero};
 
 use crate::Scalar;
 
-impl<T, V> Add<V> for Scalar<T>
+impl<const D: u32, T, M> Scalar<D, T, M> {
+    pub fn new(v: T) -> Self {
+        Scalar(v, PhantomData)
+    }
+}
+
+impl<const D: u32, T, M> Scalar<D, T, M>
 where
-    V: Add<T>,
+    T: ConstZero,
 {
-    type Output = <V as Add<T>>::Output;
+    pub const ZERO: Self = Scalar(T::ZERO, PhantomData);
+}
+
+impl<const D: u32, T, M> Scalar<D, T, M>
+where
+    T: ConstOne,
+{
+    pub const ONE: Self = Scalar(T::ONE, PhantomData);
+}
+
+impl<const D: u32, T, M, V> Add<V> for Scalar<D, T, M>
+where
+    V: Add<Scalar<D, T, M>>,
+{
+    type Output = <V as Add<Scalar<D, T, M>>>::Output;
+
     fn add(self, rhs: V) -> Self::Output {
-        rhs + self.0
+        rhs + self
     }
 }
 
-impl<T, V> Sub<V> for Scalar<T>
+impl<const D: u32, T, M, V> Mul<V> for Scalar<D, T, M>
 where
-    V: Neg<Output = V>,
-    V: Add<T>,
+    V: Mul<Scalar<D, T, M>>,
 {
-    type Output = <V as Add<T>>::Output;
-    fn sub(self, rhs: V) -> Self::Output {
-        -rhs + self.0
-    }
-}
+    type Output = <V as Mul<Scalar<D, T, M>>>::Output;
 
-impl<T, V> Mul<V> for Scalar<T>
-where
-    V: Mul<T>,
-{
-    type Output = <V as Mul<T>>::Output;
     fn mul(self, rhs: V) -> Self::Output {
-        rhs * self.0
+        rhs * self
     }
 }
