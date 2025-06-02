@@ -4,7 +4,7 @@ use num::traits::ConstZero;
 
 use crate::default_sub;
 
-use super::{Bivector, Evenvector, Multivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Point, Vector};
 
 impl<T, M> Sub<T> for Vector<T, M>
 where
@@ -25,6 +25,28 @@ default_sub!(Vector, Vector);
 default_sub!(Vector, Bivector);
 default_sub!(Vector, Evenvector);
 default_sub!(Vector, Multivector);
+
+impl<T> Sub<Vector<T>> for Point<T>
+where
+    T: ConstZero,
+    T: Neg<Output = T>,
+{
+    type Output = Point<T>;
+    fn sub(self, rhs: Vector<T>) -> Self::Output {
+        Point(self.0 - rhs)
+    }
+}
+
+impl<T> Sub<Point<T>> for Point<T>
+where
+    T: ConstZero,
+    T: Neg<Output = T>,
+{
+    type Output = Vector<T>;
+    fn sub(self, rhs: Point<T>) -> Self::Output {
+        self.0 - rhs.0
+    }
+}
 
 impl<T, M> Sub<T> for Bivector<T, M>
 where

@@ -3,7 +3,7 @@ use num::traits::ConstOne;
 
 use crate::Angle;
 
-use crate::BulkAndWeight;
+use crate::Metric;
 use crate::geometry3d as d3;
 use crate::geometry4d as d4;
 
@@ -15,7 +15,7 @@ use super::Plane;
 impl<T> Angle<HomogeneusLine<T>> for HomogeneusLine<T>
 where
     T: Float,
-    HomogeneusLine<T>: BulkAndWeight<Weight = d3::Vector<T>>,
+    HomogeneusLine<T>: Metric<Weight = d3::Vector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -35,7 +35,7 @@ impl<T> Angle<Line<T>> for Line<T>
 where
     T: ConstOne,
     T: Float,
-    Line<T>: BulkAndWeight<Weight = d3::DirVector<T>>,
+    Line<T>: Metric<Weight = d3::DirVector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -54,8 +54,8 @@ where
 impl<T> Angle<HomogeneusLine<T>> for HomogeneusPlane<T>
 where
     T: Float,
-    HomogeneusLine<T>: BulkAndWeight<Weight = d3::Vector<T>>,
-    HomogeneusPlane<T>: BulkAndWeight<Weight = d3::Bivector<T>>,
+    HomogeneusLine<T>: Metric<Weight = d3::Vector<T>>,
+    HomogeneusPlane<T>: Metric<Weight = d3::Bivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -75,8 +75,8 @@ impl<T> Angle<Line<T>> for Plane<T>
 where
     T: ConstOne,
     T: Float,
-    Line<T>: BulkAndWeight<Weight = d3::DirVector<T>>,
-    Plane<T>: BulkAndWeight<Weight = d3::DirBivector<T>>,
+    Line<T>: Metric<Weight = d3::DirVector<T>>,
+    Plane<T>: Metric<Weight = d3::DirBivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -95,7 +95,7 @@ where
 impl<T> Angle<HomogeneusPlane<T>> for HomogeneusPlane<T>
 where
     T: Float,
-    HomogeneusPlane<T>: BulkAndWeight<Weight = d3::Bivector<T>>,
+    HomogeneusPlane<T>: Metric<Weight = d3::Bivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -115,7 +115,7 @@ impl<T> Angle<Plane<T>> for Plane<T>
 where
     T: ConstOne,
     T: Float,
-    Plane<T>: BulkAndWeight<Weight = d3::DirBivector<T>>,
+    Plane<T>: Metric<Weight = d3::DirBivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;

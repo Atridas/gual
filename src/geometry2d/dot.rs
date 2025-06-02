@@ -3,9 +3,7 @@ use std::{
     ops::{Add, Mul},
 };
 
-use num::Float;
-
-use crate::{Dot, Epsilon, Unitizable};
+use crate::Dot;
 
 use super::{Bivector, Vector};
 
@@ -46,24 +44,6 @@ where
         Bivector {
             xy: self.xy * rhs.xy,
             _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> Unitizable for Vector<T>
-where
-    T: Copy,
-    T: Float,
-    T: Epsilon,
-{
-    type Output = Vector<T>;
-
-    fn unitize(&self) -> Option<Self::Output> {
-        let len2 = self.dot(self);
-        if len2.is_near_zero() {
-            None
-        } else {
-            Some(*self * len2.recip().sqrt())
         }
     }
 }

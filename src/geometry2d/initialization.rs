@@ -5,7 +5,9 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use super::{Bivector, Evenvector, Multivector, Vector};
+use crate::Unitizable;
+
+use super::{Bivector, Evenvector, Multivector, UnitVector, Vector};
 
 impl<T, M> Vector<T, M> {
     pub fn new(x: T, y: T) -> Self {
@@ -261,4 +263,34 @@ where
         v: Vector::ZERO,
         b: Bivector::XY,
     };
+}
+
+impl<T> From<UnitVector<T>> for Vector<T> {
+    fn from(value: UnitVector<T>) -> Self {
+        value.0
+    }
+}
+
+impl<T> TryFrom<Vector<T>> for UnitVector<T>
+where
+    Vector<T>: Unitizable<Output = UnitVector<T>>,
+{
+    type Error = ();
+    fn try_from(value: Vector<T>) -> Result<Self, Self::Error> {
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
+        }
+    }
+}
+
+impl<T> UnitVector<T> {
+    /// Creates a new unit vector.
+    ///
+    /// It is marked unsafe even though it is not "rust unsafe" to use,
+    /// you should really initialize it with only a unit vector if you
+    /// want other operations to have a meaningful result.
+    pub unsafe fn new(value: Vector<T>) -> Self {
+        UnitVector(value)
+    }
 }

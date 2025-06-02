@@ -3,7 +3,7 @@ use num::traits::ConstOne;
 use num::traits::ConstZero;
 
 use crate::Antiscalar;
-use crate::BulkAndWeight;
+use crate::Metric;
 use crate::Distance;
 use crate::Dot;
 use crate::Norm;

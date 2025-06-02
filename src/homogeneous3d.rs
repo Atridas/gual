@@ -10,7 +10,6 @@ pub use d4::Vector as HomogeneusPoint;
 use num::Float;
 
 mod angle;
-mod bulk_and_weight;
 mod central_antiprojection;
 mod central_projection;
 mod contraction;
@@ -21,6 +20,7 @@ mod dual;
 mod expansion;
 mod join;
 mod meet;
+mod metric;
 mod norm;
 mod orthogonal_antiprojection;
 mod orthogonal_projection;

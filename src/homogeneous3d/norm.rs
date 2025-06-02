@@ -15,6 +15,16 @@ where
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
 
+    fn bulk_norm_squared(&self) -> Self::Scalar {
+        d4::Scalar(self.dot(self).0)
+    }
+
+    fn weight_norm_squared(&self) -> Self::Antiscalar {
+        d4::Quadvector {
+            xyzw: self.w * self.w,
+        }
+    }
+
     fn bulk_norm(&self) -> d4::Scalar<T> {
         d4::Scalar(self.dot(self).0.sqrt())
     }
@@ -33,13 +43,23 @@ where
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
 
+    fn bulk_norm_squared(&self) -> Self::Scalar {
+        d4::Scalar(self.dot(self).0)
+    }
+
+    fn weight_norm_squared(&self) -> Self::Antiscalar {
+        d4::Quadvector {
+            xyzw: self.antidot(self).xyzw,
+        }
+    }
+
     fn bulk_norm(&self) -> d4::Scalar<T> {
         d4::Scalar(self.dot(self).0.sqrt())
     }
 
     fn weight_norm(&self) -> d4::Quadvector<T> {
         d4::Quadvector {
-            xyzw: self.antidot(self).xyzw.sqrt(),
+            xyzw: self.weight_norm_squared().xyzw.sqrt(),
         }
     }
 }
@@ -52,13 +72,21 @@ where
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
 
+    fn bulk_norm_squared(&self) -> Self::Scalar {
+        d4::Scalar(self.zyx * self.zyx)
+    }
+
+    fn weight_norm_squared(&self) -> Self::Antiscalar {
+        self.antidot(self)
+    }
+
     fn bulk_norm(&self) -> d4::Scalar<T> {
         d4::Scalar(self.zyx.abs())
     }
 
     fn weight_norm(&self) -> d4::Quadvector<T> {
         d4::Quadvector {
-            xyzw: self.antidot(self).xyzw.sqrt(),
+            xyzw: self.weight_norm_squared().xyzw.sqrt(),
         }
     }
 }

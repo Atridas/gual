@@ -4,21 +4,20 @@ use crate::Euclidean;
 
 mod add;
 mod antiwedge;
-mod bulkweight;
 mod complement;
 mod copyclone;
+mod div;
 mod dot;
+mod dual;
 mod initialization;
+mod metric;
 mod mul;
 mod neg;
+mod norm;
 mod sub;
+mod unitize;
 mod vector_space;
 mod wedge;
-
-//mod bivector2d;
-//mod multivector2d;
-//mod scalar2d;
-//mod vector2d;
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Vector<T, M = Euclidean> {
@@ -45,3 +44,9 @@ pub struct Multivector<T, M = Euclidean> {
     pub v: Vector<T, M>,
     pub b: Bivector<T, M>,
 }
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct UnitVector<T>(Vector<T>);
+
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+pub struct Point<T>(pub Vector<T>);

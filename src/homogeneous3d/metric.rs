@@ -5,13 +5,13 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::BulkAndWeight;
+use crate::Metric;
 
 use super::{HomogeneusLine, HomogeneusPlane, HomogeneusPoint, HorizonLine, Line, Plane};
 use crate::geometry3d as d3;
 use crate::geometry4d as d4;
 
-impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusPoint<T> {
+impl<T: Copy + ConstZero> Metric for HomogeneusPoint<T> {
     type Bulk = d3::Vector<T>;
     type Weight = d3::Scalar<T>;
 
@@ -55,7 +55,7 @@ impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusPoint<T> {
     }
 }
 
-impl<T> BulkAndWeight for d3::Point<T>
+impl<T> Metric for d3::Point<T>
 where
     T: Copy,
     T: ConstZero,
@@ -99,7 +99,7 @@ where
     }
 }
 
-impl<T> BulkAndWeight for d3::Vector<T>
+impl<T> Metric for d3::Vector<T>
 where
     T: Copy,
     T: Zero,
@@ -143,7 +143,7 @@ where
     }
 }
 
-impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusLine<T> {
+impl<T: Copy + ConstZero> Metric for HomogeneusLine<T> {
     type Bulk = d3::Bivector<T>;
     type Weight = d3::Vector<T>;
 
@@ -197,7 +197,7 @@ impl<T: Copy + ConstZero> BulkAndWeight for HomogeneusLine<T> {
     }
 }
 
-impl<T: Copy + ConstZero> BulkAndWeight for Line<T> {
+impl<T: Copy + ConstZero> Metric for Line<T> {
     type Bulk = d3::Bivector<T>;
     type Weight = d3::DirVector<T>;
 
@@ -251,7 +251,7 @@ impl<T: Copy + ConstZero> BulkAndWeight for Line<T> {
     }
 }
 
-impl<T: Copy> BulkAndWeight for HorizonLine<T>
+impl<T: Copy> Metric for HorizonLine<T>
 where
     d3::Vector<T>: ConstZero,
     d3::Vector<T>: Zero,
@@ -295,7 +295,7 @@ where
     }
 }
 
-impl<T> BulkAndWeight for HomogeneusPlane<T>
+impl<T> Metric for HomogeneusPlane<T>
 where
     T: Copy,
     T: ConstZero,
@@ -344,7 +344,7 @@ where
     }
 }
 
-impl<T> BulkAndWeight for Plane<T>
+impl<T> Metric for Plane<T>
 where
     T: Copy,
     T: ConstZero,

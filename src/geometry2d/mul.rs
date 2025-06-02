@@ -2,7 +2,7 @@ use std::{marker::PhantomData, ops::Mul};
 
 use crate::GeometricProduct;
 
-use super::{Bivector, Evenvector, Multivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Point, UnitVector, Vector};
 
 // ----------------------------------------------------------------------------------------------------
 // Vector
@@ -19,6 +19,34 @@ where
             y: self.y * rhs,
             _metric: PhantomData,
         }
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------
+// UnitVector
+// ----------------------------------------------------------------------------------------------------
+
+impl<T: Copy> Mul<T> for UnitVector<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Vector<T>;
+    fn mul(self, rhs: T) -> Self::Output {
+        self.0 * rhs
+    }
+}
+
+// ----------------------------------------------------------------------------------------------------
+// Point
+// ----------------------------------------------------------------------------------------------------
+
+impl<T: Copy> Mul<T> for Point<T>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Self;
+    fn mul(self, rhs: T) -> Self::Output {
+        Point(self.0 * rhs)
     }
 }
 

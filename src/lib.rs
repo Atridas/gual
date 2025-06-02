@@ -169,14 +169,14 @@ pub trait Dot {
     }
 }
 
-/// Separates the vector elements in a bulk and a weight.
+/// Defines a metric and divides the vector elements in a bulk and a weight.
 ///
 /// This needs a metric consistent with [`Dot`]. This is not an interesting operation in
 /// euclidean space (both bulk and weight return the full input) but becomes useful in other spaces.
 ///
 /// In projective space the bulk is the part of the element whose dot product with themself whould not become
 /// `0`, and the weight the part that whould become `0`.
-pub trait BulkAndWeight {
+pub trait Metric {
     /// Part left after applying the Metric
     type Bulk;
 
@@ -210,6 +210,12 @@ pub trait Norm {
     /// Type that represents the full space in the algebra
     type Antiscalar;
 
+    /// square of the [`Norm::bulk_norm`]
+    fn bulk_norm_squared(&self) -> Self::Scalar;
+
+    /// square of the [`Norm::weight_norm`]
+    fn weight_norm_squared(&self) -> Self::Antiscalar;
+
     /// norm of the bulk
     fn bulk_norm(&self) -> Self::Scalar;
 
@@ -219,6 +225,16 @@ pub trait Norm {
     /// addition of the bulk and weight norms
     fn geometric_norm(&self) -> (Self::Scalar, Self::Antiscalar) {
         (self.bulk_norm(), self.weight_norm())
+    }
+
+    /// equivalent to the [`Norm::bulk_norm`]
+    fn norm(&self) -> Self::Scalar {
+        self.bulk_norm()
+    }
+
+    /// equivalent to the [`Norm::bulk_norm_squared`]
+    fn norm_squared(&self) -> Self::Scalar {
+        self.bulk_norm_squared()
     }
 }
 
@@ -239,17 +255,38 @@ pub trait Unitizable {
     fn unitize(&self) -> Option<Self::Output>;
 }
 
+/// Dual operations.
+///
+/// This combines the [`Complement`] operation with the [`Metric`] operation in one. It gives 4 combinations
+/// (left & right complements and metric (bulks) and antimetric (weights)). Remember that with euclidean
+/// metrics there is no difference between the bulk and the weight.
+///
+/// We arbitrarily elevate the right variations to be the "default" ones (the only difference between the
+/// left and right ones is a sign at most) that we'll use to create other operations (Like the [`Contraction`]
+/// and the [`Expansion`]), we also define a default [`Dual::dual`] operation to be the bulk dual as a default
+/// choice.
 pub trait Dual {
+    /// Complementary vector space
     type AntiKVector;
 
+    /// The result of applying the metric and the right complement
     fn right_bulk_dual(&self) -> Self::AntiKVector;
+    /// The result of applying the metric and the left complement
     fn left_bulk_dual(&self) -> Self::AntiKVector;
+    /// The result of applying the antimetric and the right complement
     fn right_weight_dual(&self) -> Self::AntiKVector;
+    /// The result of applying the antimetric and the left complement
     fn left_weight_dual(&self) -> Self::AntiKVector;
 
+    /// Equivalent to the [`Dual::right_bulk_dual`]
+    fn dual(&self) -> Self::AntiKVector {
+        self.right_bulk_dual()
+    }
+    /// Equivalent to the [`Dual::right_bulk_dual`]
     fn bulk_dual(&self) -> Self::AntiKVector {
         self.right_bulk_dual()
     }
+    /// Equivalent to the [`Dual::right_weight_dual`]
     fn weight_dual(&self) -> Self::AntiKVector {
         self.right_weight_dual()
     }
@@ -371,9 +408,9 @@ pub trait Antisupport {
 
 impl<T> Attitude for T
 where
-    T: BulkAndWeight,
+    T: Metric,
 {
-    type Output = <T as BulkAndWeight>::Weight;
+    type Output = <T as Metric>::Weight;
 
     fn attitude(&self) -> Self::Output {
         self.weight()

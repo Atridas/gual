@@ -1,10 +1,10 @@
 use num::Zero;
 
-use crate::BulkAndWeight;
+use crate::Metric;
 
 use super::{Bivector, Vector};
 
-impl<T: Copy + Zero> BulkAndWeight for Vector<T> {
+impl<T: Copy + Zero> Metric for Vector<T> {
     type Bulk = Vector<T>;
     type Weight = Vector<T>;
 
@@ -30,7 +30,7 @@ impl<T: Copy + Zero> BulkAndWeight for Vector<T> {
     }
 }
 
-impl<T: Copy + Zero> BulkAndWeight for Bivector<T> {
+impl<T: Copy + Zero> Metric for Bivector<T> {
     type Bulk = Bivector<T>;
     type Weight = Bivector<T>;
 
