@@ -2,6 +2,8 @@ use gual::geometry2d::{Bivector, Vector};
 
 mod antiwedge;
 mod complement;
+mod contraction;
+mod expansion;
 mod wedge;
 
 struct ScalarIt {

@@ -23,7 +23,7 @@ fn wedge_scalar_bivector() {
 }
 
 #[test]
-fn wedge_vector_bivector() {
+fn wedge_vector_vector() {
     for v in VectorIt::new(50) {
         for v2 in VectorIt::new(50) {
             // vector - vector anticommute

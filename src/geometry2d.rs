@@ -5,6 +5,7 @@ use crate::Euclidean;
 mod add;
 mod antiwedge;
 mod complement;
+mod contraction;
 mod copyclone;
 mod div;
 mod dot;

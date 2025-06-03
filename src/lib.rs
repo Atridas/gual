@@ -1,11 +1,10 @@
 use std::marker::PhantomData;
 
-use num::{Float, FromPrimitive};
-
 pub mod geometry2d;
 pub mod geometry3d;
 pub mod geometry4d;
 
+mod blanket_impls;
 mod macros;
 mod scalar;
 
@@ -317,11 +316,15 @@ pub trait Contraction<Rhs> {
     /// Substracts the bulk of `rhs` from `self`.
     ///
     /// The resulting object is contained within `self` and orthogonal to the bulk of `rhs`
+    ///
+    /// Equivalent to `self.antiwedge(rhs.right_bulk_dual())`
     fn bulk_contraction(&self, rhs: &Rhs) -> Self::BulkOutput;
 
     /// Substracts the weigth of `rhs` from `self`.
     ///
     /// The resulting object is contained within `self` and orthogonal to the weigth of `rhs`
+    ///
+    /// Equivalent to `self.antiwedge(rhs.right_weight_dual())`
     fn weight_contraction(&self, rhs: &Rhs) -> Self::WeightOutput;
 
     /// Equivalent to [`Contraction::bulk_contraction`]
@@ -330,49 +333,39 @@ pub trait Contraction<Rhs> {
     }
 }
 
+/// Expansion operation: `a v b*`
+///
+/// Comes with 2 variants: bulk and weight one. In euclidean space there is no difference.
+///
+/// It conceptually "adds" the missing dimensions of the second object to the first object, so
+/// `a.expansion(b)` will have the dimension of `dimension(a) + antidimension(b)`. If both have the
+/// same dimensions the result is a scalar equivalent to the dot product.
+///
+/// The result will contain the first input and be orthogonal to the second input.
+///
+/// An example whould be expanding a vector using a bivector in 3 dimensions: the result will be another
+/// bivector with the original vector in it, that is orthogonal to the bivector input.
 pub trait Expansion<Rhs> {
     type BulkOutput;
     type WeightOutput;
 
+    /// Adds the dual of the bulk of `rhs` from `self`.
+    ///
+    /// The resulting object contains `self` and is orthogonal to the bulk of `rhs`
+    ///
+    /// Equivalent to `self.wedge(rhs.right_bulk_dual())`
     fn bulk_expansion(&self, rhs: &Rhs) -> Self::BulkOutput;
+
+    /// Adds the dual of the weight of `rhs` from `self`.
+    ///
+    /// The resulting object contains `self` and is orthogonal to the weight of `rhs`
+    ///
+    /// Equivalent to `self.wedge(rhs.right_weight_dual())`
     fn weight_expansion(&self, rhs: &Rhs) -> Self::WeightOutput;
 
+    /// Equivalent to [`Expansion::bulk_expansion`]
     fn expansion(&self, rhs: &Rhs) -> Self::BulkOutput {
         self.bulk_expansion(rhs)
-    }
-}
-
-impl<T> Contraction<T> for T
-where
-    T: Dot,
-    <T as Dot>::Antiscalar: KVector<AntiKVector = <T as Dot>::Scalar>,
-{
-    type BulkOutput = <T as Dot>::Scalar;
-    type WeightOutput = <T as Dot>::Scalar;
-
-    fn bulk_contraction(&self, rhs: &T) -> Self::BulkOutput {
-        self.dot(rhs)
-    }
-
-    fn weight_contraction(&self, rhs: &T) -> Self::WeightOutput {
-        self.antidot(rhs).right_complement()
-    }
-}
-
-impl<T> Expansion<T> for T
-where
-    T: Dot,
-    <T as Dot>::Scalar: KVector<AntiKVector = <T as Dot>::Antiscalar>,
-{
-    type BulkOutput = <T as Dot>::Antiscalar;
-    type WeightOutput = <T as Dot>::Antiscalar;
-
-    fn bulk_expansion(&self, rhs: &T) -> Self::BulkOutput {
-        self.dot(rhs).right_complement()
-    }
-
-    fn weight_expansion(&self, rhs: &T) -> Self::WeightOutput {
-        self.antidot(rhs)
     }
 }
 
@@ -438,17 +431,6 @@ pub trait Antisupport {
     type Plane;
 
     fn antisupport(&self) -> Self::Plane;
-}
-
-impl<T> Attitude for T
-where
-    T: Metric,
-{
-    type Output = <T as Metric>::Weight;
-
-    fn attitude(&self) -> Self::Output {
-        self.weight()
-    }
 }
 
 pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
@@ -600,16 +582,4 @@ macro_rules! reverse_antigeometric {
             }
         }
     };
-}
-
-impl<T: Float + FromPrimitive + Ord> Epsilon for T {
-    #[inline(always)]
-    fn eps() -> Self {
-        T::from_f32(0.001).expect("expected T to be a floating point type")
-    }
-
-    #[inline(always)]
-    fn is_near_zero(&self) -> bool {
-        self.abs() < Self::eps()
-    }
 }
