@@ -13,6 +13,7 @@ mod vector3d;
 mod add;
 mod copyclone;
 mod initialization;
+mod mul;
 mod neg;
 mod sub;
 

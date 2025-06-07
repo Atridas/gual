@@ -11,22 +11,6 @@ use crate::{
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
-impl<T> Mul<T> for Vector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Vector<T>;
-    fn mul(self, rhs: T) -> Self::Output {
-        Vector {
-            x: self.x * rhs,
-            y: self.y * rhs,
-            z: self.z * rhs,
-            _metric: PhantomData,
-        }
-    }
-}
-
 impl<T> KVector for Vector<T>
 where
     T: Copy,

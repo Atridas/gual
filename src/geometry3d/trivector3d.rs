@@ -32,19 +32,6 @@ where
     }
 }
 
-impl<T> Mul<T> for Trivector<T>
-where
-    T: Mul<T, Output = T>,
-{
-    type Output = Trivector<T>;
-    fn mul(self, rhs: T) -> Self::Output {
-        Trivector {
-            xyz: self.xyz * rhs,
-            _metric: PhantomData,
-        }
-    }
-}
-
 impl<T: Clone> KVector for Trivector<T> {
     type AntiKVector = Scalar<T>;
 
