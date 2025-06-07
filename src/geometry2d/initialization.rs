@@ -220,6 +220,16 @@ where
     };
 }
 
+impl<T> UnitVector<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    pub const X: Self = UnitVector(Vector::X);
+
+    pub const Y: Self = UnitVector(Vector::Y);
+}
+
 impl<T, M> Bivector<T, M>
 where
     T: ConstOne,

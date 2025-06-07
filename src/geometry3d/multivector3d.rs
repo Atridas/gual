@@ -17,7 +17,7 @@ where
     T: Mul<T, Output = T>,
     Trivector<T>: Antiscalar,
 {
-    type Scalar = Scalar<T>;
+    type Scalar = T;
     type Vector = Vector<T>;
     type Antivector = Bivector<T>;
     type Antiscalar = Trivector<T>;
@@ -39,21 +39,23 @@ where
     }
 
     fn right_complement(&self) -> Self {
-        Multivector {
-            s: self.a.right_complement(),
-            v: self.b.right_complement(),
-            b: self.v.right_complement(),
-            a: self.s.right_complement(),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: self.a.right_complement(),
+        //     v: self.b.right_complement(),
+        //     b: self.v.right_complement(),
+        //     a: self.s.right_complement(),
+        // }
     }
 
     fn left_complement(&self) -> Self {
-        Multivector {
-            s: self.a.left_complement(),
-            v: self.b.left_complement(),
-            b: self.v.left_complement(),
-            a: self.s.left_complement(),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: self.a.left_complement(),
+        //     v: self.b.left_complement(),
+        //     b: self.v.left_complement(),
+        //     a: self.s.left_complement(),
+        // }
     }
 }
 
@@ -63,7 +65,7 @@ where
 {
     fn zero() -> Self {
         Multivector {
-            s: Scalar::zero(),
+            s: T::zero(),
             v: Vector::zero(),
             b: Bivector::zero(),
             a: Trivector::zero(),
@@ -80,7 +82,7 @@ where
     T: ConstZero,
 {
     const ZERO: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZERO,
         a: Trivector::ZERO,
@@ -96,7 +98,7 @@ where
 {
     fn one() -> Self {
         Multivector {
-            s: Scalar::one(),
+            s: T::one(),
             v: Vector::zero(),
             b: Bivector::zero(),
             a: Trivector::zero(),
@@ -111,7 +113,7 @@ where
     Multivector<T>: Mul<Output = Multivector<T>>, // TODO!
 {
     const ONE: Self = Multivector {
-        s: Scalar::ONE,
+        s: T::ONE,
         v: Vector::ZERO,
         b: Bivector::ZERO,
         a: Trivector::ZERO,
@@ -124,49 +126,49 @@ where
     T: ConstOne,
 {
     pub const X: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::X,
         b: Bivector::ZERO,
         a: Trivector::ZERO,
     };
 
     pub const Y: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::Y,
         b: Bivector::ZERO,
         a: Trivector::ZERO,
     };
 
     pub const Z: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::Z,
         b: Bivector::ZERO,
         a: Trivector::ZERO,
     };
 
     pub const YZ: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::YZ,
         a: Trivector::ZERO,
     };
 
     pub const ZX: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZX,
         a: Trivector::ZERO,
     };
 
     pub const XY: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::XY,
         a: Trivector::ZERO,
     };
 
     pub const XYZ: Self = Multivector {
-        s: Scalar::ZERO,
+        s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZERO,
         a: Trivector::XYZ,
@@ -228,12 +230,13 @@ where
     type Output = Multivector<T>;
 
     fn wedge(&self, rhs: &Vector<T>) -> Self::Output {
-        Multivector {
-            s: Scalar::zero(),
-            v: self.s.wedge(rhs),
-            b: self.v.wedge(rhs),
-            a: self.b.wedge(rhs),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: T::zero(),
+        //     v: self.s.wedge(rhs),
+        //     b: self.v.wedge(rhs),
+        //     a: self.b.wedge(rhs),
+        // }
     }
 }
 
@@ -246,12 +249,13 @@ where
     type Output = Multivector<T>;
 
     fn wedge(&self, rhs: &Bivector<T>) -> Self::Output {
-        Multivector {
-            s: Scalar::zero(),
-            v: Vector::zero(),
-            b: self.s.wedge(rhs),
-            a: self.v.wedge(rhs),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: T::zero(),
+        //     v: Vector::zero(),
+        //     b: self.s.wedge(rhs),
+        //     a: self.v.wedge(rhs),
+        // }
     }
 }
 
@@ -264,12 +268,13 @@ where
     type Output = Multivector<T>;
 
     fn wedge(&self, rhs: &Trivector<T>) -> Self::Output {
-        Multivector {
-            s: Scalar::zero(),
-            v: Vector::zero(),
-            b: Bivector::zero(),
-            a: self.s.wedge(rhs),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: T::zero(),
+        //     v: Vector::zero(),
+        //     b: Bivector::zero(),
+        //     a: self.s.wedge(rhs),
+        // }
     }
 }
 
@@ -283,26 +288,27 @@ where
     type Output = Multivector<T>;
 
     fn wedge(&self, rhs: &Multivector<T>) -> Self::Output {
-        let s = self.s.wedge(&rhs.s);
-        let v1 = self.s.wedge(&rhs.v);
-        let b1 = self.s.wedge(&rhs.b);
-        let a1 = self.s.wedge(&rhs.a);
+        unimplemented!();
+        // let s = self.s.wedge(&rhs.s);
+        // let v1 = self.s.wedge(&rhs.v);
+        // let b1 = self.s.wedge(&rhs.b);
+        // let a1 = self.s.wedge(&rhs.a);
 
-        let v2 = self.v.wedge(&rhs.s);
-        let b2 = self.v.wedge(&rhs.v);
-        let a2 = self.v.wedge(&rhs.b);
+        // let v2 = self.v.wedge(&rhs.s);
+        // let b2 = self.v.wedge(&rhs.v);
+        // let a2 = self.v.wedge(&rhs.b);
 
-        let b3 = self.b.wedge(&rhs.s);
-        let a3 = self.b.wedge(&rhs.v);
+        // let b3 = self.b.wedge(&rhs.s);
+        // let a3 = self.b.wedge(&rhs.v);
 
-        let a4 = self.a.wedge(&rhs.s);
+        // let a4 = self.a.wedge(&rhs.s);
 
-        Multivector {
-            s: s,
-            v: v1 + v2,
-            b: b1 + b2 + b3,
-            a: a1 + a2 + a3 + a4,
-        }
+        // Multivector {
+        //     s: s,
+        //     v: v1 + v2,
+        //     b: b1 + b2 + b3,
+        //     a: a1 + a2 + a3 + a4,
+        // }
     }
 }
 
@@ -331,17 +337,18 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
-        let v = self.s.geometric_product(rhs);
-        let sb = self.v.geometric_product(rhs);
-        let vt = self.b.geometric_product(rhs);
-        let b = self.a.geometric_product(rhs);
+        unimplemented!();
+        // let v = self.s.geometric_product(rhs);
+        // let sb = self.v.geometric_product(rhs);
+        // let vt = self.b.geometric_product(rhs);
+        // let b = self.a.geometric_product(rhs);
 
-        Multivector {
-            s: sb.s,
-            v: v + vt.v,
-            b: sb.b + b,
-            a: vt.a,
-        }
+        // Multivector {
+        //     s: sb.s,
+        //     v: v + vt.v,
+        //     b: sb.b + b,
+        //     a: vt.a,
+        // }
     }
 }
 
@@ -357,17 +364,18 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
-        let b = self.s.geometric_product(rhs);
-        let vt = self.v.geometric_product(rhs);
-        let sb = self.b.geometric_product(rhs);
-        let v = self.a.geometric_product(rhs);
+        unimplemented!();
+        // let b = self.s.geometric_product(rhs);
+        // let vt = self.v.geometric_product(rhs);
+        // let sb = self.b.geometric_product(rhs);
+        // let v = self.a.geometric_product(rhs);
 
-        Multivector {
-            s: sb.s,
-            v: v + vt.v,
-            b: sb.b + b,
-            a: vt.a,
-        }
+        // Multivector {
+        //     s: sb.s,
+        //     v: v + vt.v,
+        //     b: sb.b + b,
+        //     a: vt.a,
+        // }
     }
 }
 
@@ -380,12 +388,13 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Trivector<T>) -> Self::Output {
-        Multivector {
-            s: self.a.geometric_product(rhs),
-            v: self.b.geometric_product(rhs),
-            b: self.v.geometric_product(rhs),
-            a: self.s.geometric_product(rhs),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: self.a.geometric_product(rhs),
+        //     v: self.b.geometric_product(rhs),
+        //     b: self.v.geometric_product(rhs),
+        //     a: self.s.geometric_product(rhs),
+        // }
     }
 }
 
@@ -401,9 +410,10 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
-        self.geometric_product(&rhs.s)
-            + self.geometric_product(&rhs.v)
-            + self.geometric_product(&rhs.b)
-            + self.geometric_product(&rhs.a)
+        unimplemented!();
+        // self.geometric_product(&rhs.s)
+        //     + self.geometric_product(&rhs.v)
+        //     + self.geometric_product(&rhs.b)
+        //     + self.geometric_product(&rhs.a)
     }
 }

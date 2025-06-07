@@ -49,11 +49,11 @@ where
         if w.is_near_zero() {
             None
         } else {
-            Some(d3::Point(d3::Vector {
-                x: (self.0.x * a - rhs.0.yz * b) / w,
-                y: (self.0.y * a - rhs.0.zx * b) / w,
-                z: (self.0.z * a - rhs.0.xy * b) / w,
-            }))
+            Some(d3::Point(d3::Vector::new(
+                (self.0.x * a - rhs.0.yz * b) / w,
+                (self.0.y * a - rhs.0.zx * b) / w,
+                (self.0.z * a - rhs.0.xy * b) / w,
+            )))
         }
     }
 }
@@ -75,11 +75,11 @@ where
         if w.is_near_zero() {
             None
         } else {
-            Some(d3::Point(d3::Vector {
-                x: (self.x * a - rhs.0.yz * b) / w,
-                y: (self.y * a - rhs.0.zx * b) / w,
-                z: (self.z * a - rhs.0.xy * b) / w,
-            }))
+            Some(d3::Point(d3::Vector::new(
+                (self.x * a - rhs.0.yz * b) / w,
+                (self.y * a - rhs.0.zx * b) / w,
+                (self.z * a - rhs.0.xy * b) / w,
+            )))
         }
     }
 }
@@ -118,11 +118,11 @@ where
             None
         } else {
             let s = rhs.0.zyx * rhs.0.zyx / w;
-            Some(d3::Point(d3::Vector {
-                x: s * self.0.x,
-                y: s * self.0.y,
-                z: s * self.0.z,
-            }))
+            Some(d3::Point(d3::Vector::new(
+                s * self.0.x,
+                s * self.0.y,
+                s * self.0.z,
+            )))
         }
     }
 }
@@ -141,11 +141,11 @@ where
             None
         } else {
             let s = rhs.0.zyx * rhs.0.zyx / w;
-            Some(d3::Point(d3::Vector {
-                x: s * self.x,
-                y: s * self.y,
-                z: s * self.z,
-            }))
+            Some(d3::Point(d3::Vector::new(
+                s * self.x,
+                s * self.y,
+                s * self.z,
+            )))
         }
     }
 }

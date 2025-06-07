@@ -182,17 +182,11 @@ where
             None
         } else {
             if self.0.is_sign_positive() {
-                Some(HorizonLine(d3::Bivector {
-                    yz: -rhs.0.wx,
-                    zx: -rhs.0.wy,
-                    xy: -rhs.0.wz,
-                }))
+                Some(HorizonLine(d3::Bivector::new(
+                    -rhs.0.wx, -rhs.0.wy, -rhs.0.wz,
+                )))
             } else {
-                Some(HorizonLine(d3::Bivector {
-                    yz: rhs.0.wx,
-                    zx: rhs.0.wy,
-                    xy: rhs.0.wz,
-                }))
+                Some(HorizonLine(d3::Bivector::new(rhs.0.wx, rhs.0.wy, rhs.0.wz)))
             }
         }
     }
@@ -276,11 +270,11 @@ where
     type WeightOutput = Option<d3::Point<T>>;
 
     fn bulk_expansion(&self, rhs: &Plane<T>) -> Self::BulkOutput {
-        d3::Vector {
-            x: -self.0 * rhs.0.wyz,
-            y: -self.0 * rhs.0.wzx,
-            z: -self.0 * rhs.0.wxy,
-        }
+        d3::Vector::new(
+            -self.0 * rhs.0.wyz,
+            -self.0 * rhs.0.wzx,
+            -self.0 * rhs.0.wxy,
+        )
     }
 
     fn weight_expansion(&self, _rhs: &Plane<T>) -> Self::WeightOutput {
@@ -576,11 +570,11 @@ where
     }
 
     fn weight_expansion(&self, rhs: &Plane<T>) -> Self::WeightOutput {
-        let bivector = d3::Bivector {
-            yz: self.z * rhs.0.wzx - self.y * rhs.0.wxy,
-            zx: self.x * rhs.0.wxy - self.z * rhs.0.wyz,
-            xy: self.y * rhs.0.wyz - self.x * rhs.0.wzx,
-        };
+        let bivector = d3::Bivector::new(
+            self.z * rhs.0.wzx - self.y * rhs.0.wxy,
+            self.x * rhs.0.wxy - self.z * rhs.0.wyz,
+            self.y * rhs.0.wyz - self.x * rhs.0.wzx,
+        );
         let len2 =
             bivector.yz * bivector.yz + bivector.zx * bivector.zx + bivector.xy * bivector.xy;
         if len2.is_near_zero() {
@@ -639,11 +633,7 @@ where
     fn bulk_expansion(&self, _rhs: &d4::Quadvector<T>) -> Self::BulkOutput {}
 
     fn weight_expansion(&self, rhs: &d4::Quadvector<T>) -> Self::WeightOutput {
-        d3::Vector {
-            x: self.x * rhs.xyzw,
-            y: self.y * rhs.xyzw,
-            z: self.z * rhs.xyzw,
-        }
+        d3::Vector::new(self.x * rhs.xyzw, self.y * rhs.xyzw, self.z * rhs.xyzw)
     }
 }
 
@@ -830,11 +820,9 @@ where
         } else if rhs.xyzw.is_sign_positive() {
             Some(*self)
         } else {
-            Some(HorizonLine(d3::Bivector {
-                yz: -self.0.yz,
-                zx: -self.0.zx,
-                xy: -self.0.xy,
-            }))
+            Some(HorizonLine(d3::Bivector::new(
+                -self.0.yz, -self.0.zx, -self.0.xy,
+            )))
         }
     }
 }

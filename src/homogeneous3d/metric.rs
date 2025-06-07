@@ -43,11 +43,7 @@ impl<T: Copy + ConstZero> Metric for HomogeneusPoint<T> {
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Vector {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
+        d3::Vector::new(self.x, self.y, self.z)
     }
 
     fn weight(&self) -> Self::Weight {
@@ -66,11 +62,7 @@ where
     type Weight = d3::Scalar<T>;
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
-        d3::Point(d3::Vector {
-            x: bulk.x,
-            y: bulk.y,
-            z: bulk.z,
-        })
+        d3::Point(d3::Vector::new(bulk.x, bulk.y, bulk.z))
     }
 
     fn from_weight(bulk: &Self::Weight) -> Self {
@@ -79,19 +71,15 @@ where
     }
 
     fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
-        d3::Point(d3::Vector {
-            x: bulk.x / weight.0,
-            y: bulk.y / weight.0,
-            z: bulk.z / weight.0,
-        })
+        d3::Point(d3::Vector::new(
+            bulk.x / weight.0,
+            bulk.y / weight.0,
+            bulk.z / weight.0,
+        ))
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Vector {
-            x: self.0.x,
-            y: self.0.y,
-            z: self.0.z,
-        }
+        d3::Vector::new(self.0.x, self.0.y, self.0.z)
     }
 
     fn weight(&self) -> Self::Weight {
@@ -109,11 +97,7 @@ where
     type Weight = d3::Scalar<T>;
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
-        d3::Vector {
-            x: bulk.x,
-            y: bulk.y,
-            z: bulk.z,
-        }
+        d3::Vector::new(bulk.x, bulk.y, bulk.z)
     }
 
     fn from_weight(bulk: &Self::Weight) -> Self {
@@ -123,19 +107,11 @@ where
 
     fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         assert!(weight.is_zero());
-        d3::Vector {
-            x: bulk.x,
-            y: bulk.y,
-            z: bulk.z,
-        }
+        d3::Vector::new(bulk.x, bulk.y, bulk.z)
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Vector {
-            x: self.x,
-            y: self.y,
-            z: self.z,
-        }
+        d3::Vector::new(self.x, self.y, self.z)
     }
 
     fn weight(&self) -> Self::Weight {
@@ -181,19 +157,11 @@ impl<T: Copy + ConstZero> Metric for HomogeneusLine<T> {
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Bivector {
-            yz: self.yz,
-            zx: self.zx,
-            xy: self.xy,
-        }
+        d3::Bivector::new(self.yz, self.zx, self.xy)
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Vector {
-            x: self.wx,
-            y: self.wy,
-            z: self.wz,
-        }
+        d3::Vector::new(self.wx, self.wy, self.wz)
     }
 }
 
@@ -235,19 +203,11 @@ impl<T: Copy + ConstZero> Metric for Line<T> {
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Bivector {
-            yz: self.0.yz,
-            zx: self.0.zx,
-            xy: self.0.xy,
-        }
+        d3::Bivector::new(self.0.yz, self.0.zx, self.0.xy)
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::DirVector(d3::Vector {
-            x: self.0.wx,
-            y: self.0.wy,
-            z: self.0.wz,
-        })
+        d3::DirVector(d3::Vector::new(self.0.wx, self.0.wy, self.0.wz))
     }
 }
 
@@ -261,11 +221,7 @@ where
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
         // @TODO(Atridas): Normalize
-        Self(d3::Bivector {
-            yz: bulk.yz,
-            zx: bulk.zx,
-            xy: bulk.xy,
-        })
+        Self(d3::Bivector::new(bulk.yz, bulk.zx, bulk.xy))
     }
 
     fn from_weight(_weight: &Self::Weight) -> Self {
@@ -275,19 +231,11 @@ where
     fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
         assert!(weight.is_zero());
         // @TODO(Atridas): Normalize
-        Self(d3::Bivector {
-            yz: bulk.yz,
-            zx: bulk.zx,
-            xy: bulk.xy,
-        })
+        Self(d3::Bivector::new(bulk.yz, bulk.zx, bulk.xy))
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Bivector {
-            yz: self.0.yz,
-            zx: self.0.zx,
-            xy: self.0.xy,
-        }
+        d3::Bivector::new(self.0.yz, self.0.zx, self.0.xy)
     }
 
     fn weight(&self) -> Self::Weight {
@@ -332,15 +280,11 @@ where
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Trivector { xyz: -self.zyx }
+        d3::Trivector::new(-self.zyx)
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::Bivector {
-            yz: self.wyz,
-            zx: self.wzx,
-            xy: self.wxy,
-        }
+        d3::Bivector::new(self.wyz, self.wzx, self.wxy)
     }
 }
 
@@ -378,14 +322,10 @@ where
     }
 
     fn bulk(&self) -> Self::Bulk {
-        d3::Trivector { xyz: -self.0.zyx }
+        d3::Trivector::new(-self.0.zyx)
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::DirBivector(d3::Bivector {
-            yz: self.0.wyz,
-            zx: self.0.wzx,
-            xy: self.0.wxy,
-        })
+        d3::DirBivector(d3::Bivector::new(self.0.wyz, self.0.wzx, self.0.wxy))
     }
 }

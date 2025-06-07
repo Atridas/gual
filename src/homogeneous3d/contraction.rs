@@ -65,11 +65,7 @@ where
     type WeightOutput = ();
 
     fn bulk_contraction(&self, rhs: &d4::Scalar<T>) -> Self::BulkOutput {
-        d3::Vector {
-            x: self.x * rhs.0,
-            y: self.y * rhs.0,
-            z: self.z * rhs.0,
-        }
+        d3::Vector::new(self.x * rhs.0, self.y * rhs.0, self.z * rhs.0)
     }
 
     fn weight_contraction(&self, _rhs: &d4::Scalar<T>) -> Self::WeightOutput {}
@@ -128,11 +124,11 @@ where
     type WeightOutput = ();
 
     fn bulk_contraction(&self, rhs: &d4::Scalar<T>) -> Self::BulkOutput {
-        HorizonLine(d3::Bivector {
-            yz: self.0.yz * rhs.0,
-            zx: self.0.zx * rhs.0,
-            xy: self.0.xy * rhs.0,
-        })
+        HorizonLine(d3::Bivector::new(
+            self.0.yz * rhs.0,
+            self.0.zx * rhs.0,
+            self.0.xy * rhs.0,
+        ))
     }
 
     fn weight_contraction(&self, _rhs: &d4::Scalar<T>) -> Self::WeightOutput {}
@@ -183,11 +179,7 @@ where
     }
 
     fn weight_contraction(&self, _rhs: &d3::Point<T>) -> Self::WeightOutput {
-        d3::Vector {
-            x: self.0.wx,
-            y: self.0.wy,
-            z: self.0.wz,
-        }
+        d3::Vector::new(self.0.wx, self.0.wy, self.0.wz)
     }
 }
 
@@ -212,19 +204,19 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(d3::DirVector(d3::Vector {
-                    x: x * invlen,
-                    y: y * invlen,
-                    z: z * invlen,
-                })))
+                Some(NormalizedPoint::DirVector(d3::DirVector(d3::Vector::new(
+                    x * invlen,
+                    y * invlen,
+                    z * invlen,
+                ))))
             }
         } else {
             let inv_w = w.recip();
-            Some(NormalizedPoint::Point(d3::Point(d3::Vector {
-                x: (self.0.zx * rhs.z - self.0.xy * rhs.y) * inv_w,
-                y: (self.0.xy * rhs.x - self.0.yz * rhs.z) * inv_w,
-                z: (self.0.yz * rhs.y - self.0.zx * rhs.x) * inv_w,
-            })))
+            Some(NormalizedPoint::Point(d3::Point(d3::Vector::new(
+                (self.0.zx * rhs.z - self.0.xy * rhs.y) * inv_w,
+                (self.0.xy * rhs.x - self.0.yz * rhs.z) * inv_w,
+                (self.0.yz * rhs.y - self.0.zx * rhs.x) * inv_w,
+            ))))
         }
     }
 
@@ -241,11 +233,11 @@ where
     type WeightOutput = ();
 
     fn bulk_contraction(&self, rhs: &d3::Point<T>) -> Self::BulkOutput {
-        d3::Vector {
-            x: self.0.zx * rhs.0.z - self.0.xy * rhs.0.y,
-            y: self.0.xy * rhs.0.x - self.0.yz * rhs.0.z,
-            z: self.0.yz * rhs.0.y - self.0.zx * rhs.0.x,
-        }
+        d3::Vector::new(
+            self.0.zx * rhs.0.z - self.0.xy * rhs.0.y,
+            self.0.xy * rhs.0.x - self.0.yz * rhs.0.z,
+            self.0.yz * rhs.0.y - self.0.zx * rhs.0.x,
+        )
     }
 
     fn weight_contraction(&self, _rhs: &d3::Point<T>) -> Self::WeightOutput {}
@@ -263,11 +255,11 @@ where
     type WeightOutput = ();
 
     fn bulk_contraction(&self, rhs: &d3::Vector<T>) -> Self::BulkOutput {
-        d3::Vector {
-            x: self.0.zx * rhs.z - self.0.xy * rhs.y,
-            y: self.0.xy * rhs.x - self.0.yz * rhs.z,
-            z: self.0.yz * rhs.y - self.0.zx * rhs.x,
-        }
+        d3::Vector::new(
+            self.0.zx * rhs.z - self.0.xy * rhs.y,
+            self.0.xy * rhs.x - self.0.yz * rhs.z,
+            self.0.yz * rhs.y - self.0.zx * rhs.x,
+        )
     }
 
     fn weight_contraction(&self, _rhs: &d3::Vector<T>) -> Self::WeightOutput {}
@@ -361,11 +353,7 @@ where
     }
 
     fn weight_contraction(&self, _rhs: &d3::Point<T>) -> Self::WeightOutput {
-        HorizonLine(d3::Bivector {
-            yz: self.0.wyz,
-            zx: self.0.wzx,
-            xy: self.0.wxy,
-        })
+        HorizonLine(d3::Bivector::new(self.0.wyz, self.0.wzx, self.0.wxy))
     }
 }
 
@@ -393,11 +381,11 @@ where
                 None
             } else {
                 let invlen = -len2.sqrt().recip();
-                Some(NormalizedLine::HorizonLine(HorizonLine(d3::Bivector {
-                    yz: yz * invlen,
-                    zx: zx * invlen,
-                    xy: xy * invlen,
-                })))
+                Some(NormalizedLine::HorizonLine(HorizonLine(d3::Bivector::new(
+                    yz * invlen,
+                    zx * invlen,
+                    xy * invlen,
+                ))))
             }
         } else {
             let invlen = len2.sqrt().recip();

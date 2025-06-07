@@ -40,11 +40,11 @@ where
 
     fn orthogonal_projection(&self, rhs: &Plane<T>) -> Self::Output {
         let b = self.0.x * rhs.0.wyz + self.0.y * rhs.0.wzx + self.0.z * rhs.0.wxy + rhs.0.zyx;
-        d3::Point(d3::Vector {
-            x: self.0.x - b * rhs.0.wyz,
-            y: self.0.y - b * rhs.0.wzx,
-            z: self.0.z - b * rhs.0.wxy,
-        })
+        d3::Point(d3::Vector::new(
+            self.0.x - b * rhs.0.wyz,
+            self.0.y - b * rhs.0.wzx,
+            self.0.z - b * rhs.0.wxy,
+        ))
     }
 }
 
@@ -81,11 +81,11 @@ where
     fn orthogonal_projection(&self, rhs: &Line<T>) -> Self::Output {
         let a = self.0.x * rhs.0.wx + self.0.y * rhs.0.wy + self.0.z * rhs.0.wz;
 
-        d3::Point(d3::Vector {
-            x: a * rhs.0.wx + (rhs.0.wy * rhs.0.xy - rhs.0.wz * rhs.0.zx),
-            y: a * rhs.0.wy + (rhs.0.wz * rhs.0.yz - rhs.0.wx * rhs.0.xy),
-            z: a * rhs.0.wz + (rhs.0.wx * rhs.0.zx - rhs.0.wy * rhs.0.yz),
-        })
+        d3::Point(d3::Vector::new(
+            a * rhs.0.wx + (rhs.0.wy * rhs.0.xy - rhs.0.wz * rhs.0.zx),
+            a * rhs.0.wy + (rhs.0.wz * rhs.0.yz - rhs.0.wx * rhs.0.xy),
+            a * rhs.0.wz + (rhs.0.wx * rhs.0.zx - rhs.0.wy * rhs.0.yz),
+        ))
     }
 }
 
@@ -177,11 +177,11 @@ where
     type Point = d3::Point<T>;
 
     fn support(&self) -> Self::Point {
-        d3::Point(d3::Vector {
-            x: self.0.wy * self.0.xy - self.0.wz * self.0.zx,
-            y: self.0.wz * self.0.yz - self.0.wx * self.0.xy,
-            z: self.0.wx * self.0.zx - self.0.wy * self.0.yz,
-        })
+        d3::Point(d3::Vector::new(
+            self.0.wy * self.0.xy - self.0.wz * self.0.zx,
+            self.0.wz * self.0.yz - self.0.wx * self.0.xy,
+            self.0.wx * self.0.zx - self.0.wy * self.0.yz,
+        ))
     }
 }
 
@@ -214,10 +214,10 @@ where
     type Point = d3::Point<T>;
 
     fn support(&self) -> Self::Point {
-        d3::Point(d3::Vector {
-            x: -self.0.zyx * self.0.wyz,
-            y: -self.0.zyx * self.0.wzx,
-            z: -self.0.zyx * self.0.wxy,
-        })
+        d3::Point(d3::Vector::new(
+            -self.0.zyx * self.0.wyz,
+            -self.0.zyx * self.0.wzx,
+            -self.0.zyx * self.0.wxy,
+        ))
     }
 }

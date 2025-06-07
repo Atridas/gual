@@ -65,19 +65,19 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(d3::DirVector(Vector {
-                    x: self.x * invlen,
-                    y: self.y * invlen,
-                    z: self.z * invlen,
-                })))
+                Some(NormalizedPoint::DirVector(d3::DirVector(Vector::new(
+                    self.x * invlen,
+                    self.y * invlen,
+                    self.z * invlen,
+                ))))
             }
         } else {
             let w = self.w.recip();
-            Some(NormalizedPoint::Point(d3::Point(Vector {
-                x: self.x * w,
-                y: self.y * w,
-                z: self.z * w,
-            })))
+            Some(NormalizedPoint::Point(d3::Point(Vector::new(
+                self.x * w,
+                self.y * w,
+                self.z * w,
+            ))))
         }
     }
 }
@@ -97,11 +97,11 @@ where
                     None
                 } else {
                     let invlen = len2.sqrt().recip();
-                    Some(NormalizedLine::HorizonLine(HorizonLine(d3::Bivector {
-                        yz: self.yz * invlen,
-                        zx: self.zx * invlen,
-                        xy: self.xy * invlen,
-                    })))
+                    Some(NormalizedLine::HorizonLine(HorizonLine(d3::Bivector::new(
+                        self.yz * invlen,
+                        self.zx * invlen,
+                        self.xy * invlen,
+                    ))))
                 }
             } else {
                 let invlen = len2.sqrt().recip();

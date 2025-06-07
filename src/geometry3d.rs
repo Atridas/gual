@@ -1,3 +1,7 @@
+use std::marker::PhantomData;
+
+use crate::Euclidean;
+
 mod angle3d;
 mod bivector3d;
 mod direction3d;
@@ -8,14 +12,18 @@ mod scalar3d;
 mod trivector3d;
 mod vector3d;
 
+mod copyclone;
+mod initialization;
+
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Scalar<T>(pub T);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Vector<T> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct Vector<T, M = Euclidean> {
     pub x: T,
     pub y: T,
     pub z: T,
+    _metric: PhantomData<M>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -24,31 +32,33 @@ pub struct Point<T>(pub Vector<T>);
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DirVector<T>(pub(super) Vector<T>);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Bivector<T> {
+#[derive(Debug, PartialEq, Eq)]
+pub struct Bivector<T, M = Euclidean> {
     pub yz: T,
     pub zx: T,
     pub xy: T,
+    _metric: PhantomData<M>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct DirBivector<T>(pub(super) Bivector<T>);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
-pub struct Trivector<T> {
+pub struct Trivector<T, M = Euclidean> {
     pub xyz: T,
+    _metric: PhantomData<M>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Multivector<T> {
-    pub s: Scalar<T>,
-    pub v: Vector<T>,
-    pub b: Bivector<T>,
-    pub a: Trivector<T>,
+pub struct Multivector<T, M = Euclidean> {
+    pub s: T,
+    pub v: Vector<T, M>,
+    pub b: Bivector<T, M>,
+    pub a: Trivector<T, M>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Evenvector<T> {
-    pub s: Scalar<T>,
-    pub b: Bivector<T>,
+pub struct Evenvector<T, M = Euclidean> {
+    pub s: T,
+    pub b: Bivector<T, M>,
 }

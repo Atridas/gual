@@ -1,4 +1,7 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Mul, Neg, Sub},
+};
 
 use num::{
     Zero,
@@ -14,7 +17,10 @@ where
     T: Zero,
 {
     fn zero() -> Self {
-        Trivector { xyz: T::zero() }
+        Trivector {
+            xyz: T::zero(),
+            _metric: PhantomData,
+        }
     }
 
     fn is_zero(&self) -> bool {
@@ -26,14 +32,20 @@ impl<T> ConstZero for Trivector<T>
 where
     T: ConstZero,
 {
-    const ZERO: Self = Trivector { xyz: T::ZERO };
+    const ZERO: Self = Trivector {
+        xyz: T::ZERO,
+        _metric: PhantomData,
+    };
 }
 
 impl<T: Clone> Antiscalar for Trivector<T>
 where
     T: ConstOne,
 {
-    const UNIT_VOLUME: Self = Trivector { xyz: T::ONE };
+    const UNIT_VOLUME: Self = Trivector {
+        xyz: T::ONE,
+        _metric: PhantomData,
+    };
 
     type T = T;
 
@@ -42,7 +54,10 @@ where
     }
 
     fn from_volume(volume: Self::T) -> Self {
-        Trivector { xyz: volume }
+        Trivector {
+            xyz: volume,
+            _metric: PhantomData,
+        }
     }
 }
 
@@ -50,7 +65,10 @@ impl<T> Trivector<T>
 where
     T: ConstOne,
 {
-    pub const XYZ: Self = Trivector { xyz: T::ONE };
+    pub const XYZ: Self = Trivector {
+        xyz: T::ONE,
+        _metric: PhantomData,
+    };
 }
 
 impl<T> Add for Trivector<T>
@@ -61,6 +79,7 @@ where
     fn add(self, rhs: Self) -> Self::Output {
         Trivector {
             xyz: self.xyz + rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -73,6 +92,7 @@ where
     fn sub(self, rhs: Self) -> Self::Output {
         Trivector {
             xyz: self.xyz - rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -83,7 +103,10 @@ where
 {
     type Output = Trivector<T>;
     fn neg(self) -> Self::Output {
-        Trivector { xyz: -self.xyz }
+        Trivector {
+            xyz: -self.xyz,
+            _metric: PhantomData,
+        }
     }
 }
 
@@ -95,6 +118,7 @@ where
     fn mul(self, rhs: T) -> Self::Output {
         Trivector {
             xyz: self.xyz * rhs,
+            _metric: PhantomData,
         }
     }
 }
@@ -121,6 +145,7 @@ where
     fn antiwedge(&self, rhs: &Trivector<T>) -> Self::Output {
         Trivector {
             xyz: self.xyz * rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -150,6 +175,7 @@ where
             x: -self.xyz * rhs.yz,
             y: -self.xyz * rhs.zx,
             z: -self.xyz * rhs.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -176,11 +202,12 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
-        Multivector {
-            s: self.geometric_product(&rhs.a),
-            v: self.geometric_product(&rhs.b),
-            b: self.geometric_product(&rhs.v),
-            a: self.geometric_product(&rhs.s),
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: self.geometric_product(&rhs.a),
+        //     v: self.geometric_product(&rhs.b),
+        //     b: self.geometric_product(&rhs.v),
+        //     a: self.geometric_product(&rhs.s),
+        // }
     }
 }

@@ -1,4 +1,7 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Mul, Neg, Sub},
+};
 
 use num::{
     Zero,
@@ -7,7 +10,7 @@ use num::{
 
 use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
 
-use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
+use super::{Bivector, Evenvector, Multivector, Trivector, Vector};
 
 impl<T> Zero for Bivector<T>
 where
@@ -18,6 +21,7 @@ where
             yz: T::zero(),
             zx: T::zero(),
             xy: T::zero(),
+            _metric: PhantomData,
         }
     }
 
@@ -34,6 +38,7 @@ where
         yz: T::ZERO,
         zx: T::ZERO,
         xy: T::ZERO,
+        _metric: PhantomData,
     };
 }
 
@@ -46,18 +51,21 @@ where
         yz: T::ONE,
         zx: T::ZERO,
         xy: T::ZERO,
+        _metric: PhantomData,
     };
 
     pub const ZX: Self = Bivector {
         yz: T::ZERO,
         zx: T::ONE,
         xy: T::ZERO,
+        _metric: PhantomData,
     };
 
     pub const XY: Self = Bivector {
         yz: T::ZERO,
         zx: T::ZERO,
         xy: T::ONE,
+        _metric: PhantomData,
     };
 }
 
@@ -71,6 +79,7 @@ where
             yz: self.yz + rhs.yz,
             zx: self.zx + rhs.zx,
             xy: self.xy + rhs.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -85,6 +94,7 @@ where
             yz: self.yz - rhs.yz,
             zx: self.zx - rhs.zx,
             xy: self.xy - rhs.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -99,6 +109,7 @@ where
             yz: -self.yz,
             zx: -self.zx,
             xy: -self.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -114,6 +125,7 @@ where
             yz: self.yz * rhs,
             zx: self.zx * rhs,
             xy: self.xy * rhs,
+            _metric: PhantomData,
         }
     }
 }
@@ -126,6 +138,7 @@ impl<T: Copy> KVector for Bivector<T> {
             x: self.yz,
             y: self.zx,
             z: self.xy,
+            _metric: PhantomData,
         }
     }
 
@@ -134,6 +147,7 @@ impl<T: Copy> KVector for Bivector<T> {
             x: self.yz,
             y: self.zx,
             z: self.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -151,6 +165,7 @@ where
             x: self.zx * rhs.xy - self.xy * rhs.zx,
             y: self.xy * rhs.yz - self.yz * rhs.xy,
             z: self.yz * rhs.zx - self.zx * rhs.yz,
+            _metric: PhantomData,
         }
     }
 }
@@ -167,6 +182,7 @@ where
             yz: self.yz * rhs.xyz,
             zx: self.zx * rhs.xyz,
             xy: self.xy * rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -183,11 +199,12 @@ where
 
     fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
         Multivector {
-            s: Scalar::ZERO,
+            s: T::ZERO,
             v: Vector {
                 x: self.xy * rhs.y - self.zx * rhs.z,
                 y: self.yz * rhs.z - self.xy * rhs.x,
                 z: self.zx * rhs.x - self.yz * rhs.y,
+                _metric: PhantomData,
             },
             b: Bivector::ZERO,
             a: rhs.wedge(self),
@@ -207,11 +224,12 @@ where
 
     fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
         Evenvector {
-            s: -Scalar(self.yz * rhs.yz + self.zx * rhs.zx + self.xy * rhs.xy),
+            s: -(self.yz * rhs.yz + self.zx * rhs.zx + self.xy * rhs.xy),
             b: Bivector {
                 yz: self.xy * rhs.zx - self.zx * rhs.xy,
                 zx: self.yz * rhs.xy - self.xy * rhs.yz,
                 xy: self.zx * rhs.yz - self.yz * rhs.zx,
+                _metric: PhantomData,
             },
         }
     }
@@ -230,34 +248,35 @@ where
             x: self.yz * -rhs.xyz,
             y: self.zx * -rhs.xyz,
             z: self.xy * -rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
 
-impl<T> GeometricProduct<Multivector<T>> for Bivector<T>
-where
-    T: Copy,
-    T: ConstZero,
-    T: Add<T, Output = T>,
-    T: Sub<T, Output = T>,
-    T: Neg<Output = T>,
-    T: Mul<T, Output = T>,
-{
-    type Output = Multivector<T>;
+// impl<T> GeometricProduct<Multivector<T>> for Bivector<T>
+// where
+//     T: Copy,
+//     T: ConstZero,
+//     T: Add<T, Output = T>,
+//     T: Sub<T, Output = T>,
+//     T: Neg<Output = T>,
+//     T: Mul<T, Output = T>,
+// {
+//     type Output = Multivector<T>;
 
-    fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
-        let b = self.geometric_product(&rhs.s);
-        let vt = self.geometric_product(&rhs.v);
-        let sb = self.geometric_product(&rhs.b);
-        let v = self.geometric_product(&rhs.a);
+//     fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
+//         let b = self.geometric_product(&rhs.s);
+//         let vt = self.geometric_product(&rhs.v);
+//         let sb = self.geometric_product(&rhs.b);
+//         let v = self.geometric_product(&rhs.a);
 
-        Multivector {
-            s: sb.s,
-            v: v + vt.v,
-            b: sb.b + b,
-            a: vt.a,
-        }
-    }
-}
+//         Multivector {
+//             s: sb.s,
+//             v: v + vt.v,
+//             b: sb.b + b,
+//             a: vt.a,
+//         }
+//     }
+// }
 
 reverse_antiwedge!(Trivector, Bivector);

@@ -1,3 +1,5 @@
+use std::marker::PhantomData;
+
 use num::{Float, traits::ConstOne};
 
 use crate::Angle;
@@ -18,6 +20,7 @@ where
                 xyz: ((self.x * self.x + self.y * self.y + self.z * self.z)
                     * (rhs.x * rhs.x + rhs.y * rhs.y + rhs.z * rhs.z))
                     .sqrt(),
+                _metric: PhantomData,
             },
         )
     }
@@ -39,7 +42,10 @@ where
     fn geometric_cosine(&self, rhs: &DirVector<T>) -> (Self::Scalar, Self::Antiscalar) {
         (
             Scalar(self.0.x * rhs.0.x + self.0.y * rhs.0.y + self.0.z * rhs.0.z),
-            Trivector { xyz: T::ONE },
+            Trivector {
+                xyz: T::ONE,
+                _metric: PhantomData,
+            },
         )
     }
 
@@ -67,6 +73,7 @@ where
                 xyz: ((self.yz * self.yz + self.zx * self.zx + self.xy * self.xy)
                     * (rhs.x * rhs.x + rhs.y * rhs.y + rhs.z * rhs.z))
                     .sqrt(),
+                _metric: PhantomData,
             },
         )
     }
@@ -90,7 +97,13 @@ where
         let y = self.0.yz * rhs.0.z - self.0.xy * rhs.0.x;
         let z = self.0.zx * rhs.0.x - self.0.yz * rhs.0.y;
 
-        (Scalar(x * x + y * y + z * z), Trivector { xyz: T::ONE })
+        (
+            Scalar(x * x + y * y + z * z),
+            Trivector {
+                xyz: T::ONE,
+                _metric: PhantomData,
+            },
+        )
     }
 
     fn cosine(&self, rhs: &DirVector<T>) -> Option<Self::Scalar> {
@@ -146,6 +159,7 @@ where
                 xyz: ((self.yz * self.yz + self.zx * self.zx + self.xy * self.xy)
                     * (rhs.yz * rhs.yz + rhs.zx * rhs.zx + rhs.xy * rhs.xy))
                     .sqrt(),
+                _metric: PhantomData,
             },
         )
     }
@@ -167,7 +181,10 @@ where
     fn geometric_cosine(&self, rhs: &DirBivector<T>) -> (Self::Scalar, Self::Antiscalar) {
         (
             Scalar(self.0.yz * rhs.0.yz + self.0.zx * rhs.0.zx + self.0.xy * rhs.0.xy),
-            Trivector { xyz: T::ONE },
+            Trivector {
+                xyz: T::ONE,
+                _metric: PhantomData,
+            },
         )
     }
 

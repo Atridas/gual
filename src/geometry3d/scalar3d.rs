@@ -1,4 +1,7 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Mul, Neg, Sub},
+};
 
 use num::{
     One, Zero,
@@ -95,12 +98,14 @@ impl<T: Clone> KVector for Scalar<T> {
     fn right_complement(&self) -> Self::AntiKVector {
         Trivector {
             xyz: self.0.clone(),
+            _metric: PhantomData,
         }
     }
 
     fn left_complement(&self) -> Self::AntiKVector {
         Trivector {
             xyz: self.0.clone(),
+            _metric: PhantomData,
         }
     }
 }
@@ -128,6 +133,7 @@ where
             x: self.0 * rhs.x,
             y: self.0 * rhs.y,
             z: self.0 * rhs.z,
+            _metric: PhantomData,
         }
     }
 }
@@ -144,6 +150,7 @@ where
             yz: self.0 * rhs.yz,
             zx: self.0 * rhs.zx,
             xy: self.0 * rhs.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -158,6 +165,7 @@ where
     fn mul(self, rhs: Trivector<T>) -> Self::Output {
         Trivector {
             xyz: self.0 * rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -170,12 +178,13 @@ where
     type Output = Multivector<T>;
 
     fn mul(self, rhs: Multivector<T>) -> Self::Output {
-        Multivector {
-            s: self * rhs.s,
-            v: self * rhs.v,
-            b: self * rhs.b,
-            a: self * rhs.a,
-        }
+        unimplemented!();
+        // Multivector {
+        //     s: self * rhs.s,
+        //     v: self * rhs.v,
+        //     b: self * rhs.b,
+        //     a: self * rhs.a,
+        // }
     }
 }
 

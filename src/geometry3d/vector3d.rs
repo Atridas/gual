@@ -1,4 +1,7 @@
-use std::ops::{Add, Mul, Neg, Sub};
+use std::{
+    marker::PhantomData,
+    ops::{Add, Mul, Neg, Sub},
+};
 
 use num::{
     Zero,
@@ -20,6 +23,7 @@ where
             x: T::zero(),
             y: T::zero(),
             z: T::zero(),
+            _metric: PhantomData,
         }
     }
 
@@ -36,6 +40,7 @@ where
         x: T::ZERO,
         y: T::ZERO,
         z: T::ZERO,
+        _metric: PhantomData,
     };
 }
 
@@ -48,18 +53,21 @@ where
         x: T::ONE,
         y: T::ZERO,
         z: T::ZERO,
+        _metric: PhantomData,
     };
 
     pub const Y: Self = Vector {
         x: T::ZERO,
         y: T::ONE,
         z: T::ZERO,
+        _metric: PhantomData,
     };
 
     pub const Z: Self = Vector {
         x: T::ZERO,
         y: T::ZERO,
         z: T::ONE,
+        _metric: PhantomData,
     };
 }
 
@@ -73,6 +81,7 @@ where
             x: self.x + rhs.x,
             y: self.y + rhs.y,
             z: self.z + rhs.z,
+            _metric: PhantomData,
         }
     }
 }
@@ -87,6 +96,7 @@ where
             x: self.x - rhs.x,
             y: self.y - rhs.y,
             z: self.z - rhs.z,
+            _metric: PhantomData,
         }
     }
 }
@@ -101,6 +111,7 @@ where
             x: -self.x,
             y: -self.y,
             z: -self.z,
+            _metric: PhantomData,
         }
     }
 }
@@ -116,6 +127,7 @@ where
             x: self.x * rhs,
             y: self.y * rhs,
             z: self.z * rhs,
+            _metric: PhantomData,
         }
     }
 }
@@ -131,6 +143,7 @@ where
             yz: self.x,
             zx: self.y,
             xy: self.z,
+            _metric: PhantomData,
         }
     }
 
@@ -139,6 +152,7 @@ where
             yz: self.x,
             zx: self.y,
             xy: self.z,
+            _metric: PhantomData,
         }
     }
 }
@@ -156,6 +170,7 @@ where
             yz: self.y * rhs.z - self.z * rhs.y,
             zx: self.z * rhs.x - self.x * rhs.z,
             xy: self.x * rhs.y - self.y * rhs.x,
+            _metric: PhantomData,
         }
     }
 }
@@ -171,6 +186,7 @@ where
     fn wedge(&self, rhs: &Bivector<T>) -> Self::Output {
         Trivector {
             xyz: self.x * rhs.yz + self.y * rhs.zx + self.z * rhs.xy,
+            _metric: PhantomData,
         }
     }
 }
@@ -200,6 +216,7 @@ where
             x: self.x * rhs.xyz,
             y: self.y * rhs.xyz,
             z: self.z * rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -215,7 +232,7 @@ where
 
     fn geometric_product(&self, rhs: &Vector<T>) -> Self::Output {
         Evenvector {
-            s: Scalar(self.x * rhs.x + self.y * rhs.y + self.z * rhs.z),
+            s: self.x * rhs.x + self.y * rhs.y + self.z * rhs.z,
             b: self.wedge(rhs),
         }
     }
@@ -233,11 +250,12 @@ where
 
     fn geometric_product(&self, rhs: &Bivector<T>) -> Self::Output {
         Multivector {
-            s: Scalar::ZERO,
+            s: T::ZERO,
             v: Vector {
                 x: self.z * rhs.zx - self.y * rhs.xy,
                 y: self.x * rhs.xy - self.z * rhs.yz,
                 z: self.y * rhs.yz - self.x * rhs.zx,
+                _metric: PhantomData,
             },
             b: Bivector::ZERO,
             a: self.wedge(rhs),
@@ -257,6 +275,7 @@ where
             yz: self.x * rhs.xyz,
             zx: self.y * rhs.xyz,
             xy: self.z * rhs.xyz,
+            _metric: PhantomData,
         }
     }
 }
@@ -272,17 +291,18 @@ where
     type Output = Multivector<T>;
 
     fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
-        let v = self.geometric_product(&rhs.s);
-        let sb = self.geometric_product(&rhs.v);
-        let vt = self.geometric_product(&rhs.b);
-        let b = self.geometric_product(&rhs.a);
+        unimplemented!();
+        // let v = self.geometric_product(&rhs.s);
+        // let sb = self.geometric_product(&rhs.v);
+        // let vt = self.geometric_product(&rhs.b);
+        // let b = self.geometric_product(&rhs.a);
 
-        Multivector {
-            s: sb.s,
-            v: v + vt.v,
-            b: sb.b + b,
-            a: vt.a,
-        }
+        // Multivector {
+        //     s: sb.s,
+        //     v: v + vt.v,
+        //     b: sb.b + b,
+        //     a: vt.a,
+        // }
     }
 }
 
