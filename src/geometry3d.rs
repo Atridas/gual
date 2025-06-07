@@ -6,7 +6,6 @@ mod angle3d;
 mod bivector3d;
 mod evenvector;
 mod multivector3d;
-mod point3d;
 mod scalar3d;
 mod trivector3d;
 mod vector3d;
@@ -14,6 +13,7 @@ mod vector3d;
 mod add;
 mod copyclone;
 mod initialization;
+mod sub;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Scalar<T>(pub T);

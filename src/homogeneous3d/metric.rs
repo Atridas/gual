@@ -67,7 +67,7 @@ where
 
     fn from_weight(bulk: &Self::Weight) -> Self {
         assert!(!bulk.is_zero());
-        d3::Point::ZERO
+        d3::Point::ORIGIN
     }
 
     fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {

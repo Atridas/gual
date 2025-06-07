@@ -1,6 +1,6 @@
 use std::{
     marker::PhantomData,
-    ops::{Mul, Neg, Sub},
+    ops::{Mul, Neg},
 };
 
 use num::traits::ConstOne;
@@ -32,24 +32,11 @@ where
     }
 }
 
-impl<T> Sub for Trivector<T>
-where
-    T: Sub<T, Output = T>,
-{
-    type Output = Trivector<T>;
-    fn sub(self, rhs: Self) -> Self::Output {
-        Trivector {
-            xyz: self.xyz - rhs.xyz,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> Neg for Trivector<T>
+impl<T, M> Neg for Trivector<T, M>
 where
     T: Neg<Output = T>,
 {
-    type Output = Trivector<T>;
+    type Output = Trivector<T, M>;
     fn neg(self) -> Self::Output {
         Trivector {
             xyz: -self.xyz,

@@ -11,26 +11,11 @@ use crate::{
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
-impl<T> Sub for Vector<T>
-where
-    T: Sub<T, Output = T>,
-{
-    type Output = Vector<T>;
-    fn sub(self, rhs: Self) -> Self::Output {
-        Vector {
-            x: self.x - rhs.x,
-            y: self.y - rhs.y,
-            z: self.z - rhs.z,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> Neg for Vector<T>
+impl<T, M> Neg for Vector<T, M>
 where
     T: Neg<Output = T>,
 {
-    type Output = Vector<T>;
+    type Output = Vector<T, M>;
     fn neg(self) -> Self::Output {
         Vector {
             x: -self.x,

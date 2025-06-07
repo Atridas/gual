@@ -281,7 +281,7 @@ where
         if self.is_zero() {
             None
         } else {
-            Some(d3::Point::ZERO)
+            Some(d3::Point::ORIGIN)
         }
     }
 }

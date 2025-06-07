@@ -56,21 +56,6 @@ where
     }
 }
 
-impl<T> Sub for Multivector<T>
-where
-    T: Sub<T, Output = T>,
-{
-    type Output = Multivector<T>;
-    fn sub(self, rhs: Self) -> Self::Output {
-        Multivector {
-            s: self.s - rhs.s,
-            v: self.v - rhs.v,
-            b: self.b - rhs.b,
-            t: self.t - rhs.t,
-        }
-    }
-}
-
 impl<T> Neg for Multivector<T>
 where
     T: Neg<Output = T>,
