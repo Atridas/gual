@@ -4,7 +4,6 @@ use crate::Euclidean;
 
 mod angle3d;
 mod bivector3d;
-mod evenvector;
 mod multivector3d;
 mod scalar3d;
 mod trivector3d;
