@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 use crate::Euclidean;
 
 mod add;
+mod angle;
 mod antiwedge;
 mod complement;
 mod contraction;

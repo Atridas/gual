@@ -404,7 +404,7 @@ pub trait Angle<Rhs> {
     type Antiscalar;
 
     fn geometric_cosine(&self, rhs: &Rhs) -> (Self::Scalar, Self::Antiscalar);
-    fn cosine(&self, rhs: &Rhs) -> Self::Scalar;
+    fn cosine(&self, rhs: &Rhs) -> Option<Self::Scalar>;
 }
 
 pub trait Attitude {

@@ -25,9 +25,9 @@ where
         (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
-    fn cosine(&self, rhs: &HomogeneusLine<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &HomogeneusLine<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        d4::Scalar(geometric.0.0 / geometric.1.xyzw)
+        Some(d4::Scalar(geometric.0.0 / geometric.1.xyzw))
     }
 }
 
@@ -41,13 +41,13 @@ where
     type Antiscalar = d4::Quadvector<T>;
 
     fn geometric_cosine(&self, rhs: &Line<T>) -> (Self::Scalar, Self::Antiscalar) {
-        let dim3 = self.weight().cosine(&rhs.weight());
+        let dim3 = self.weight().cosine(&rhs.weight()).unwrap();
         (d4::Scalar(dim3.0), d4::Quadvector { xyzw: T::ONE })
     }
 
-    fn cosine(&self, rhs: &Line<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Line<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        d4::Scalar(geometric.0.0)
+        Some(d4::Scalar(geometric.0.0))
     }
 }
 
@@ -65,9 +65,9 @@ where
         (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
-    fn cosine(&self, rhs: &HomogeneusLine<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &HomogeneusLine<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        d4::Scalar(geometric.0.0 / geometric.1.xyzw)
+        Some(d4::Scalar(geometric.0.0 / geometric.1.xyzw))
     }
 }
 
@@ -82,13 +82,13 @@ where
     type Antiscalar = d4::Quadvector<T>;
 
     fn geometric_cosine(&self, rhs: &Line<T>) -> (Self::Scalar, Self::Antiscalar) {
-        let dim3 = self.weight().cosine(&rhs.weight());
+        let dim3 = self.weight().cosine(&rhs.weight()).unwrap();
         (d4::Scalar(dim3.0), d4::Quadvector { xyzw: T::ONE })
     }
 
-    fn cosine(&self, rhs: &Line<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Line<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        d4::Scalar(geometric.0.0 / geometric.1.xyzw)
+        Some(d4::Scalar(geometric.0.0 / geometric.1.xyzw))
     }
 }
 
@@ -105,9 +105,9 @@ where
         (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
-    fn cosine(&self, rhs: &HomogeneusPlane<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &HomogeneusPlane<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        d4::Scalar(geometric.0.0 / geometric.1.xyzw)
+        Some(d4::Scalar(geometric.0.0 / geometric.1.xyzw))
     }
 }
 
@@ -121,12 +121,12 @@ where
     type Antiscalar = d4::Quadvector<T>;
 
     fn geometric_cosine(&self, rhs: &Plane<T>) -> (Self::Scalar, Self::Antiscalar) {
-        let dim3 = self.weight().cosine(&rhs.weight());
+        let dim3 = self.weight().cosine(&rhs.weight()).unwrap();
         (d4::Scalar(dim3.0), d4::Quadvector { xyzw: T::ONE })
     }
 
-    fn cosine(&self, rhs: &Plane<T>) -> Self::Scalar {
-        let geometric = self.weight().cosine(&rhs.weight());
-        d4::Scalar(geometric.0)
+    fn cosine(&self, rhs: &Plane<T>) -> Option<Self::Scalar> {
+        let geometric = self.weight().cosine(&rhs.weight()).unwrap();
+        Some(d4::Scalar(geometric.0))
     }
 }

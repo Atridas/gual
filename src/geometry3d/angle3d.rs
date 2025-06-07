@@ -22,9 +22,9 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &Vector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Vector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0 / geometric.1.xyz)
+        Some(Scalar(geometric.0.0 / geometric.1.xyz))
     }
 }
 
@@ -43,9 +43,9 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &DirVector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &DirVector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0)
+        Some(Scalar(geometric.0.0))
     }
 }
 
@@ -71,9 +71,9 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &Vector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Vector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0 / geometric.1.xyz)
+        Some(Scalar(geometric.0.0 / geometric.1.xyz))
     }
 }
 
@@ -93,9 +93,9 @@ where
         (Scalar(x * x + y * y + z * z), Trivector { xyz: T::ONE })
     }
 
-    fn cosine(&self, rhs: &DirVector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &DirVector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0)
+        Some(Scalar(geometric.0.0))
     }
 }
 
@@ -110,7 +110,7 @@ where
         rhs.geometric_cosine(self)
     }
 
-    fn cosine(&self, rhs: &Bivector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Bivector<T>) -> Option<Self::Scalar> {
         rhs.cosine(self)
     }
 }
@@ -127,7 +127,7 @@ where
         rhs.geometric_cosine(self)
     }
 
-    fn cosine(&self, rhs: &DirBivector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &DirBivector<T>) -> Option<Self::Scalar> {
         rhs.cosine(self)
     }
 }
@@ -150,9 +150,9 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &Bivector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &Bivector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0 / geometric.1.xyz)
+        Some(Scalar(geometric.0.0 / geometric.1.xyz))
     }
 }
 
@@ -171,8 +171,8 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &DirBivector<T>) -> Self::Scalar {
+    fn cosine(&self, rhs: &DirBivector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Scalar(geometric.0.0)
+        Some(Scalar(geometric.0.0))
     }
 }
