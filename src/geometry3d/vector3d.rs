@@ -3,10 +3,7 @@ use std::{
     ops::{Add, Mul, Neg, Sub},
 };
 
-use num::{
-    Zero,
-    traits::{ConstOne, ConstZero},
-};
+use num::traits::ConstZero;
 
 use crate::{
     AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_wedge,
@@ -14,68 +11,11 @@ use crate::{
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
-impl<T> Zero for Vector<T>
-where
-    T: Zero,
-{
-    fn zero() -> Self {
-        Vector {
-            x: T::zero(),
-            y: T::zero(),
-            z: T::zero(),
-            _metric: PhantomData,
-        }
-    }
-
-    fn is_zero(&self) -> bool {
-        self.x.is_zero() && self.y.is_zero() && self.z.is_zero()
-    }
-}
-
-impl<T> ConstZero for Vector<T>
-where
-    T: ConstZero,
-{
-    const ZERO: Self = Vector {
-        x: T::ZERO,
-        y: T::ZERO,
-        z: T::ZERO,
-        _metric: PhantomData,
-    };
-}
-
-impl<T> Vector<T>
-where
-    T: ConstZero,
-    T: ConstOne,
-{
-    pub const X: Self = Vector {
-        x: T::ONE,
-        y: T::ZERO,
-        z: T::ZERO,
-        _metric: PhantomData,
-    };
-
-    pub const Y: Self = Vector {
-        x: T::ZERO,
-        y: T::ONE,
-        z: T::ZERO,
-        _metric: PhantomData,
-    };
-
-    pub const Z: Self = Vector {
-        x: T::ZERO,
-        y: T::ZERO,
-        z: T::ONE,
-        _metric: PhantomData,
-    };
-}
-
-impl<T> Add for Vector<T>
+impl<T, M> Add for Vector<T, M>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Vector<T>;
+    type Output = Vector<T, M>;
     fn add(self, rhs: Self) -> Self::Output {
         Vector {
             x: self.x + rhs.x,
@@ -290,7 +230,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
+    fn geometric_product(&self, _rhs: &Multivector<T>) -> Self::Output {
         unimplemented!();
         // let v = self.geometric_product(&rhs.s);
         // let sb = self.geometric_product(&rhs.v);

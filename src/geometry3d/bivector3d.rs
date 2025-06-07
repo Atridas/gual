@@ -3,77 +3,17 @@ use std::{
     ops::{Add, Mul, Neg, Sub},
 };
 
-use num::{
-    Zero,
-    traits::{ConstOne, ConstZero},
-};
+use num::traits::ConstZero;
 
 use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
 
 use super::{Bivector, Evenvector, Multivector, Trivector, Vector};
 
-impl<T> Zero for Bivector<T>
-where
-    T: Zero,
-{
-    fn zero() -> Self {
-        Bivector {
-            yz: T::zero(),
-            zx: T::zero(),
-            xy: T::zero(),
-            _metric: PhantomData,
-        }
-    }
-
-    fn is_zero(&self) -> bool {
-        self.yz.is_zero() && self.zx.is_zero() && self.xy.is_zero()
-    }
-}
-
-impl<T> ConstZero for Bivector<T>
-where
-    T: ConstZero,
-{
-    const ZERO: Self = Bivector {
-        yz: T::ZERO,
-        zx: T::ZERO,
-        xy: T::ZERO,
-        _metric: PhantomData,
-    };
-}
-
-impl<T> Bivector<T>
-where
-    T: ConstZero,
-    T: ConstOne,
-{
-    pub const YZ: Self = Bivector {
-        yz: T::ONE,
-        zx: T::ZERO,
-        xy: T::ZERO,
-        _metric: PhantomData,
-    };
-
-    pub const ZX: Self = Bivector {
-        yz: T::ZERO,
-        zx: T::ONE,
-        xy: T::ZERO,
-        _metric: PhantomData,
-    };
-
-    pub const XY: Self = Bivector {
-        yz: T::ZERO,
-        zx: T::ZERO,
-        xy: T::ONE,
-        _metric: PhantomData,
-    };
-}
-
-impl<T> Add for Bivector<T>
+impl<T, M> Add for Bivector<T, M>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Bivector<T>;
+    type Output = Bivector<T, M>;
     fn add(self, rhs: Self) -> Self::Output {
         Bivector {
             yz: self.yz + rhs.yz,

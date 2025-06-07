@@ -28,7 +28,7 @@ mod orthogonal_projection;
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum NormalizedPoint<T> {
     Point(d3::Point<T>),
-    DirVector(d3::DirVector<T>),
+    DirVector(d3::UnitVector<T>),
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
@@ -65,7 +65,7 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(d3::DirVector(Vector::new(
+                Some(NormalizedPoint::DirVector(d3::UnitVector(Vector::new(
                     self.x * invlen,
                     self.y * invlen,
                     self.z * invlen,

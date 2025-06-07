@@ -167,7 +167,7 @@ impl<T: Copy + ConstZero> Metric for HomogeneusLine<T> {
 
 impl<T: Copy + ConstZero> Metric for Line<T> {
     type Bulk = d3::Bivector<T>;
-    type Weight = d3::DirVector<T>;
+    type Weight = d3::UnitVector<T>;
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
         Self(d4::Bivector {
@@ -207,7 +207,7 @@ impl<T: Copy + ConstZero> Metric for Line<T> {
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::DirVector(d3::Vector::new(self.0.wx, self.0.wy, self.0.wz))
+        d3::UnitVector(d3::Vector::new(self.0.wx, self.0.wy, self.0.wz))
     }
 }
 
@@ -295,7 +295,7 @@ where
     T: Neg<Output = T>,
 {
     type Bulk = d3::Trivector<T>;
-    type Weight = d3::DirBivector<T>;
+    type Weight = d3::UnitBivector<T>;
 
     fn from_bulk(_bulk: &Self::Bulk) -> Self {
         unreachable!();
@@ -326,6 +326,6 @@ where
     }
 
     fn weight(&self) -> Self::Weight {
-        d3::DirBivector(d3::Bivector::new(self.0.wyz, self.0.wzx, self.0.wxy))
+        d3::UnitBivector(d3::Bivector::new(self.0.wyz, self.0.wzx, self.0.wxy))
     }
 }

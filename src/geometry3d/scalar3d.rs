@@ -177,7 +177,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn mul(self, rhs: Multivector<T>) -> Self::Output {
+    fn mul(self, _rhs: Multivector<T>) -> Self::Output {
         unimplemented!();
         // Multivector {
         //     s: self * rhs.s,

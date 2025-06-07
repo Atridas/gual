@@ -204,7 +204,7 @@ where
                 None
             } else {
                 let invlen = len2.sqrt().recip();
-                Some(NormalizedPoint::DirVector(d3::DirVector(d3::Vector::new(
+                Some(NormalizedPoint::DirVector(d3::UnitVector(d3::Vector::new(
                     x * invlen,
                     y * invlen,
                     z * invlen,

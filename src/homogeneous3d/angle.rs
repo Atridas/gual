@@ -35,7 +35,7 @@ impl<T> Angle<Line<T>> for Line<T>
 where
     T: ConstOne,
     T: Float,
-    Line<T>: Metric<Weight = d3::DirVector<T>>,
+    Line<T>: Metric<Weight = d3::UnitVector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -75,8 +75,8 @@ impl<T> Angle<Line<T>> for Plane<T>
 where
     T: ConstOne,
     T: Float,
-    Line<T>: Metric<Weight = d3::DirVector<T>>,
-    Plane<T>: Metric<Weight = d3::DirBivector<T>>,
+    Line<T>: Metric<Weight = d3::UnitVector<T>>,
+    Plane<T>: Metric<Weight = d3::UnitBivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;
@@ -115,7 +115,7 @@ impl<T> Angle<Plane<T>> for Plane<T>
 where
     T: ConstOne,
     T: Float,
-    Plane<T>: Metric<Weight = d3::DirBivector<T>>,
+    Plane<T>: Metric<Weight = d3::UnitBivector<T>>,
 {
     type Scalar = d4::Scalar<T>;
     type Antiscalar = d4::Quadvector<T>;

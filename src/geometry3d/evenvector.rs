@@ -1,73 +1,14 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{
-    One, Zero,
-    traits::{ConstOne, ConstZero},
-};
-
 use crate::GeometricProduct;
 
-use super::{Bivector, Evenvector, Scalar};
+use super::Evenvector;
 
-impl<T> Zero for Evenvector<T>
-where
-    T: Zero,
-{
-    fn zero() -> Self {
-        Evenvector {
-            s: T::zero(),
-            b: Bivector::zero(),
-        }
-    }
-
-    fn is_zero(&self) -> bool {
-        self.s.is_zero() && self.b.is_zero()
-    }
-}
-
-impl<T> ConstZero for Evenvector<T>
-where
-    T: ConstZero,
-{
-    const ZERO: Self = Evenvector {
-        s: T::ZERO,
-        b: Bivector::ZERO,
-    };
-}
-
-impl<T> One for Evenvector<T>
-where
-    T: Copy,
-    T: Zero,
-    T: One,
-    Evenvector<T>: Mul<Evenvector<T>, Output = Evenvector<T>>,
-{
-    fn one() -> Self {
-        Evenvector {
-            s: T::one(),
-            b: Bivector::zero(),
-        }
-    }
-}
-
-impl<T> ConstOne for Evenvector<T>
-where
-    T: Copy,
-    T: ConstZero,
-    T: ConstOne,
-    Evenvector<T>: One,
-{
-    const ONE: Self = Evenvector {
-        s: T::ONE,
-        b: Bivector::ZERO,
-    };
-}
-
-impl<T> Add for Evenvector<T>
+impl<T, M> Add for Evenvector<T, M>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Evenvector<T>;
+    type Output = Evenvector<T, M>;
     fn add(self, rhs: Self) -> Self::Output {
         Evenvector {
             s: self.s + rhs.s,
@@ -102,13 +43,13 @@ where
     }
 }
 
-impl<T> Mul<Evenvector<T>> for Evenvector<T>
+impl<T, M> Mul<Evenvector<T, M>> for Evenvector<T, M>
 where
-    Evenvector<T>: GeometricProduct<Evenvector<T>, Output = Evenvector<T>>,
+    Evenvector<T, M>: GeometricProduct<Evenvector<T, M>, Output = Evenvector<T, M>>,
 {
-    type Output = Evenvector<T>;
+    type Output = Evenvector<T, M>;
 
-    fn mul(self, rhs: Evenvector<T>) -> Self::Output {
+    fn mul(self, rhs: Evenvector<T, M>) -> Self::Output {
         self.geometric_product(&rhs)
     }
 }

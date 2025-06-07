@@ -4,7 +4,6 @@ use crate::Euclidean;
 
 mod angle3d;
 mod bivector3d;
-mod direction3d;
 mod evenvector;
 mod multivector3d;
 mod point3d;
@@ -30,7 +29,7 @@ pub struct Vector<T, M = Euclidean> {
 pub struct Point<T>(pub Vector<T>);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct DirVector<T>(pub(super) Vector<T>);
+pub struct UnitVector<T>(pub(super) Vector<T>);
 
 #[derive(Debug, PartialEq, Eq)]
 pub struct Bivector<T, M = Euclidean> {
@@ -41,7 +40,7 @@ pub struct Bivector<T, M = Euclidean> {
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct DirBivector<T>(pub(super) Bivector<T>);
+pub struct UnitBivector<T>(pub(super) Bivector<T>);
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Trivector<T, M = Euclidean> {

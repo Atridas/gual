@@ -5,7 +5,7 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
-use crate::Unitizable;
+use crate::{Unitizable, geometry2d::Point};
 
 use super::{Bivector, Evenvector, Multivector, UnitVector, Vector};
 
@@ -28,15 +28,9 @@ impl<T, M> Bivector<T, M> {
     }
 }
 
-impl<T, M> Evenvector<T, M> {
-    pub fn new(s: T, b: Bivector<T, M>) -> Self {
-        Self { s, b }
-    }
-}
-
-impl<T, M> Multivector<T, M> {
-    pub fn new(s: T, v: Vector<T, M>, b: Bivector<T, M>) -> Self {
-        Self { s, v, b }
+impl<T> Point<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self(Vector::new(x, y))
     }
 }
 
@@ -207,12 +201,14 @@ where
     T: ConstZero,
     T: ConstOne,
 {
+    /// Unit vector in the X direction
     pub const X: Self = Vector {
         x: T::ONE,
         y: T::ZERO,
         _metric: PhantomData,
     };
 
+    /// Unit vector in the Y direction
     pub const Y: Self = Vector {
         x: T::ZERO,
         y: T::ONE,
@@ -225,8 +221,10 @@ where
     T: ConstZero,
     T: ConstOne,
 {
+    /// Unit vector in the X direction
     pub const X: Self = UnitVector(Vector::X);
 
+    /// Unit vector in the Y direction
     pub const Y: Self = UnitVector(Vector::Y);
 }
 
@@ -234,6 +232,7 @@ impl<T, M> Bivector<T, M>
 where
     T: ConstOne,
 {
+    /// Unit bivector
     pub const XY: Self = Bivector {
         xy: T::ONE,
         _metric: PhantomData,
@@ -245,6 +244,7 @@ where
     T: ConstZero,
     T: ConstOne,
 {
+    /// Unit bivector
     pub const XY: Self = Evenvector {
         s: T::ZERO,
         b: Bivector::XY,
@@ -256,23 +256,34 @@ where
     T: ConstZero,
     T: ConstOne,
 {
+    /// Unit vector in the X direction
     pub const X: Self = Multivector {
         s: T::ZERO,
         v: Vector::X,
         b: Bivector::ZERO,
     };
 
+    /// Unit vector in the Y direction
     pub const Y: Self = Multivector {
         s: T::ZERO,
         v: Vector::Y,
         b: Bivector::ZERO,
     };
 
+    /// Unit bivector
     pub const XY: Self = Multivector {
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::XY,
     };
+}
+
+impl<T> Point<T>
+where
+    T: ConstZero,
+{
+    /// Coordinate origin
+    pub const ORIGIN: Self = Point(Vector::ZERO);
 }
 
 impl<T> From<UnitVector<T>> for Vector<T> {

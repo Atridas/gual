@@ -4,7 +4,7 @@ use num::{Float, traits::ConstOne};
 
 use crate::Angle;
 
-use super::{Bivector, DirBivector, DirVector, Scalar, Trivector, Vector};
+use super::{Bivector, Scalar, Trivector, UnitBivector, UnitVector, Vector};
 
 impl<T> Angle<Vector<T>> for Vector<T>
 where
@@ -31,7 +31,7 @@ where
     }
 }
 
-impl<T> Angle<DirVector<T>> for DirVector<T>
+impl<T> Angle<UnitVector<T>> for UnitVector<T>
 where
     T: ConstOne,
     T: Float,
@@ -39,7 +39,7 @@ where
     type Scalar = Scalar<T>;
     type Antiscalar = Trivector<T>;
 
-    fn geometric_cosine(&self, rhs: &DirVector<T>) -> (Self::Scalar, Self::Antiscalar) {
+    fn geometric_cosine(&self, rhs: &UnitVector<T>) -> (Self::Scalar, Self::Antiscalar) {
         (
             Scalar(self.0.x * rhs.0.x + self.0.y * rhs.0.y + self.0.z * rhs.0.z),
             Trivector {
@@ -49,7 +49,7 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &DirVector<T>) -> Option<Self::Scalar> {
+    fn cosine(&self, rhs: &UnitVector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
         Some(Scalar(geometric.0.0))
     }
@@ -84,7 +84,7 @@ where
     }
 }
 
-impl<T> Angle<DirVector<T>> for DirBivector<T>
+impl<T> Angle<UnitVector<T>> for UnitBivector<T>
 where
     T: ConstOne,
     T: Float,
@@ -92,7 +92,7 @@ where
     type Scalar = Scalar<T>;
     type Antiscalar = Trivector<T>;
 
-    fn geometric_cosine(&self, rhs: &DirVector<T>) -> (Self::Scalar, Self::Antiscalar) {
+    fn geometric_cosine(&self, rhs: &UnitVector<T>) -> (Self::Scalar, Self::Antiscalar) {
         let x = self.0.xy * rhs.0.y - self.0.zx * rhs.0.z;
         let y = self.0.yz * rhs.0.z - self.0.xy * rhs.0.x;
         let z = self.0.zx * rhs.0.x - self.0.yz * rhs.0.y;
@@ -106,7 +106,7 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &DirVector<T>) -> Option<Self::Scalar> {
+    fn cosine(&self, rhs: &UnitVector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
         Some(Scalar(geometric.0.0))
     }
@@ -128,7 +128,7 @@ where
     }
 }
 
-impl<T> Angle<DirBivector<T>> for DirVector<T>
+impl<T> Angle<UnitBivector<T>> for UnitVector<T>
 where
     T: ConstOne,
     T: Float,
@@ -136,11 +136,11 @@ where
     type Scalar = Scalar<T>;
     type Antiscalar = Trivector<T>;
 
-    fn geometric_cosine(&self, rhs: &DirBivector<T>) -> (Self::Scalar, Self::Antiscalar) {
+    fn geometric_cosine(&self, rhs: &UnitBivector<T>) -> (Self::Scalar, Self::Antiscalar) {
         rhs.geometric_cosine(self)
     }
 
-    fn cosine(&self, rhs: &DirBivector<T>) -> Option<Self::Scalar> {
+    fn cosine(&self, rhs: &UnitBivector<T>) -> Option<Self::Scalar> {
         rhs.cosine(self)
     }
 }
@@ -170,7 +170,7 @@ where
     }
 }
 
-impl<T> Angle<DirBivector<T>> for DirBivector<T>
+impl<T> Angle<UnitBivector<T>> for UnitBivector<T>
 where
     T: ConstOne,
     T: Float,
@@ -178,7 +178,7 @@ where
     type Scalar = Scalar<T>;
     type Antiscalar = Trivector<T>;
 
-    fn geometric_cosine(&self, rhs: &DirBivector<T>) -> (Self::Scalar, Self::Antiscalar) {
+    fn geometric_cosine(&self, rhs: &UnitBivector<T>) -> (Self::Scalar, Self::Antiscalar) {
         (
             Scalar(self.0.yz * rhs.0.yz + self.0.zx * rhs.0.zx + self.0.xy * rhs.0.xy),
             Trivector {
@@ -188,7 +188,7 @@ where
         )
     }
 
-    fn cosine(&self, rhs: &DirBivector<T>) -> Option<Self::Scalar> {
+    fn cosine(&self, rhs: &UnitBivector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
         Some(Scalar(geometric.0.0))
     }

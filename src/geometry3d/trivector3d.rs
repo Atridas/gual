@@ -3,40 +3,11 @@ use std::{
     ops::{Add, Mul, Neg, Sub},
 };
 
-use num::{
-    Zero,
-    traits::{ConstOne, ConstZero},
-};
+use num::traits::ConstOne;
 
 use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, KVector};
 
 use super::{Bivector, Multivector, Scalar, Trivector, Vector};
-
-impl<T> Zero for Trivector<T>
-where
-    T: Zero,
-{
-    fn zero() -> Self {
-        Trivector {
-            xyz: T::zero(),
-            _metric: PhantomData,
-        }
-    }
-
-    fn is_zero(&self) -> bool {
-        self.xyz.is_zero()
-    }
-}
-
-impl<T> ConstZero for Trivector<T>
-where
-    T: ConstZero,
-{
-    const ZERO: Self = Trivector {
-        xyz: T::ZERO,
-        _metric: PhantomData,
-    };
-}
 
 impl<T: Clone> Antiscalar for Trivector<T>
 where
@@ -61,21 +32,11 @@ where
     }
 }
 
-impl<T> Trivector<T>
-where
-    T: ConstOne,
-{
-    pub const XYZ: Self = Trivector {
-        xyz: T::ONE,
-        _metric: PhantomData,
-    };
-}
-
-impl<T> Add for Trivector<T>
+impl<T, M> Add for Trivector<T, M>
 where
     T: Add<T, Output = T>,
 {
-    type Output = Trivector<T>;
+    type Output = Trivector<T, M>;
     fn add(self, rhs: Self) -> Self::Output {
         Trivector {
             xyz: self.xyz + rhs.xyz,
@@ -201,7 +162,7 @@ where
 {
     type Output = Multivector<T>;
 
-    fn geometric_product(&self, rhs: &Multivector<T>) -> Self::Output {
+    fn geometric_product(&self, _rhs: &Multivector<T>) -> Self::Output {
         unimplemented!();
         // Multivector {
         //     s: self.geometric_product(&rhs.a),
