@@ -1,21 +1,8 @@
-use std::ops::{Mul, Neg};
+use std::ops::Mul;
 
 use crate::GeometricProduct;
 
 use super::Evenvector;
-
-impl<T> Neg for Evenvector<T>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Evenvector<T>;
-    fn neg(self) -> Self::Output {
-        Evenvector {
-            s: -self.s,
-            b: -self.b,
-        }
-    }
-}
 
 impl<T, M> Mul<Evenvector<T, M>> for Evenvector<T, M>
 where

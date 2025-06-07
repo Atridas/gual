@@ -56,21 +56,6 @@ where
     }
 }
 
-impl<T> Neg for Multivector<T>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Multivector<T>;
-    fn neg(self) -> Self::Output {
-        Multivector {
-            s: -self.s,
-            v: -self.v,
-            t: -self.t,
-            b: -self.b,
-        }
-    }
-}
-
 impl<T> WedgeProduct<Vector<T>> for Multivector<T>
 where
     T: Zero,

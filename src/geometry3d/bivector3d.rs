@@ -9,21 +9,6 @@ use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_a
 
 use super::{Bivector, Evenvector, Multivector, Trivector, Vector};
 
-impl<T, M> Neg for Bivector<T, M>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Bivector<T, M>;
-    fn neg(self) -> Self::Output {
-        Bivector {
-            yz: -self.yz,
-            zx: -self.zx,
-            xy: -self.xy,
-            _metric: PhantomData,
-        }
-    }
-}
-
 impl<T> Mul<T> for Bivector<T>
 where
     T: Copy,

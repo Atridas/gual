@@ -1,6 +1,6 @@
 use std::{
     marker::PhantomData,
-    ops::{Add, Mul, Neg, Sub},
+    ops::{Add, Mul, Sub},
 };
 
 use num::traits::ConstZero;
@@ -10,21 +10,6 @@ use crate::{
 };
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
-
-impl<T, M> Neg for Vector<T, M>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Vector<T, M>;
-    fn neg(self) -> Self::Output {
-        Vector {
-            x: -self.x,
-            y: -self.y,
-            z: -self.z,
-            _metric: PhantomData,
-        }
-    }
-}
 
 impl<T> Mul<T> for Vector<T>
 where

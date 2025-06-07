@@ -13,6 +13,7 @@ mod vector3d;
 mod add;
 mod copyclone;
 mod initialization;
+mod neg;
 mod sub;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]

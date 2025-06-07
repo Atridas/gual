@@ -32,19 +32,6 @@ where
     }
 }
 
-impl<T, M> Neg for Trivector<T, M>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Trivector<T, M>;
-    fn neg(self) -> Self::Output {
-        Trivector {
-            xyz: -self.xyz,
-            _metric: PhantomData,
-        }
-    }
-}
-
 impl<T> Mul<T> for Trivector<T>
 where
     T: Mul<T, Output = T>,
