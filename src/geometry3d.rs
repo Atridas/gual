@@ -11,6 +11,7 @@ mod scalar3d;
 mod trivector3d;
 mod vector3d;
 
+mod add;
 mod copyclone;
 mod initialization;
 

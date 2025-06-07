@@ -11,21 +11,6 @@ use crate::{
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
-impl<T, M> Add for Vector<T, M>
-where
-    T: Add<T, Output = T>,
-{
-    type Output = Vector<T, M>;
-    fn add(self, rhs: Self) -> Self::Output {
-        Vector {
-            x: self.x + rhs.x,
-            y: self.y + rhs.y,
-            z: self.z + rhs.z,
-            _metric: PhantomData,
-        }
-    }
-}
-
 impl<T> Sub for Vector<T>
 where
     T: Sub<T, Output = T>,

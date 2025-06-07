@@ -56,21 +56,6 @@ where
     }
 }
 
-impl<T, M> Add for Multivector<T, M>
-where
-    T: Add<T, Output = T>,
-{
-    type Output = Multivector<T, M>;
-    fn add(self, rhs: Self) -> Self::Output {
-        Multivector {
-            s: self.s + rhs.s,
-            v: self.v + rhs.v,
-            b: self.b + rhs.b,
-            a: self.a + rhs.a,
-        }
-    }
-}
-
 impl<T> Sub for Multivector<T>
 where
     T: Sub<T, Output = T>,

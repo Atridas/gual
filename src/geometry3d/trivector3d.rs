@@ -1,6 +1,6 @@
 use std::{
     marker::PhantomData,
-    ops::{Add, Mul, Neg, Sub},
+    ops::{Mul, Neg, Sub},
 };
 
 use num::traits::ConstOne;
@@ -27,19 +27,6 @@ where
     fn from_volume(volume: Self::T) -> Self {
         Trivector {
             xyz: volume,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T, M> Add for Trivector<T, M>
-where
-    T: Add<T, Output = T>,
-{
-    type Output = Trivector<T, M>;
-    fn add(self, rhs: Self) -> Self::Output {
-        Trivector {
-            xyz: self.xyz + rhs.xyz,
             _metric: PhantomData,
         }
     }

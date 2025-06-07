@@ -1,4 +1,4 @@
-use std::ops::{Add, Sub};
+use std::ops::Sub;
 
 use num::traits::{ConstOne, ConstZero};
 
@@ -22,16 +22,6 @@ where
     pub const X: Self = Point(Vector::X);
     pub const Y: Self = Point(Vector::Y);
     pub const Z: Self = Point(Vector::X);
-}
-
-impl<T> Add<Vector<T>> for Point<T>
-where
-    T: Add<T, Output = T>,
-{
-    type Output = Point<T>;
-    fn add(self, rhs: Vector<T>) -> Self::Output {
-        Point(self.0 + rhs)
-    }
 }
 
 impl<T> Sub for Point<T>
