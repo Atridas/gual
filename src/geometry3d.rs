@@ -54,7 +54,7 @@ pub struct Multivector<T, M = Euclidean> {
     pub s: T,
     pub v: Vector<T, M>,
     pub b: Bivector<T, M>,
-    pub a: Trivector<T, M>,
+    pub t: Trivector<T, M>,
 }
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

@@ -20,7 +20,7 @@ where
             s: rhs,
             v: self,
             b: Bivector::ZERO,
-            a: Trivector::ZERO,
+            t: Trivector::ZERO,
         }
     }
 }
@@ -35,7 +35,7 @@ where
             s: rhs.0,
             v: self,
             b: Bivector::ZERO,
-            a: Trivector::ZERO,
+            t: Trivector::ZERO,
         }
     }
 }
@@ -65,7 +65,7 @@ where
             s: T::ZERO,
             v: self,
             b: rhs,
-            a: Trivector::ZERO,
+            t: Trivector::ZERO,
         }
     }
 }
@@ -80,7 +80,7 @@ where
             s: T::ZERO,
             v: self,
             b: Bivector::ZERO,
-            a: rhs,
+            t: rhs,
         }
     }
 }
@@ -95,7 +95,7 @@ where
             s: rhs.s,
             v: self,
             b: rhs.b,
-            a: Trivector::ZERO,
+            t: Trivector::ZERO,
         }
     }
 }
@@ -111,7 +111,7 @@ where
             s: rhs.s,
             v: self + rhs.v,
             b: rhs.b,
-            a: Trivector::ZERO,
+            t: Trivector::ZERO,
         }
     }
 }
@@ -175,7 +175,7 @@ where
             s: T::ZERO,
             v: Vector::ZERO,
             b: self,
-            a: rhs,
+            t: rhs,
         }
     }
 }
@@ -204,7 +204,7 @@ where
             s: rhs.s,
             v: rhs.v,
             b: self + rhs.b,
-            a: rhs.a,
+            t: rhs.t,
         }
     }
 }
@@ -223,7 +223,7 @@ where
             s: rhs,
             v: Vector::ZERO,
             b: Bivector::ZERO,
-            a: self,
+            t: self,
         }
     }
 }
@@ -238,7 +238,7 @@ where
             s: rhs.0,
             v: Vector::ZERO,
             b: Bivector::ZERO,
-            a: self,
+            t: self,
         }
     }
 }
@@ -269,7 +269,7 @@ where
             s: rhs.s,
             v: Vector::ZERO,
             b: rhs.b,
-            a: self,
+            t: self,
         }
     }
 }
@@ -285,7 +285,7 @@ where
             s: rhs.s,
             v: rhs.v,
             b: rhs.b,
-            a: self + rhs.a,
+            t: self + rhs.t,
         }
     }
 }
@@ -349,7 +349,7 @@ where
             s: self.s + rhs.s,
             v: rhs.v,
             b: self.b + rhs.b,
-            a: rhs.a,
+            t: rhs.t,
         }
     }
 }
@@ -368,7 +368,7 @@ where
             s: self.s + rhs,
             v: self.v,
             b: self.b,
-            a: self.a,
+            t: self.t,
         }
     }
 }
@@ -383,7 +383,7 @@ where
             s: self.s + rhs.0,
             v: self.v,
             b: self.b,
-            a: self.a,
+            t: self.t,
         }
     }
 }
@@ -404,7 +404,7 @@ where
             s: self.s + rhs.s,
             v: self.v + rhs.v,
             b: self.b + rhs.b,
-            a: self.a + rhs.a,
+            t: self.t + rhs.t,
         }
     }
 }

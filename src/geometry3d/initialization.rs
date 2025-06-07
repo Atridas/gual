@@ -126,12 +126,12 @@ where
             s: T::zero(),
             v: Vector::zero(),
             b: Bivector::zero(),
-            a: Trivector::zero(),
+            t: Trivector::zero(),
         }
     }
 
     fn is_zero(&self) -> bool {
-        self.s.is_zero() && self.v.is_zero() && self.b.is_zero() && self.a.is_zero()
+        self.s.is_zero() && self.v.is_zero() && self.b.is_zero() && self.t.is_zero()
     }
 }
 impl<T, M> ConstZero for Vector<T, M>
@@ -186,7 +186,7 @@ where
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZERO,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 }
 
@@ -216,7 +216,7 @@ where
             s: T::one(),
             v: Vector::zero(),
             b: Bivector::zero(),
-            a: Trivector::zero(),
+            t: Trivector::zero(),
         }
     }
 }
@@ -245,7 +245,7 @@ where
         s: T::ONE,
         v: Vector::ZERO,
         b: Bivector::ZERO,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 }
 
@@ -354,7 +354,7 @@ where
         s: T::ZERO,
         v: Vector::X,
         b: Bivector::ZERO,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit vector in the Y direction
@@ -362,7 +362,7 @@ where
         s: T::ZERO,
         v: Vector::Y,
         b: Bivector::ZERO,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit vector in the Z direction
@@ -370,7 +370,7 @@ where
         s: T::ZERO,
         v: Vector::Z,
         b: Bivector::ZERO,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit bivector in the YZ plane
@@ -378,7 +378,7 @@ where
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::YZ,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit bivector in the ZX plane
@@ -386,7 +386,7 @@ where
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZX,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit bivector in the XY plane
@@ -394,7 +394,7 @@ where
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::XY,
-        a: Trivector::ZERO,
+        t: Trivector::ZERO,
     };
 
     /// Unit trivector
@@ -402,7 +402,7 @@ where
         s: T::ZERO,
         v: Vector::ZERO,
         b: Bivector::ZERO,
-        a: Trivector::XYZ,
+        t: Trivector::XYZ,
     };
 }
 

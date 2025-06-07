@@ -183,7 +183,7 @@ where
                 _metric: PhantomData,
             },
             b: Bivector::ZERO,
-            a: self.wedge(rhs),
+            t: self.wedge(rhs),
         }
     }
 }
