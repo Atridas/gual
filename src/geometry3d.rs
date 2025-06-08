@@ -10,6 +10,7 @@ mod trivector3d;
 mod vector3d;
 
 mod add;
+mod complement;
 mod copyclone;
 mod initialization;
 mod mul;

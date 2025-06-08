@@ -5,7 +5,7 @@ use std::{
 
 use num::traits::ConstOne;
 
-use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, KVector};
+use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct};
 
 use super::{Bivector, Multivector, Scalar, Trivector, Vector};
 
@@ -29,18 +29,6 @@ where
             xyz: volume,
             _metric: PhantomData,
         }
-    }
-}
-
-impl<T: Clone> KVector for Trivector<T> {
-    type AntiKVector = Scalar<T>;
-
-    fn right_complement(&self) -> Self::AntiKVector {
-        Scalar(self.xyz.clone())
-    }
-
-    fn left_complement(&self) -> Self::AntiKVector {
-        Scalar(self.xyz.clone())
     }
 }
 

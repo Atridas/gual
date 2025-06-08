@@ -5,34 +5,9 @@ use std::{
 
 use num::traits::ConstZero;
 
-use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
+use crate::{AntiwedgeProduct, GeometricProduct, WedgeProduct, reverse_antiwedge};
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
-
-impl<T> KVector for Vector<T>
-where
-    T: Copy,
-{
-    type AntiKVector = Bivector<T>;
-
-    fn right_complement(&self) -> Self::AntiKVector {
-        Bivector {
-            yz: self.x,
-            zx: self.y,
-            xy: self.z,
-            _metric: PhantomData,
-        }
-    }
-
-    fn left_complement(&self) -> Self::AntiKVector {
-        Bivector {
-            yz: self.x,
-            zx: self.y,
-            xy: self.z,
-            _metric: PhantomData,
-        }
-    }
-}
 
 impl<T> AntiwedgeProduct<Bivector<T>> for Vector<T>
 where
