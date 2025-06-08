@@ -1,5 +1,7 @@
 use std::marker::PhantomData;
 
+use crate::geometry3d::Trivector;
+
 use super::{Bivector, Vector};
 
 impl<T: Clone, M> Clone for Vector<T, M> {
@@ -36,5 +38,19 @@ impl<T: Clone, M> Clone for Bivector<T, M> {
     }
 }
 
+impl<T: Clone, M> Clone for Trivector<T, M> {
+    fn clone(&self) -> Self {
+        Trivector {
+            xyz: self.xyz.clone(),
+            _metric: PhantomData,
+        }
+    }
+
+    fn clone_from(&mut self, source: &Self) {
+        self.xyz.clone_from(&source.xyz);
+    }
+}
+
 impl<T: Copy, M> Copy for Vector<T, M> {}
 impl<T: Copy, M> Copy for Bivector<T, M> {}
+impl<T: Copy, M> Copy for Trivector<T, M> {}

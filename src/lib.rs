@@ -399,6 +399,7 @@ pub trait GeometricAntiproduct<Rhs> {
     fn geometric_antiproduct(&self, rhs: &Rhs) -> Self::Output;
 }
 
+/// Computes the angle between 2 primitives
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;

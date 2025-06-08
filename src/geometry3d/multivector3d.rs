@@ -1,6 +1,6 @@
 use std::ops::{Add, Mul, Neg, Sub};
 
-use num::{Zero, traits::ConstZero};
+use num::traits::ConstZero;
 
 use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, VectorSpace, WedgeProduct};
 
@@ -52,98 +52,6 @@ where
         //     v: self.b.left_complement(),
         //     b: self.v.left_complement(),
         //     a: self.s.left_complement(),
-        // }
-    }
-}
-
-impl<T> WedgeProduct<Vector<T>> for Multivector<T>
-where
-    T: Zero,
-    T: Copy,
-    T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-{
-    type Output = Multivector<T>;
-
-    fn wedge(&self, _rhs: &Vector<T>) -> Self::Output {
-        unimplemented!();
-        // Multivector {
-        //     s: T::zero(),
-        //     v: self.s.wedge(rhs),
-        //     b: self.v.wedge(rhs),
-        //     a: self.b.wedge(rhs),
-        // }
-    }
-}
-
-impl<T> WedgeProduct<Bivector<T>> for Multivector<T>
-where
-    T: Zero,
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Multivector<T>;
-
-    fn wedge(&self, _rhs: &Bivector<T>) -> Self::Output {
-        unimplemented!();
-        // Multivector {
-        //     s: T::zero(),
-        //     v: Vector::zero(),
-        //     b: self.s.wedge(rhs),
-        //     a: self.v.wedge(rhs),
-        // }
-    }
-}
-
-impl<T> WedgeProduct<Trivector<T>> for Multivector<T>
-where
-    T: Zero,
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Multivector<T>;
-
-    fn wedge(&self, _rhs: &Trivector<T>) -> Self::Output {
-        unimplemented!();
-        // Multivector {
-        //     s: T::zero(),
-        //     v: Vector::zero(),
-        //     b: Bivector::zero(),
-        //     a: self.s.wedge(rhs),
-        // }
-    }
-}
-
-impl<T> WedgeProduct<Multivector<T>> for Multivector<T>
-where
-    T: Zero,
-    T: Copy,
-    T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-{
-    type Output = Multivector<T>;
-
-    fn wedge(&self, _rhs: &Multivector<T>) -> Self::Output {
-        unimplemented!();
-        // let s = self.s.wedge(&rhs.s);
-        // let v1 = self.s.wedge(&rhs.v);
-        // let b1 = self.s.wedge(&rhs.b);
-        // let a1 = self.s.wedge(&rhs.a);
-
-        // let v2 = self.v.wedge(&rhs.s);
-        // let b2 = self.v.wedge(&rhs.v);
-        // let a2 = self.v.wedge(&rhs.b);
-
-        // let b3 = self.b.wedge(&rhs.s);
-        // let a3 = self.b.wedge(&rhs.v);
-
-        // let a4 = self.a.wedge(&rhs.s);
-
-        // Multivector {
-        //     s: s,
-        //     v: v1 + v2,
-        //     b: b1 + b2 + b3,
-        //     a: a1 + a2 + a3 + a4,
         // }
     }
 }

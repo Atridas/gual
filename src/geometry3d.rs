@@ -15,6 +15,7 @@ mod initialization;
 mod mul;
 mod neg;
 mod sub;
+mod wedge;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Scalar<T>(pub T);
@@ -44,7 +45,7 @@ pub struct Bivector<T, M = Euclidean> {
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub struct UnitBivector<T>(pub(super) Bivector<T>);
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
+#[derive(Debug, PartialEq, Eq, PartialOrd, Ord)]
 pub struct Trivector<T, M = Euclidean> {
     pub xyz: T,
     _metric: PhantomData<M>,

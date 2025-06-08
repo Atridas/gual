@@ -5,9 +5,7 @@ use std::{
 
 use num::traits::ConstZero;
 
-use crate::{
-    AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge, reverse_wedge,
-};
+use crate::{AntiwedgeProduct, GeometricProduct, KVector, WedgeProduct, reverse_antiwedge};
 
 use super::{Bivector, Evenvector, Multivector, Scalar, Trivector, Vector};
 
@@ -31,40 +29,6 @@ where
             yz: self.x,
             zx: self.y,
             xy: self.z,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> WedgeProduct<Vector<T>> for Vector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-{
-    type Output = Bivector<T>;
-
-    fn wedge(&self, rhs: &Vector<T>) -> Self::Output {
-        Bivector {
-            yz: self.y * rhs.z - self.z * rhs.y,
-            zx: self.z * rhs.x - self.x * rhs.z,
-            xy: self.x * rhs.y - self.y * rhs.x,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> WedgeProduct<Bivector<T>> for Vector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-    T: Add<T, Output = T>,
-{
-    type Output = Trivector<T>;
-
-    fn wedge(&self, rhs: &Bivector<T>) -> Self::Output {
-        Trivector {
-            xyz: self.x * rhs.yz + self.y * rhs.zx + self.z * rhs.xy,
             _metric: PhantomData,
         }
     }
@@ -184,8 +148,6 @@ where
         // }
     }
 }
-
-reverse_wedge!(Bivector, Vector);
 
 reverse_antiwedge!(Bivector, Vector);
 reverse_antiwedge!(Trivector, Vector);

@@ -1,5 +1,8 @@
 use gual::{AntiwedgeProduct, Complement, Dual, WedgeProduct};
+
 mod geometry2d;
+
+mod geometry3d;
 
 pub fn antiwedge<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output as Complement>::Output
 where
