@@ -13,6 +13,7 @@ mod add;
 mod antiwedge;
 mod complement;
 mod copyclone;
+mod div;
 mod initialization;
 mod mul;
 mod neg;
