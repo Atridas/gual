@@ -1,5 +1,6 @@
 use gual::geometry3d::*;
 
+mod antiwedge;
 mod complement;
 mod wedge;
 
@@ -62,12 +63,12 @@ impl TrivectorIt {
 }
 
 impl Iterator for ScalarIt {
-    type Item = Scalar<i32>;
+    type Item = i32;
     fn next(&mut self) -> Option<Self::Item> {
         if self.s < self.max {
             let s = self.s;
             self.s += 1;
-            Some(Scalar(s))
+            Some(s)
         } else {
             None
         }
@@ -142,69 +143,3 @@ impl Iterator for TrivectorIt {
         }
     }
 }
-
-// #[test]
-// fn antiwedge_vector_bivector() {
-//     for v in VectorIt::new(20) {
-//         for b in BivectorIt::new(20) {
-//             // actual implementation matches definition
-//             assert_eq!(v.antiwedge(&b), antiwedge_reference(v, b));
-//             assert_eq!(b.antiwedge(&v), antiwedge_reference(b, v));
-//         }
-//     }
-// }
-
-// #[test]
-// fn antiwedge_vector_trivector() {
-//     for v in VectorIt::new(20) {
-//         for t in TrivectorIt::new(100) {
-//             // actual implementation matches definition
-//             assert_eq!(v.antiwedge(&t), antiwedge_reference(v, t));
-//             assert_eq!(t.antiwedge(&v), antiwedge_reference(t, v));
-//         }
-//     }
-// }
-
-// #[test]
-// fn antiwedge_bivector_bivector() {
-//     for b1 in BivectorIt::new(20) {
-//         for b2 in BivectorIt::new(20) {
-//             // actual implementation matches definition
-//             assert_eq!(b1.antiwedge(&b2), antiwedge_reference(b1, b2));
-//             assert_eq!(b2.antiwedge(&b1), antiwedge_reference(b2, b1));
-//         }
-//     }
-// }
-
-// #[test]
-// fn antiwedge_bivector_trivector() {
-//     for b in BivectorIt::new(20) {
-//         for t in TrivectorIt::new(100) {
-//             // actual implementation matches definition
-//             assert_eq!(b.antiwedge(&t), antiwedge_reference(b, t));
-//             assert_eq!(t.antiwedge(&b), antiwedge_reference(t, b));
-//         }
-//     }
-// }
-
-// #[test]
-// fn antiwedge_trivector_trivector() {
-//     for t1 in TrivectorIt::new(100) {
-//         for t2 in TrivectorIt::new(100) {
-//             // actual implementation matches definition
-//             assert_eq!(t1.antiwedge(&t2), antiwedge_reference(t1, t2));
-//             assert_eq!(t2.antiwedge(&t1), antiwedge_reference(t2, t1));
-//         }
-//     }
-// }
-
-// #[test]
-// fn antiwedge_scalar_trivector() {
-//     for s in ScalarIt::new(100) {
-//         for t in TrivectorIt::new(100) {
-//             // actual implementation matches definition
-//             assert_eq!(s.antiwedge(&t), antiwedge_reference(s, t));
-//             assert_eq!(t.antiwedge(&s), antiwedge_reference(t, s));
-//         }
-//     }
-// }

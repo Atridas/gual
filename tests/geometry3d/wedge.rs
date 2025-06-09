@@ -3,16 +3,6 @@ use gual::WedgeProduct;
 use crate::geometry3d::{BivectorIt, ScalarIt, TrivectorIt, VectorIt};
 
 #[test]
-fn wedge_scalar_scalar() {
-    for s in ScalarIt::new(100) {
-        for s2 in ScalarIt::new(100) {
-            // scalars always commute
-            assert_eq!(s.wedge(&s2), s2.wedge(&s));
-        }
-    }
-}
-
-#[test]
 fn wedge_scalar_vector() {
     for s in ScalarIt::new(100) {
         for v in VectorIt::new(20) {

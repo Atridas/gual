@@ -5,7 +5,7 @@ use std::{
 
 use num::traits::ConstOne;
 
-use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct};
+use crate::{Antiscalar, GeometricProduct};
 
 use super::{Bivector, Multivector, Scalar, Trivector, Vector};
 
@@ -27,21 +27,6 @@ where
     fn from_volume(volume: Self::T) -> Self {
         Trivector {
             xyz: volume,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> AntiwedgeProduct<Trivector<T>> for Trivector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Trivector<T>;
-
-    fn antiwedge(&self, rhs: &Trivector<T>) -> Self::Output {
-        Trivector {
-            xyz: self.xyz * rhs.xyz,
             _metric: PhantomData,
         }
     }

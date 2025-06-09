@@ -5,44 +5,9 @@ use std::{
 
 use num::traits::ConstZero;
 
-use crate::{AntiwedgeProduct, GeometricProduct, WedgeProduct, reverse_antiwedge};
+use crate::{GeometricProduct, WedgeProduct};
 
 use super::{Bivector, Evenvector, Multivector, Trivector, Vector};
-
-impl<T> AntiwedgeProduct<Bivector<T>> for Bivector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-    T: Sub<T, Output = T>,
-{
-    type Output = Vector<T>;
-
-    fn antiwedge(&self, rhs: &Bivector<T>) -> Self::Output {
-        Vector {
-            x: self.zx * rhs.xy - self.xy * rhs.zx,
-            y: self.xy * rhs.yz - self.yz * rhs.xy,
-            z: self.yz * rhs.zx - self.zx * rhs.yz,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> AntiwedgeProduct<Trivector<T>> for Bivector<T>
-where
-    T: Copy,
-    T: Mul<T, Output = T>,
-{
-    type Output = Bivector<T>;
-
-    fn antiwedge(&self, rhs: &Trivector<T>) -> Self::Output {
-        Bivector {
-            yz: self.yz * rhs.xyz,
-            zx: self.zx * rhs.xyz,
-            xy: self.xy * rhs.xyz,
-            _metric: PhantomData,
-        }
-    }
-}
 
 impl<T> GeometricProduct<Vector<T>> for Bivector<T>
 where
@@ -135,5 +100,3 @@ where
 //         }
 //     }
 // }
-
-reverse_antiwedge!(Trivector, Bivector);

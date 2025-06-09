@@ -2,7 +2,7 @@ use std::ops::{Add, Mul, Neg, Sub};
 
 use num::traits::ConstZero;
 
-use crate::{Antiscalar, AntiwedgeProduct, GeometricProduct, VectorSpace, WedgeProduct};
+use crate::{Antiscalar, GeometricProduct, VectorSpace};
 
 use super::{Bivector, Multivector, Trivector, Vector};
 
@@ -53,20 +53,6 @@ where
         //     b: self.v.left_complement(),
         //     a: self.s.left_complement(),
         // }
-    }
-}
-
-impl<T> AntiwedgeProduct<Multivector<T>> for Multivector<T>
-where
-    Multivector<T>: VectorSpace,
-    Multivector<T>: WedgeProduct<Multivector<T>, Output = Multivector<T>>,
-{
-    type Output = Multivector<T>;
-
-    fn antiwedge(&self, rhs: &Multivector<T>) -> Self::Output {
-        self.left_complement()
-            .wedge(&rhs.left_complement())
-            .right_complement()
     }
 }
 
