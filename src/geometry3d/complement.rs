@@ -115,3 +115,29 @@ where
         }
     }
 }
+
+impl<T, M> Complement for Multivector<T, M>
+where
+    T: Copy,
+    T: ConstZero,
+{
+    type Output = Multivector<T, M>;
+
+    fn right_complement(&self) -> Self::Output {
+        Multivector {
+            s: self.t.right_complement(),
+            v: self.b.right_complement(),
+            b: self.v.right_complement(),
+            t: Scalar::<3, T, M>::new(self.s).right_complement(),
+        }
+    }
+
+    fn left_complement(&self) -> Self::Output {
+        Multivector {
+            s: self.t.left_complement(),
+            v: self.b.left_complement(),
+            b: self.v.left_complement(),
+            t: Scalar::<3, T, M>::new(self.s).left_complement(),
+        }
+    }
+}
