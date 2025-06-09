@@ -127,41 +127,6 @@ where
     }
 }
 
-impl<T> Dual for d3::Vector<T>
-where
-    T: Copy,
-    T: ConstZero,
-    T: Neg<Output = T>,
-{
-    type AntiKVector = HomogeneusPlane<T>;
-
-    fn right_bulk_dual(&self) -> HomogeneusPlane<T> {
-        HomogeneusPlane {
-            wyz: self.x,
-            wzx: self.y,
-            wxy: self.z,
-            zyx: T::ZERO,
-        }
-    }
-
-    fn left_bulk_dual(&self) -> HomogeneusPlane<T> {
-        HomogeneusPlane {
-            wyz: -self.x,
-            wzx: -self.y,
-            wxy: -self.z,
-            zyx: T::ZERO,
-        }
-    }
-
-    fn right_weight_dual(&self) -> HomogeneusPlane<T> {
-        HomogeneusPlane::ZERO
-    }
-
-    fn left_weight_dual(&self) -> HomogeneusPlane<T> {
-        HomogeneusPlane::ZERO
-    }
-}
-
 impl<T> Dual for HomogeneusLine<T>
 where
     T: Copy,

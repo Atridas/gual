@@ -1,8 +1,12 @@
-use gual::{AntiwedgeProduct, Complement, Scalar, geometry3d::Trivector};
+use gual::{AntiwedgeProduct, Complement, Euclidean, Scalar, geometry3d::Trivector};
 
-use crate::{antiwedge, geometry3d::TrivectorIt};
+use crate::antiwedge;
 
-use super::{BivectorIt, ScalarIt, VectorIt};
+use super::ScalarIt;
+
+type VectorIt = crate::geometry3d::VectorIt<Euclidean>;
+type BivectorIt = crate::geometry3d::BivectorIt<Euclidean>;
+type TrivectorIt = crate::geometry3d::TrivectorIt<Euclidean>;
 
 #[test]
 fn antiwedge_vector_bivector() {

@@ -87,38 +87,6 @@ where
     }
 }
 
-impl<T> Metric for d3::Vector<T>
-where
-    T: Copy,
-    T: Zero,
-    T: ConstZero,
-{
-    type Bulk = d3::Vector<T>;
-    type Weight = d3::Scalar<T>;
-
-    fn from_bulk(bulk: &Self::Bulk) -> Self {
-        d3::Vector::new(bulk.x, bulk.y, bulk.z)
-    }
-
-    fn from_weight(bulk: &Self::Weight) -> Self {
-        assert!(bulk.is_zero());
-        d3::Vector::ZERO
-    }
-
-    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
-        assert!(weight.is_zero());
-        d3::Vector::new(bulk.x, bulk.y, bulk.z)
-    }
-
-    fn bulk(&self) -> Self::Bulk {
-        d3::Vector::new(self.x, self.y, self.z)
-    }
-
-    fn weight(&self) -> Self::Weight {
-        d3::Scalar::ZERO
-    }
-}
-
 impl<T: Copy + ConstZero> Metric for HomogeneusLine<T> {
     type Bulk = d3::Bivector<T>;
     type Weight = d3::Vector<T>;

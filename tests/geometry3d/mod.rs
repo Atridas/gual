@@ -1,7 +1,10 @@
+use std::marker::PhantomData;
+
 use gual::geometry3d::*;
 
 mod antiwedge;
 mod complement;
+mod dual;
 mod wedge;
 
 struct ScalarIt {
@@ -9,23 +12,26 @@ struct ScalarIt {
     max: i32,
 }
 
-struct VectorIt {
+struct VectorIt<M> {
     x: i32,
     y: i32,
     z: i32,
     max: i32,
+    _metric: PhantomData<M>,
 }
 
-struct BivectorIt {
+struct BivectorIt<M> {
     yz: i32,
     zx: i32,
     xy: i32,
     max: i32,
+    _metric: PhantomData<M>,
 }
 
-struct TrivectorIt {
+struct TrivectorIt<M> {
     xyz: i32,
     max: i32,
+    _metric: PhantomData<M>,
 }
 
 impl ScalarIt {
@@ -34,31 +40,37 @@ impl ScalarIt {
     }
 }
 
-impl VectorIt {
+impl<M> VectorIt<M> {
     fn new(max: i32) -> Self {
         Self {
             x: 0,
             y: 0,
             z: 0,
             max,
+            _metric: PhantomData,
         }
     }
 }
 
-impl BivectorIt {
+impl<M> BivectorIt<M> {
     fn new(max: i32) -> Self {
         Self {
             yz: 0,
             zx: 0,
             xy: 0,
             max,
+            _metric: PhantomData,
         }
     }
 }
 
-impl TrivectorIt {
+impl<M> TrivectorIt<M> {
     fn new(max: i32) -> Self {
-        Self { xyz: 0, max }
+        Self {
+            xyz: 0,
+            max,
+            _metric: PhantomData,
+        }
     }
 }
 
@@ -75,8 +87,8 @@ impl Iterator for ScalarIt {
     }
 }
 
-impl Iterator for VectorIt {
-    type Item = Vector<i32>;
+impl<M> Iterator for VectorIt<M> {
+    type Item = Vector<i32, M>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.z < self.max {
             if self.y < self.max {
@@ -103,8 +115,8 @@ impl Iterator for VectorIt {
     }
 }
 
-impl Iterator for BivectorIt {
-    type Item = Bivector<i32>;
+impl<M> Iterator for BivectorIt<M> {
+    type Item = Bivector<i32, M>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.xy < self.max {
             if self.zx < self.max {
@@ -131,8 +143,8 @@ impl Iterator for BivectorIt {
     }
 }
 
-impl Iterator for TrivectorIt {
-    type Item = Trivector<i32>;
+impl<M> Iterator for TrivectorIt<M> {
+    type Item = Trivector<i32, M>;
     fn next(&mut self) -> Option<Self::Item> {
         if self.xyz < self.max {
             let xyz = self.xyz;

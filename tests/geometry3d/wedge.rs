@@ -1,6 +1,10 @@
-use gual::WedgeProduct;
+use gual::{Euclidean, WedgeProduct};
 
-use crate::geometry3d::{BivectorIt, ScalarIt, TrivectorIt, VectorIt};
+use crate::geometry3d::ScalarIt;
+
+type VectorIt = crate::geometry3d::VectorIt<Euclidean>;
+type BivectorIt = crate::geometry3d::BivectorIt<Euclidean>;
+type TrivectorIt = crate::geometry3d::TrivectorIt<Euclidean>;
 
 #[test]
 fn wedge_scalar_vector() {
