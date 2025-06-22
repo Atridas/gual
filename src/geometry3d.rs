@@ -16,6 +16,7 @@ mod initialization;
 mod metric;
 mod mul;
 mod neg;
+mod projective_geometric_product;
 mod sub;
 mod vector_space;
 mod wedge;

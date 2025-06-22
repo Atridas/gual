@@ -10,6 +10,25 @@ use crate::{GeometricProduct, WedgeProduct, geometric_with_scalar_metric, geomet
 use super::{Bivector, Evenvector, Multivector, UnitVector, Vector};
 
 // ----------------------------------------------------------------------------------------------------
+// Macros
+// ----------------------------------------------------------------------------------------------------
+
+macro_rules! unit_vector_geometric {
+    ($lht:ident) => {
+        impl<T> GeometricProduct<UnitVector<T>> for $lht<T>
+        where
+            $lht<T>: GeometricProduct<Vector<T>>,
+        {
+            type Output = <$lht<T> as GeometricProduct<Vector<T>>>::Output;
+
+            fn geometric_product(&self, rhs: &UnitVector<T>) -> Self::Output {
+                self.geometric_product(&rhs.0)
+            }
+        }
+    };
+}
+
+// ----------------------------------------------------------------------------------------------------
 // Scalar
 // ----------------------------------------------------------------------------------------------------
 
@@ -121,6 +140,8 @@ where
         }
     }
 }
+
+unit_vector_geometric!(Vector);
 
 impl<T> GeometricProduct<Bivector<T>> for Vector<T>
 where
@@ -269,6 +290,8 @@ where
     }
 }
 
+unit_vector_geometric!(Bivector);
+
 impl<T> GeometricProduct<Bivector<T>> for Bivector<T>
 where
     T: Copy,
@@ -313,10 +336,10 @@ where
 impl<T> GeometricProduct<Evenvector<T>> for Bivector<T>
 where
     T: Copy,
-    T: Add<T, Output = T>,
-    T: Sub<T, Output = T>,
+    T: Add<Output = T>,
+    T: Sub<Output = T>,
     T: Neg<Output = T>,
-    T: Mul<T, Output = T>,
+    T: Mul<Output = T>,
 {
     type Output = Evenvector<T>;
 
@@ -373,6 +396,8 @@ where
         rhs.geometric_product(self)
     }
 }
+
+unit_vector_geometric!(Trivector);
 
 impl<T> GeometricProduct<Bivector<T>> for Trivector<T>
 where
@@ -471,6 +496,8 @@ where
         }
     }
 }
+
+unit_vector_geometric!(Evenvector);
 
 impl<T> GeometricProduct<Bivector<T>> for Evenvector<T>
 where
@@ -572,6 +599,8 @@ where
         }
     }
 }
+
+unit_vector_geometric!(Multivector);
 
 impl<T> GeometricProduct<Bivector<T>> for Multivector<T>
 where
