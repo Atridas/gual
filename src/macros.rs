@@ -212,13 +212,13 @@ macro_rules! geometric_with_scalar {
 #[macro_export]
 macro_rules! reverse_geometric_metric {
     ($lht:ident, $rht:ident) => {
-        impl<T, M> GeometricProduct<rht<T, M>> for $lht<T, M>
+        impl<T, M> GeometricProduct<$rht<T, M>> for $lht<T, M>
         where
             $rht<T, M>: GeometricProduct<$lht<T, M>>,
         {
             type Output = <$rht<T, M> as GeometricProduct<$lht<T, M>>>::Output;
 
-            fn geometric_product(&self, rhs: &T) -> Self::Output {
+            fn geometric_product(&self, rhs: &$rht<T, M>) -> Self::Output {
                 rhs.geometric_product(self)
             }
         }
