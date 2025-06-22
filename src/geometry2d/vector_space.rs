@@ -5,7 +5,7 @@ use std::{
 
 use num::{Float, traits::ConstOne};
 
-use crate::{Antiscalar, VectorSpace};
+use crate::{Antiscalar, Complement, VectorSpace};
 
 use super::{Bivector, Multivector, Vector};
 
@@ -63,20 +63,18 @@ where
     }
 
     fn right_complement(&self) -> Self {
-        unimplemented!("TODO")
-        // Multivector {
-        //     s: self.b.right_complement(),
-        //     v: self.v.right_complement(),
-        //     b: self.s.right_complement(),
-        // }
+        Multivector {
+            s: self.b.right_complement(),
+            v: self.v.right_complement(),
+            b: Bivector::new(self.s),
+        }
     }
 
     fn left_complement(&self) -> Self {
-        unimplemented!("TODO")
-        // Multivector {
-        //     s: self.b.left_complement(),
-        //     v: self.v.left_complement(),
-        //     b: self.s.left_complement(),
-        // }
+        Multivector {
+            s: self.b.left_complement(),
+            v: self.v.left_complement(),
+            b: Bivector::new(self.s),
+        }
     }
 }

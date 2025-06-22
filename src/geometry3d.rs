@@ -3,11 +3,7 @@ use std::marker::PhantomData;
 use crate::Euclidean;
 
 mod angle3d;
-mod bivector3d;
-mod multivector3d;
 mod scalar3d;
-mod trivector3d;
-mod vector3d;
 
 mod add;
 mod antiwedge;
@@ -15,11 +11,13 @@ mod complement;
 mod copyclone;
 mod div;
 mod dual;
+mod geometric_product;
 mod initialization;
 mod metric;
 mod mul;
 mod neg;
 mod sub;
+mod vector_space;
 mod wedge;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord)]
