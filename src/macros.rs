@@ -176,3 +176,68 @@ macro_rules! reverse_antiwedge_anticommutative_metric {
         }
     };
 }
+
+#[macro_export]
+macro_rules! geometric_with_scalar_metric {
+    ($lht:ident) => {
+        impl<T, M> GeometricProduct<T> for $lht<T, M>
+        where
+            T: GeometricProduct<$lht<T, M>, Output = $lht<T, M>>,
+        {
+            type Output = $lht<T, M>;
+
+            fn geometric_product(&self, rhs: &T) -> Self::Output {
+                rhs.geometric_product(self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! geometric_with_scalar {
+    ($lht:ident) => {
+        impl<T> GeometricProduct<T> for $lht<T>
+        where
+            T: GeometricProduct<$lht<T>, Output = $lht<T>>,
+        {
+            type Output = $lht<T>;
+
+            fn geometric_product(&self, rhs: &T) -> Self::Output {
+                rhs.geometric_product(self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_geometric_metric {
+    ($lht:ident, $rht:ident) => {
+        impl<T, M> GeometricProduct<rht<T, M>> for $lht<T, M>
+        where
+            $rht<T, M>: GeometricProduct<$lht<T, M>>,
+        {
+            type Output = <$rht<T, M> as GeometricProduct<$lht<T, M>>>::Output;
+
+            fn geometric_product(&self, rhs: &T) -> Self::Output {
+                rhs.geometric_product(self)
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_geometric_anticommute_metric {
+    ($lht:ident, $rht:ident) => {
+        impl<T, M> GeometricProduct<rht<T, M>> for $lht<T, M>
+        where
+            $rht<T, M>: GeometricProduct<$lht<T, M>>,
+            GeometricProduct<$lht<T, M>>::Output: Neg<Output = GeometricProduct<$lht<T, M>>>::Output>,
+        {
+            type Output = <$rht<T, M> as GeometricProduct<$lht<T, M>>>::Output;
+
+            fn geometric_product(&self, rhs: &T) -> Self::Output {
+                -rhs.geometric_product(self)
+            }
+        }
+    };
+}
