@@ -164,16 +164,16 @@ where
 // UnitVector
 // ----------------------------------------------------------------------------------------------------
 
-impl<T, Rhs> GeometricProduct<Rhs> for UnitVector<T>
-where
-    Vector<T>: GeometricProduct<Rhs>,
-{
-    type Output = <Vector<T> as GeometricProduct<Rhs>>::Output;
+// impl<T, Rhs> GeometricProduct<Rhs> for UnitVector<T>
+// where
+//     Vector<T>: GeometricProduct<Rhs>,
+// {
+//     type Output = <Vector<T> as GeometricProduct<Rhs>>::Output;
 
-    fn geometric_product(&self, rhs: &Rhs) -> Self::Output {
-        self.0.geometric_product(rhs)
-    }
-}
+//     fn geometric_product(&self, rhs: &Rhs) -> Self::Output {
+//         self.0.geometric_product(rhs)
+//     }
+// }
 
 // ----------------------------------------------------------------------------------------------------
 // Bivector

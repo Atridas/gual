@@ -292,12 +292,31 @@ impl<T> From<UnitVector<T>> for Vector<T> {
     }
 }
 
+impl<T: Copy> From<&UnitVector<T>> for Vector<T> {
+    fn from(value: &UnitVector<T>) -> Self {
+        value.0
+    }
+}
+
 impl<T> TryFrom<Vector<T>> for UnitVector<T>
 where
     Vector<T>: Unitizable<Output = UnitVector<T>>,
 {
     type Error = ();
     fn try_from(value: Vector<T>) -> Result<Self, Self::Error> {
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
+        }
+    }
+}
+
+impl<T: Copy> TryFrom<&Vector<T>> for UnitVector<T>
+where
+    Vector<T>: Unitizable<Output = UnitVector<T>>,
+{
+    type Error = ();
+    fn try_from(value: &Vector<T>) -> Result<Self, Self::Error> {
         match value.unitize() {
             Some(unit) => Ok(unit),
             None => Err(()),

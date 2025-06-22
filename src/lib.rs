@@ -3,6 +3,7 @@ use std::marker::PhantomData;
 pub mod geometry2d;
 pub mod geometry3d;
 pub mod geometry4d;
+pub mod projective2d;
 
 mod blanket_impls;
 mod macros;
