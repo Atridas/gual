@@ -70,25 +70,25 @@ where
     }
 }
 
-impl<T> Dot for d3::Vector<T>
-where
-    T: Copy,
-    T: ConstZero,
-    T: Add<T, Output = T>,
-    T: Mul<T, Output = T>,
-    d4::Quadvector<T>: Antiscalar,
-{
-    type Scalar = d4::Scalar<T>;
-    type Antiscalar = d4::Quadvector<T>;
+// impl<T> Dot for d3::Vector<T>
+// where
+//     T: Copy,
+//     T: ConstZero,
+//     T: Add<T, Output = T>,
+//     T: Mul<T, Output = T>,
+//     d4::Quadvector<T>: Antiscalar,
+// {
+//     type Scalar = d4::Scalar<T>;
+//     type Antiscalar = d4::Quadvector<T>;
 
-    fn dot(&self, rhs: &Self) -> Self::Scalar {
-        d4::Scalar(self.x * rhs.x + self.y * rhs.y + self.z * rhs.z)
-    }
+//     fn dot(&self, rhs: &Self) -> Self::Scalar {
+//         d4::Scalar(self.x * rhs.x + self.y * rhs.y + self.z * rhs.z)
+//     }
 
-    fn antidot(&self, _rhs: &Self) -> Self::Antiscalar {
-        d4::Quadvector::ZERO
-    }
-}
+//     fn antidot(&self, _rhs: &Self) -> Self::Antiscalar {
+//         d4::Quadvector::ZERO
+//     }
+// }
 
 impl<T> Dot for HomogeneusLine<T>
 where
