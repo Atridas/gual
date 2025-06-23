@@ -3,11 +3,9 @@ use std::{
     ops::{Add, Mul, Neg, Sub},
 };
 
-use crate::{
-    GeometricProduct, geometric_with_scalar_metric, reverse_geometric, reverse_geometric_metric,
-};
+use crate::{GeometricProduct, geometric_with_scalar_metric, reverse_geometric_metric};
 
-use super::{Bivector, Evenvector, Multivector, UnitVector, Vector};
+use super::{Bivector, Evenvector, Multivector, Vector};
 
 // ----------------------------------------------------------------------------------------------------
 // Scalar
@@ -22,20 +20,6 @@ where
         Vector {
             x: *self * rhs.x,
             y: *self * rhs.y,
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T: Copy> GeometricProduct<UnitVector<T>> for T
-where
-    T: Mul<Output = T>,
-{
-    type Output = Vector<T>;
-    fn geometric_product(&self, rhs: &UnitVector<T>) -> Self::Output {
-        Vector {
-            x: *self * rhs.0.x,
-            y: *self * rhs.0.y,
             _metric: PhantomData,
         }
     }
@@ -102,16 +86,6 @@ where
                 _metric: PhantomData,
             },
         }
-    }
-}
-
-impl<T: Copy> GeometricProduct<UnitVector<T>> for Vector<T>
-where
-    Vector<T>: GeometricProduct<Vector<T>, Output = Evenvector<T>>,
-{
-    type Output = Evenvector<T>;
-    fn geometric_product(&self, rhs: &UnitVector<T>) -> Self::Output {
-        self.geometric_product(&rhs.0)
     }
 }
 
@@ -183,8 +157,6 @@ geometric_with_scalar_metric!(Bivector);
 
 reverse_geometric_metric!(Bivector, Vector);
 
-reverse_geometric!(Bivector, UnitVector);
-
 impl<T: Copy> GeometricProduct<Bivector<T>> for Bivector<T>
 where
     T: Neg<Output = T>,
@@ -230,8 +202,6 @@ where
 geometric_with_scalar_metric!(Evenvector);
 
 reverse_geometric_metric!(Evenvector, Vector);
-
-reverse_geometric!(Evenvector, UnitVector);
 
 reverse_geometric_metric!(Evenvector, Bivector);
 
@@ -280,16 +250,6 @@ where
             v: self.s.geometric_product(rhs) + self.b.geometric_product(rhs),
             b: ev.b,
         }
-    }
-}
-
-impl<T: Copy> GeometricProduct<UnitVector<T>> for Multivector<T>
-where
-    Multivector<T>: GeometricProduct<Vector<T>, Output = Multivector<T>>,
-{
-    type Output = Multivector<T>;
-    fn geometric_product(&self, rhs: &UnitVector<T>) -> Self::Output {
-        self.geometric_product(&rhs.0)
     }
 }
 

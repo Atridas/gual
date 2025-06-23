@@ -5,7 +5,7 @@ use std::{
 
 use num::traits::ConstOne;
 
-use super::{Bivector, Evenvector, Multivector, Point, UnitVector, Vector};
+use super::{Bivector, Evenvector, Multivector, Vector};
 
 impl<T: Copy, M> Div<T> for Vector<T, M>
 where
@@ -21,26 +21,6 @@ where
             y: self.y * inv,
             _metric: PhantomData,
         }
-    }
-}
-
-impl<T: Copy> Div<T> for UnitVector<T>
-where
-    Vector<T>: Div<T, Output = Vector<T>>,
-{
-    type Output = Vector<T>;
-    fn div(self, rhs: T) -> Self::Output {
-        self.0 / rhs
-    }
-}
-
-impl<T: Copy> Div<T> for Point<T>
-where
-    Vector<T>: Div<T, Output = Vector<T>>,
-{
-    type Output = Point<T>;
-    fn div(self, rhs: T) -> Self::Output {
-        Point(self.0 / rhs)
     }
 }
 

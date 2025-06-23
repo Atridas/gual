@@ -4,7 +4,7 @@ use num::traits::ConstZero;
 
 use crate::{Scalar, default_sub};
 
-use super::{Bivector, Evenvector, Multivector, Point, Vector};
+use super::{Bivector, Evenvector, Multivector, Vector};
 
 // ----------------------------------------------------------------------------------------------------
 // Scalar
@@ -103,32 +103,6 @@ default_sub!(Vector, Vector);
 default_sub!(Vector, Bivector);
 default_sub!(Vector, Evenvector);
 default_sub!(Vector, Multivector);
-
-// ----------------------------------------------------------------------------------------------------
-// Point
-// ----------------------------------------------------------------------------------------------------
-
-impl<T> Sub<Vector<T>> for Point<T>
-where
-    T: ConstZero,
-    T: Neg<Output = T>,
-{
-    type Output = Point<T>;
-    fn sub(self, rhs: Vector<T>) -> Self::Output {
-        Point(self.0 - rhs)
-    }
-}
-
-impl<T> Sub<Point<T>> for Point<T>
-where
-    T: ConstZero,
-    T: Neg<Output = T>,
-{
-    type Output = Vector<T>;
-    fn sub(self, rhs: Point<T>) -> Self::Output {
-        self.0 - rhs.0
-    }
-}
 
 // ----------------------------------------------------------------------------------------------------
 // Bivector

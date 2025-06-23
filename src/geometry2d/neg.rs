@@ -1,6 +1,6 @@
 use std::{marker::PhantomData, ops::Neg};
 
-use super::{Bivector, Evenvector, Multivector, Point, UnitVector, Vector};
+use super::{Bivector, Evenvector, Multivector, Vector};
 
 impl<T, M> Neg for Vector<T, M>
 where
@@ -13,26 +13,6 @@ where
             y: -self.y,
             _metric: PhantomData,
         }
-    }
-}
-
-impl<T> Neg for UnitVector<T>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Self;
-    fn neg(self) -> Self::Output {
-        UnitVector(-self.0)
-    }
-}
-
-impl<T> Neg for Point<T>
-where
-    T: Neg<Output = T>,
-{
-    type Output = Self;
-    fn neg(self) -> Self::Output {
-        Point(-self.0)
     }
 }
 

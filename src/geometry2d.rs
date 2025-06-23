@@ -18,7 +18,6 @@ mod mul;
 mod neg;
 mod norm;
 mod sub;
-mod unitize;
 mod vector_space;
 mod wedge;
 
@@ -47,9 +46,3 @@ pub struct Multivector<T, M = Euclidean> {
     pub v: Vector<T, M>,
     pub b: Bivector<T, M>,
 }
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct UnitVector<T>(Vector<T>);
-
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub struct Point<T>(pub Vector<T>);

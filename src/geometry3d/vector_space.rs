@@ -12,7 +12,7 @@ use crate::{
 
 use super::Trivector;
 
-impl<T: Clone> Antiscalar for Trivector<T>
+impl<T: Clone, M> Antiscalar for Trivector<T, M>
 where
     T: ConstOne,
 {
@@ -35,18 +35,18 @@ where
     }
 }
 
-impl<T: Copy> VectorSpace for Multivector<T>
+impl<T: Copy, M> VectorSpace for Multivector<T, M>
 where
     T: Neg<Output = T>,
     T: Add<Output = T>,
     T: Sub<Output = T>,
     T: Mul<Output = T>,
-    Trivector<T>: Antiscalar,
+    Trivector<T, M>: Antiscalar,
 {
     type Scalar = T;
-    type Vector = Vector<T>;
-    type Antivector = Bivector<T>;
-    type Antiscalar = Trivector<T>;
+    type Vector = Vector<T, M>;
+    type Antivector = Bivector<T, M>;
+    type Antiscalar = Trivector<T, M>;
 
     fn scalar(&self) -> Self::Scalar {
         self.s

@@ -1,10 +1,10 @@
 use std::marker::PhantomData;
 
-use num::{Float, traits::ConstOne};
+use num::Float;
 
 use crate::{Dot, Norm};
 
-use super::{Bivector, UnitVector, Vector};
+use super::{Bivector, Vector};
 
 impl<T> Norm for Vector<T>
 where
@@ -29,36 +29,6 @@ where
     fn weight_norm(&self) -> Bivector<T> {
         Bivector {
             xy: self.weight_norm_squared().xy.sqrt(),
-            _metric: PhantomData,
-        }
-    }
-}
-
-impl<T> Norm for UnitVector<T>
-where
-    T: ConstOne,
-{
-    type Scalar = T;
-    type Antiscalar = Bivector<T>;
-
-    fn bulk_norm_squared(&self) -> T {
-        T::ONE
-    }
-
-    fn weight_norm_squared(&self) -> Bivector<T> {
-        Bivector {
-            xy: T::ONE,
-            _metric: PhantomData,
-        }
-    }
-
-    fn bulk_norm(&self) -> T {
-        T::ONE
-    }
-
-    fn weight_norm(&self) -> Bivector<T> {
-        Bivector {
-            xy: T::ONE,
             _metric: PhantomData,
         }
     }

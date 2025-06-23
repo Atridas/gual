@@ -1,8 +1,9 @@
+use std::ops::Mul;
+
 use crate::GeometricProduct;
 use crate::Projective;
-use crate::geometry2d::{Point, UnitVector};
 use crate::geometry3d::{Bivector, Evenvector, Multivector, Trivector, Vector};
-use crate::projective2d::DirVector;
+use crate::projective2d::{DirVector, Point, UnitVector};
 
 // ----------------------------------------------------------------------------------------------------
 // Macros
@@ -38,7 +39,7 @@ macro_rules! equivalent_vector_geometric_product {
     };
 
     ($lht:ident<T>, $rht:ident<T>) => {
-        impl<T: Copy> GeometricProduct<$rht<T>> for $rht<T>
+        impl<T: Copy> GeometricProduct<$rht<T>> for $lht<T>
         where
             $lht<T>: Into<Vector<T, Projective>>,
             $rht<T>: Into<Vector<T, Projective>>,
@@ -57,6 +58,16 @@ macro_rules! equivalent_vector_geometric_product {
 // Points
 // ----------------------------------------------------------------------------------------------------
 
+impl<T: Copy> GeometricProduct<Point<T>> for T
+where
+    T: Mul<Output = T>,
+{
+    type Output = Point<T>;
+    fn geometric_product(&self, rhs: &Point<T>) -> Self::Output {
+        Point::new(*self * rhs.0.x, *self * rhs.0.y)
+    }
+}
+
 equivalent_vector_geometric_product!(Point<T>, Vector<T, Projective>);
 equivalent_vector_geometric_product!(Point<T>, Bivector<T, Projective>);
 equivalent_vector_geometric_product!(Point<T>, Trivector<T, Projective>);
@@ -70,7 +81,7 @@ equivalent_vector_geometric_product!(Evenvector<T, Projective>, Point<T>);
 equivalent_vector_geometric_product!(Multivector<T, Projective>, Point<T>);
 
 equivalent_vector_geometric_product!(Point<T>, Point<T>);
-// equivalent_vector_geometric_product!(Point<T>, DirVector<T>);
+equivalent_vector_geometric_product!(Point<T>, DirVector<T>);
 equivalent_vector_geometric_product!(Point<T>, UnitVector<T>);
 
 // ----------------------------------------------------------------------------------------------------
@@ -89,13 +100,23 @@ equivalent_vector_geometric_product!(DirVector<T>, Multivector<T, Projective>);
 // equivalent_vector_geometric_product!(Evenvector<T, Projective>, DirVector<T>);
 // equivalent_vector_geometric_product!(Multivector<T, Projective>, DirVector<T>);
 
-// equivalent_vector_geometric_product!(DirVector<T>, Point<T>);
+equivalent_vector_geometric_product!(DirVector<T>, Point<T>);
 // equivalent_vector_geometric_product!(DirVector<T>, DirVector<T>);
-// equivalent_vector_geometric_product!(DirVector<T>, UnitVector<T>);
+equivalent_vector_geometric_product!(DirVector<T>, UnitVector<T>);
 
 // ----------------------------------------------------------------------------------------------------
 // Unit Vector
 // ----------------------------------------------------------------------------------------------------
+
+impl<T: Copy> GeometricProduct<UnitVector<T>> for T
+where
+    T: Mul<Output = T>,
+{
+    type Output = DirVector<T>;
+    fn geometric_product(&self, rhs: &UnitVector<T>) -> Self::Output {
+        DirVector::new(*self * rhs.0.x, *self * rhs.0.y)
+    }
+}
 
 equivalent_vector_geometric_product!(UnitVector<T>, Vector<T, Projective>);
 equivalent_vector_geometric_product!(UnitVector<T>, Bivector<T, Projective>);
@@ -109,6 +130,6 @@ equivalent_vector_geometric_product!(Trivector<T, Projective>, UnitVector<T>);
 equivalent_vector_geometric_product!(Evenvector<T, Projective>, UnitVector<T>);
 equivalent_vector_geometric_product!(Multivector<T, Projective>, UnitVector<T>);
 
-// equivalent_vector_geometric_product!(UnitVector<T>, Point<T>);
-// equivalent_vector_geometric_product!(UnitVector<T>, DirVector<T>);
-// equivalent_vector_geometric_product!(UnitVector<T>, UnitVector<T>);
+equivalent_vector_geometric_product!(UnitVector<T>, Point<T>);
+equivalent_vector_geometric_product!(UnitVector<T>, DirVector<T>);
+equivalent_vector_geometric_product!(UnitVector<T>, UnitVector<T>);

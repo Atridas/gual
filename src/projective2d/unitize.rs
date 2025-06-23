@@ -2,14 +2,14 @@ use num::{Float, traits::ConstOne};
 
 use crate::{Epsilon, Norm, Unitizable};
 
-use super::{UnitVector, Vector};
+use super::{DirVector, UnitVector};
 
-impl<T> Unitizable for Vector<T>
+impl<T> Unitizable for DirVector<T>
 where
     T: Float,
     T: ConstOne,
     T: Epsilon,
-    Vector<T>: Norm<Scalar = T>,
+    DirVector<T>: Norm<Scalar = T>,
 {
     type Output = UnitVector<T>;
 

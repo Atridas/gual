@@ -4,7 +4,7 @@ use num::traits::ConstZero;
 
 use crate::{Scalar, reverse_add_metric};
 
-use super::{Bivector, Evenvector, Multivector, Point, Vector};
+use super::{Bivector, Evenvector, Multivector, Vector};
 
 // ----------------------------------------------------------------------------------------------------
 // Vector
@@ -88,24 +88,6 @@ where
             v: self + rhs.v,
             b: rhs.b,
         }
-    }
-}
-
-// ----------------------------------------------------------------------------------------------------
-// Point
-// ----------------------------------------------------------------------------------------------------
-
-impl<T> Add<Vector<T>> for Point<T>
-where
-    T: Add<T, Output = T>,
-{
-    type Output = Point<T>;
-    fn add(self, rhs: Vector<T>) -> Self::Output {
-        Point(Vector {
-            x: self.0.x + rhs.x,
-            y: self.0.y + rhs.y,
-            _metric: PhantomData,
-        })
     }
 }
 

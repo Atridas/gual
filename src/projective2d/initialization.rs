@@ -6,11 +6,55 @@ use num::{
 };
 
 use crate::{
-    Epsilon, WedgeProduct,
+    Epsilon, Unitizable, WedgeProduct,
     projective2d::{DirVector, Line, ParametricLine, Point, UnitLine, UnitVector},
 };
 
 type Vector3<T> = crate::geometry3d::Vector<T, crate::Projective>;
+
+impl<T> Point<T> {
+    pub fn new(x: T, y: T) -> Self {
+        Self(DirVector::new(x, y))
+    }
+}
+
+impl<T> From<UnitVector<T>> for DirVector<T> {
+    fn from(value: UnitVector<T>) -> Self {
+        value.0
+    }
+}
+
+impl<T: Copy> From<&UnitVector<T>> for DirVector<T> {
+    fn from(value: &UnitVector<T>) -> Self {
+        value.0
+    }
+}
+
+impl<T> TryFrom<DirVector<T>> for UnitVector<T>
+where
+    DirVector<T>: Unitizable<Output = UnitVector<T>>,
+{
+    type Error = ();
+    fn try_from(value: DirVector<T>) -> Result<Self, Self::Error> {
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
+        }
+    }
+}
+
+impl<T: Copy> TryFrom<&DirVector<T>> for UnitVector<T>
+where
+    DirVector<T>: Unitizable<Output = UnitVector<T>>,
+{
+    type Error = ();
+    fn try_from(value: &DirVector<T>) -> Result<Self, Self::Error> {
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
+        }
+    }
+}
 
 impl<T: ConstOne> From<Point<T>> for Vector3<T> {
     fn from(value: Point<T>) -> Self {
@@ -50,6 +94,26 @@ impl<T: ConstZero + Copy> From<&UnitVector<T>> for Vector3<T> {
     }
 }
 
+impl<T> UnitVector<T>
+where
+    T: ConstZero,
+    T: ConstOne,
+{
+    /// Unit vector in the X direction
+    pub const X: Self = UnitVector(DirVector::X);
+
+    /// Unit vector in the Y direction
+    pub const Y: Self = UnitVector(DirVector::Y);
+}
+
+impl<T> Point<T>
+where
+    T: ConstZero,
+{
+    /// Coordinate origin
+    pub const ORIGIN: Self = Point(DirVector::ZERO);
+}
+
 impl<T> Line<T>
 where
     T: Copy,
@@ -83,6 +147,17 @@ where
         } else {
             Ok(UnitLine(value * len2.sqrt().recip()))
         }
+    }
+}
+
+impl<T> UnitVector<T> {
+    /// Creates a new unit vector.
+    ///
+    /// It is marked unsafe even though it is not "rust unsafe" to use,
+    /// you should really initialize it with only a unit vector if you
+    /// want other operations to have a meaningful result.
+    pub unsafe fn raw_new(value: DirVector<T>) -> Self {
+        UnitVector(value)
     }
 }
 
