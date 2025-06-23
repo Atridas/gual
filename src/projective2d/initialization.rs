@@ -1,12 +1,9 @@
 use std::ops::{Mul, Neg, Sub};
 
-use num::{
-    Float,
-    traits::{ConstOne, ConstZero},
-};
+use num::traits::{ConstOne, ConstZero};
 
 use crate::{
-    Epsilon, Unitizable, WedgeProduct,
+    Unitizable, WedgeProduct,
     projective2d::{DirVector, Line, ParametricLine, Point, UnitLine, UnitVector},
 };
 
@@ -136,16 +133,26 @@ impl<T> From<UnitLine<T>> for Line<T> {
 
 impl<T> TryFrom<Line<T>> for UnitLine<T>
 where
-    T: Float,
-    T: Epsilon,
+    Line<T>: Unitizable<Output = UnitLine<T>>,
 {
     type Error = ();
     fn try_from(value: Line<T>) -> Result<Self, Self::Error> {
-        let len2 = value.yz * value.yz + value.zx * value.zx;
-        if len2.is_near_zero() {
-            Err(())
-        } else {
-            Ok(UnitLine(value * len2.sqrt().recip()))
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
+        }
+    }
+}
+
+impl<T> TryFrom<&Line<T>> for UnitLine<T>
+where
+    Line<T>: Unitizable<Output = UnitLine<T>>,
+{
+    type Error = ();
+    fn try_from(value: &Line<T>) -> Result<Self, Self::Error> {
+        match value.unitize() {
+            Some(unit) => Ok(unit),
+            None => Err(()),
         }
     }
 }
