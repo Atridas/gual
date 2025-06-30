@@ -5,8 +5,8 @@ use crate::Metric;
 use super::{Bivector, Vector};
 
 impl<T: Copy + Zero> Metric for Vector<T> {
-    type Bulk = Vector<T>;
-    type Weight = Vector<T>;
+    type Bulk = Self;
+    type Weight = Self;
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
         *bulk
@@ -26,13 +26,21 @@ impl<T: Copy + Zero> Metric for Vector<T> {
     }
 
     fn weight(&self) -> Self::Weight {
+        *self
+    }
+
+    fn proper_bulk(&self) -> Self {
+        *self
+    }
+
+    fn proper_weight(&self) -> Self {
         *self
     }
 }
 
 impl<T: Copy + Zero> Metric for Bivector<T> {
-    type Bulk = Bivector<T>;
-    type Weight = Bivector<T>;
+    type Bulk = Self;
+    type Weight = Self;
 
     fn from_bulk(bulk: &Self::Bulk) -> Self {
         *bulk
@@ -52,6 +60,14 @@ impl<T: Copy + Zero> Metric for Bivector<T> {
     }
 
     fn weight(&self) -> Self::Weight {
+        *self
+    }
+
+    fn proper_bulk(&self) -> Self {
+        *self
+    }
+
+    fn proper_weight(&self) -> Self {
         *self
     }
 }

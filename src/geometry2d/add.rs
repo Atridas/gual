@@ -2,7 +2,7 @@ use std::{marker::PhantomData, ops::Add};
 
 use num::traits::ConstZero;
 
-use crate::{Scalar, reverse_add_metric};
+use crate::{Scalar, reverse_add_metric, reverse_add_scalar_metric};
 
 use super::{Bivector, Evenvector, Multivector, Vector};
 
@@ -37,6 +37,8 @@ where
         }
     }
 }
+
+reverse_add_scalar_metric!(Vector);
 
 impl<T, M> Add<Vector<T, M>> for Vector<T, M>
 where
@@ -108,6 +110,8 @@ impl<T, M> Add<Scalar<2, T, M>> for Bivector<T, M> {
         Evenvector { s: rhs.0, b: self }
     }
 }
+
+reverse_add_scalar_metric!(Bivector);
 
 reverse_add_metric!(Bivector, Vector);
 
@@ -181,6 +185,8 @@ where
     }
 }
 
+reverse_add_scalar_metric!(Evenvector);
+
 reverse_add_metric!(Evenvector, Vector);
 
 reverse_add_metric!(Evenvector, Bivector);
@@ -243,6 +249,8 @@ where
         }
     }
 }
+
+reverse_add_scalar_metric!(Multivector);
 
 reverse_add_metric!(Multivector, Vector);
 

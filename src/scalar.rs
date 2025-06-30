@@ -3,9 +3,12 @@ use std::{
     ops::{Add, Mul},
 };
 
-use num::traits::{ConstOne, ConstZero};
+use num::{
+    One, Zero,
+    traits::{ConstOne, ConstZero},
+};
 
-use crate::Scalar;
+use crate::{Metric, Projective, Scalar};
 
 impl<const D: u32, T, M> Scalar<D, T, M> {
     pub fn new(v: T) -> Self {
@@ -13,38 +16,132 @@ impl<const D: u32, T, M> Scalar<D, T, M> {
     }
 }
 
-impl<const D: u32, T, M> Scalar<D, T, M>
+impl<const D: u32, T, M> Zero for Scalar<D, T, M>
 where
-    T: ConstZero,
+    T: Zero,
 {
-    pub const ZERO: Self = Scalar(T::ZERO, PhantomData);
-}
+    fn zero() -> Self {
+        Scalar(T::zero(), PhantomData)
+    }
 
-impl<const D: u32, T, M> Scalar<D, T, M>
-where
-    T: ConstOne,
-{
-    pub const ONE: Self = Scalar(T::ONE, PhantomData);
-}
-
-impl<const D: u32, T, M, V> Add<V> for Scalar<D, T, M>
-where
-    V: Add<Scalar<D, T, M>>,
-{
-    type Output = <V as Add<Scalar<D, T, M>>>::Output;
-
-    fn add(self, rhs: V) -> Self::Output {
-        rhs + self
+    fn is_zero(&self) -> bool {
+        self.0.is_zero()
     }
 }
 
-impl<const D: u32, T, M, V> Mul<V> for Scalar<D, T, M>
+impl<const D: u32, T, M> ConstZero for Scalar<D, T, M>
 where
-    V: Mul<Scalar<D, T, M>>,
+    T: ConstZero,
 {
-    type Output = <V as Mul<Scalar<D, T, M>>>::Output;
+    const ZERO: Self = Scalar(T::ZERO, PhantomData);
+}
 
-    fn mul(self, rhs: V) -> Self::Output {
-        rhs * self
+impl<const D: u32, T, M> One for Scalar<D, T, M>
+where
+    T: One,
+{
+    fn one() -> Self {
+        Scalar(T::one(), PhantomData)
+    }
+}
+
+impl<const D: u32, T, M> ConstOne for Scalar<D, T, M>
+where
+    T: ConstOne,
+    T: PartialEq,
+{
+    const ONE: Self = Scalar(T::ONE, PhantomData);
+}
+
+impl<const D: u32, T, M> Add<Scalar<D, T, M>> for Scalar<D, T, M>
+where
+    T: Add<Output = T>,
+{
+    type Output = Scalar<D, T, M>;
+
+    fn add(self, rhs: Scalar<D, T, M>) -> Self::Output {
+        Scalar::<D, T, M>(self.0 + rhs.0, PhantomData)
+    }
+}
+
+impl<const D: u32, T, M> Mul<Scalar<D, T, M>> for Scalar<D, T, M>
+where
+    T: Mul<Output = T>,
+{
+    type Output = Scalar<D, T, M>;
+
+    fn mul(self, rhs: Scalar<D, T, M>) -> Self::Output {
+        Scalar::<D, T, M>(self.0 * rhs.0, PhantomData)
+    }
+}
+
+impl<const D: u32, T: Clone> Metric for Scalar<D, T>
+where
+    T: Zero,
+{
+    type Bulk = Self;
+    type Weight = Self;
+
+    fn bulk(&self) -> Self {
+        self.clone()
+    }
+
+    fn weight(&self) -> Self {
+        self.clone()
+    }
+
+    fn from_bulk(bulk: &Self) -> Self {
+        bulk.clone()
+    }
+
+    fn from_weight(weight: &Self) -> Self {
+        weight.clone()
+    }
+
+    fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self {
+        assert!(weight.is_zero());
+        bulk.clone()
+    }
+
+    fn proper_bulk(&self) -> Self {
+        self.clone()
+    }
+
+    fn proper_weight(&self) -> Self {
+        self.clone()
+    }
+}
+
+impl<const D: u32, T: Clone> Metric for Scalar<D, T, Projective>
+where
+    T: ConstZero,
+{
+    type Bulk = T;
+    type Weight = ();
+
+    fn bulk(&self) -> T {
+        self.0.clone()
+    }
+
+    fn weight(&self) {}
+
+    fn from_bulk(bulk: &T) -> Self {
+        Scalar(bulk.clone(), PhantomData)
+    }
+
+    fn from_weight(_weight: &()) -> Self {
+        Self::ZERO
+    }
+
+    fn from_bulk_and_weight(bulk: &T, _weight: &()) -> Self {
+        Scalar(bulk.clone(), PhantomData)
+    }
+
+    fn proper_bulk(&self) -> Self {
+        self.clone()
+    }
+
+    fn proper_weight(&self) -> Self {
+        self.clone()
     }
 }

@@ -4,6 +4,7 @@ mod antiwedge;
 mod complement;
 mod contraction;
 mod expansion;
+mod metric;
 mod wedge;
 
 struct ScalarIt {

@@ -1,6 +1,6 @@
 use std::{marker::PhantomData, ops::Mul};
 
-use crate::{GeometricProduct, Scalar};
+use crate::{GeometricProduct, Scalar, reverse_mul_scalar_metric};
 
 use super::{Bivector, Evenvector, Multivector, Vector};
 
@@ -36,6 +36,8 @@ where
     }
 }
 
+reverse_mul_scalar_metric!(Vector);
+
 // ----------------------------------------------------------------------------------------------------
 // Bivector
 // ----------------------------------------------------------------------------------------------------
@@ -66,6 +68,8 @@ where
     }
 }
 
+reverse_mul_scalar_metric!(Bivector);
+
 // ----------------------------------------------------------------------------------------------------
 // Evenvector
 // ----------------------------------------------------------------------------------------------------
@@ -95,6 +99,8 @@ where
         }
     }
 }
+
+reverse_mul_scalar_metric!(Evenvector);
 
 impl<T, M> Mul<Vector<T, M>> for Evenvector<T, M>
 where
@@ -167,6 +173,8 @@ where
         }
     }
 }
+
+reverse_mul_scalar_metric!(Multivector);
 
 impl<T, M> Mul<Vector<T, M>> for Multivector<T, M>
 where

@@ -70,6 +70,15 @@ pub trait VectorSpace {
     fn left_complement(&self) -> Self;
 }
 
+pub trait GeometricElement {
+    const ALGEBRA_DIMENSION: u32;
+    const ELEMENT_DIMENSION: u32;
+    type Field;
+    type Metric;
+
+    type Scalar; // = Scalar<ALGEBRA_DIMENSION, Field, Metric>;
+}
+
 /// Complement operation for a geometric algebra.
 ///
 /// This is one of the "arbitrary" operations for a geometric algebra, it needs
@@ -206,6 +215,12 @@ pub trait Metric {
 
     /// Constructs an element from its bulk and weight
     fn from_bulk_and_weight(bulk: &Self::Bulk, weight: &Self::Weight) -> Self;
+
+    /// Implementation of the bulk that works with Self
+    fn proper_bulk(&self) -> Self;
+
+    /// Implementation of the weight that works with Self
+    fn proper_weight(&self) -> Self;
 }
 
 /// Computes the different norms available in an element
@@ -435,19 +450,48 @@ pub trait Antisupport {
     fn antisupport(&self) -> Self::Plane;
 }
 
-pub fn antiwedge_reference<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output as KVector>::AntiKVector
+impl<const D: u32, T, M> GeometricElement for Scalar<D, T, M> {
+    const ALGEBRA_DIMENSION: u32 = D;
+    const ELEMENT_DIMENSION: u32 = 0;
+    type Field = T;
+    type Metric = M;
+    type Scalar = Self;
+}
+
+/// This is a default implementation of the antiwedge product. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `right_complement( left_complement(lhs) ^ left_complement(rhs) )`
+pub fn canonical_antiwedge<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output as Complement>::Output
 where
-    Lhs: KVector,
-    Rhs: KVector,
-    <Lhs as KVector>::AntiKVector: WedgeProduct<<Rhs as KVector>::AntiKVector>,
-    <<Lhs as KVector>::AntiKVector as WedgeProduct<<Rhs as KVector>::AntiKVector>>::Output: KVector,
+    Lhs: Complement,
+    Rhs: Complement,
+    <Lhs as Complement>::Output: WedgeProduct<<Rhs as Complement>::Output>,
+    <<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output: Complement,
 {
     lhs.left_complement()
         .wedge(&rhs.left_complement())
         .right_complement()
 }
 
-pub fn reference_bulk_contraction<Lhs, Rhs>(
+/// This is a default implementation of the weight. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `right_complement( bulk( left_complement(a) ) )`
+pub fn canonical_weight<T>(a: T) -> <<T as Complement>::Output as Complement>::Output
+where
+    T: Complement,
+    <T as Complement>::Output: Metric,
+    <T as Complement>::Output: Complement,
+{
+    a.left_complement().proper_bulk().right_complement()
+}
+
+/// This is a default implementation of the bulk contraction. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
+pub fn canonical_bulk_contraction<Lhs, Rhs>(
     lhs: Lhs,
     rhs: Rhs,
 ) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
@@ -458,7 +502,11 @@ where
     lhs.antiwedge(&rhs.bulk_dual())
 }
 
-pub fn reference_weight_contraction<Lhs, Rhs>(
+/// This is a default implementation of the weight contraction. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `lhs.antiwedge( rhs.weight_dual() )`
+pub fn canonical_weight_contraction<Lhs, Rhs>(
     lhs: Lhs,
     rhs: Rhs,
 ) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
@@ -467,6 +515,36 @@ where
     Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
 {
     lhs.antiwedge(&rhs.weight_dual())
+}
+
+/// This is a default implementation of the bulk expansion. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `lhs.wedge( rhs.bulk_dual() )`
+pub fn canonical_bulk_expansion<Lhs, Rhs>(
+    lhs: Lhs,
+    rhs: Rhs,
+) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+where
+    Rhs: Dual,
+    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
+{
+    lhs.wedge(&rhs.bulk_dual())
+}
+
+/// This is a default implementation of the weight expansion. It will be correct, but not as optimal as the
+/// spetialized implementations
+///
+/// The algorithm for this is: `lhs.wedge( rhs.weight_dual() )`
+pub fn canonical_weight_expansion<Lhs, Rhs>(
+    lhs: Lhs,
+    rhs: Rhs,
+) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+where
+    Rhs: Dual,
+    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
+{
+    lhs.wedge(&rhs.weight_dual())
 }
 
 #[macro_export]

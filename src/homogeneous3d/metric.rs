@@ -49,6 +49,24 @@ impl<T: Copy + ConstZero> Metric for HomogeneusPoint<T> {
     fn weight(&self) -> Self::Weight {
         d3::Scalar(self.w)
     }
+
+    fn proper_bulk(&self) -> Self {
+        HomogeneusPoint {
+            x: self.x,
+            y: self.y,
+            z: self.z,
+            w: T::ZERO,
+        }
+    }
+
+    fn proper_weight(&self) -> Self {
+        HomogeneusPoint {
+            x: T::ZERO,
+            y: T::ZERO,
+            z: T::ZERO,
+            w: self.w,
+        }
+    }
 }
 
 impl<T> Metric for d3::Point<T>
@@ -84,6 +102,14 @@ where
 
     fn weight(&self) -> Self::Weight {
         d3::Scalar::ONE
+    }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
     }
 }
 
@@ -131,6 +157,14 @@ impl<T: Copy + ConstZero> Metric for HomogeneusLine<T> {
     fn weight(&self) -> Self::Weight {
         d3::Vector::new(self.wx, self.wy, self.wz)
     }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
+    }
 }
 
 impl<T: Copy + ConstZero> Metric for Line<T> {
@@ -177,6 +211,14 @@ impl<T: Copy + ConstZero> Metric for Line<T> {
     fn weight(&self) -> Self::Weight {
         d3::UnitVector(d3::Vector::new(self.0.wx, self.0.wy, self.0.wz))
     }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
+    }
 }
 
 impl<T: Copy> Metric for HorizonLine<T>
@@ -208,6 +250,14 @@ where
 
     fn weight(&self) -> Self::Weight {
         d3::Vector::ZERO
+    }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
     }
 }
 
@@ -254,6 +304,14 @@ where
     fn weight(&self) -> Self::Weight {
         d3::Bivector::new(self.wyz, self.wzx, self.wxy)
     }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
+    }
 }
 
 impl<T> Metric for Plane<T>
@@ -295,5 +353,13 @@ where
 
     fn weight(&self) -> Self::Weight {
         d3::UnitBivector(d3::Bivector::new(self.0.wyz, self.0.wzx, self.0.wxy))
+    }
+
+    fn proper_bulk(&self) -> Self {
+        unimplemented!();
+    }
+
+    fn proper_weight(&self) -> Self {
+        unimplemented!();
     }
 }

@@ -5,6 +5,8 @@ use num::{
     traits::{ConstOne, ConstZero},
 };
 
+use crate::{GeometricElement, Scalar};
+
 use super::{Bivector, Evenvector, Multivector, Vector};
 
 impl<T, M> Vector<T, M> {
@@ -256,4 +258,20 @@ where
         v: Vector::ZERO,
         b: Bivector::XY,
     };
+}
+
+impl<T, M> GeometricElement for Vector<T, M> {
+    const ALGEBRA_DIMENSION: u32 = 2;
+    const ELEMENT_DIMENSION: u32 = 1;
+    type Field = T;
+    type Metric = M;
+    type Scalar = Scalar<2, T, M>;
+}
+
+impl<T, M> GeometricElement for Bivector<T, M> {
+    const ALGEBRA_DIMENSION: u32 = 2;
+    const ELEMENT_DIMENSION: u32 = 2;
+    type Field = T;
+    type Metric = M;
+    type Scalar = Scalar<2, T, M>;
 }

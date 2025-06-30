@@ -2,6 +2,7 @@ use gual::{
     Antiscalar, Complement, Scalar, WedgeProduct,
     geometry3d::{Bivector, Trivector, Vector},
 };
+use num::traits::ConstOne;
 
 #[test]
 fn complement_scalar() {

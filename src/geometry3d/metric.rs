@@ -36,6 +36,14 @@ impl<T: Copy + Zero> Metric for d3::Vector<T> {
     fn weight(&self) -> Self::Weight {
         *self
     }
+
+    fn proper_bulk(&self) -> Self {
+        *self
+    }
+
+    fn proper_weight(&self) -> Self {
+        *self
+    }
 }
 
 impl<T: Copy + Zero> Metric for d3::Bivector<T> {
@@ -62,6 +70,14 @@ impl<T: Copy + Zero> Metric for d3::Bivector<T> {
     fn weight(&self) -> Self::Weight {
         *self
     }
+
+    fn proper_bulk(&self) -> Self {
+        *self
+    }
+
+    fn proper_weight(&self) -> Self {
+        *self
+    }
 }
 
 impl<T: Copy + Zero> Metric for d3::Trivector<T> {
@@ -86,6 +102,14 @@ impl<T: Copy + Zero> Metric for d3::Trivector<T> {
     }
 
     fn weight(&self) -> Self::Weight {
+        *self
+    }
+
+    fn proper_bulk(&self) -> Self {
+        *self
+    }
+
+    fn proper_weight(&self) -> Self {
         *self
     }
 }
@@ -116,6 +140,14 @@ impl<T: Copy + ConstZero> Metric for d3::Vector<T, Projective> {
 
     fn weight(&self) -> T {
         self.z
+    }
+
+    fn proper_bulk(&self) -> Self {
+        d3::Vector::new(self.x, self.y, T::ZERO)
+    }
+
+    fn proper_weight(&self) -> Self {
+        d3::Vector::new(T::ZERO, T::ZERO, self.z)
     }
 }
 
@@ -157,6 +189,14 @@ impl<T: Copy + ConstZero> Metric for d3::Bivector<T, Projective> {
     fn weight(&self) -> d2::Vector<T> {
         d2::Vector::new(self.yz, self.zx)
     }
+
+    fn proper_bulk(&self) -> Self {
+        d3::Bivector::new(T::ZERO, T::ZERO, self.xy)
+    }
+
+    fn proper_weight(&self) -> Self {
+        d3::Bivector::new(self.yz, self.zx, T::ZERO)
+    }
 }
 
 impl<T: Copy + ConstZero> Metric for d3::Trivector<T, Projective> {
@@ -179,5 +219,13 @@ impl<T: Copy + ConstZero> Metric for d3::Trivector<T, Projective> {
 
     fn weight(&self) -> d2::Bivector<T> {
         d2::Bivector::new(self.xyz)
+    }
+
+    fn proper_bulk(&self) -> Self {
+        d3::Trivector::new(T::ZERO)
+    }
+
+    fn proper_weight(&self) -> Self {
+        d3::Trivector::new(self.xyz)
     }
 }

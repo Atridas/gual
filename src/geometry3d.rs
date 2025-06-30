@@ -1,3 +1,28 @@
+//! Module that contains the code of 3D geometric algebra. It has implementations for both
+//! euclidean geometry and projective geometry (the later will actually create 2D objects!)
+//!
+//! The canonical basis of the algebra is: `x`, `y`, `z`, `yz`, `zx`, `xy`, `xyz`.
+//! 
+//! Complements:
+//! 
+//! |                  |  1  | x  | y  | z  | yz | zx | xy | xyz |
+//! | ---------------- | --- | -- | -- | -- | -- | -- | -- | --- |
+//! | right complement | xyz | yz | zx | xy |  x |  y |  z |  1  |
+//! | left complement  | xyz | yz | zx | xy |  x |  y |  z |  1  |
+//!
+//! Wedge product:
+//!
+//! | `^` |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//! | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+//! |  1  |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//! |  x  |  x  |  0  | xy  | -zx | xyz |  0  |  0  |  0  |
+//! |  y  |  y  | -xy |  0  |  yz |  0  | xyz |  0  |  0  |
+//! |  z  |  z  |  zx | -yz |  0  |  0  |  0  | xyz |  0  |
+//! |  yz |  yz | xyz |  0  |  0  |  0  |  0  |  0  |  0  |
+//! |  zx |  zx |  0  | xyz |  0  |  0  |  0  |  0  |  0  |
+//! |  xy |  xy |  0  |  0  | xyz |  0  |  0  |  0  |  0  |
+//!
+
 use std::marker::PhantomData;
 
 use crate::Euclidean;

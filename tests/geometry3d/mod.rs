@@ -5,6 +5,7 @@ use gual::geometry3d::*;
 mod antiwedge;
 mod complement;
 mod dual;
+mod metric;
 mod wedge;
 
 struct ScalarIt {

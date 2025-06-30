@@ -16,6 +16,38 @@ macro_rules! reverse_add_metric {
 }
 
 #[macro_export]
+macro_rules! reverse_add_scalar_metric {
+    ($rht:ident) => {
+        impl<const D: u32, T, M> Add<$rht<T, M>> for Scalar<D, T, M>
+        where
+            $rht<T, M>: Add<Scalar<D, T, M>>,
+        {
+            type Output = <$rht<T, M> as Add<Scalar<D, T, M>>>::Output;
+
+            fn add(self, rhs: $rht<T, M>) -> Self::Output {
+                rhs + self
+            }
+        }
+    };
+}
+
+#[macro_export]
+macro_rules! reverse_mul_scalar_metric {
+    ($rht:ident) => {
+        impl<const D: u32, T, M> Mul<$rht<T, M>> for Scalar<D, T, M>
+        where
+            $rht<T, M>: Mul<Scalar<D, T, M>>,
+        {
+            type Output = <$rht<T, M> as Mul<Scalar<D, T, M>>>::Output;
+
+            fn mul(self, rhs: $rht<T, M>) -> Self::Output {
+                rhs * self
+            }
+        }
+    };
+}
+
+#[macro_export]
 macro_rules! default_sub {
     ($lht:ident, $rht:ident) => {
         impl<T, M> Sub<$rht<T, M>> for $lht<T, M>
