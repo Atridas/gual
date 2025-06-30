@@ -1,4 +1,4 @@
-use gual::{Complement, Metric, Scalar, canonical_weight};
+use gual::{Complement, Metric, Scalar, canonical::canonical_weight};
 
 use super::{BivectorIt, VectorIt};
 

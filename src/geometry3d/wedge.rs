@@ -1,14 +1,13 @@
-//! Wedge product implementation
-//!
-//! | `^` |  1  |  x   |  y   |  z   |  yz  |  zx  |  xy  | xyz |
-//! | --- | --- | ---- | ---- | ---- | ---- | ---- | ---- | --- |
-//! |  1  |  1  |  x   |  y   |  z   |  yz  |  zx  |  xy  | xyz |
-//! |  x  |  x  |  0   | xy   | -zx  | -xyz |  0   |  0   |  0  |
-//! |  y  |  y  | -xy  |  0   |  yz  |   0  | -xyz |  0   |  0  |
-//! |  z  |  z  |  zx  | -yz  |  0   |   0  |  0   | -xyz |  0  |
-//! |  yz |  yz | -xyz |  0   |  0   |   0  |  0   |  0   |  0  |
-//! |  zx |  zx |  0   | -xyz |  0   |   0  |  0   |  0   |  0  |
-//! |  xy |  xy |  0   |  0   | -xyz |   0  |  0   |  0   |  0  |
+//! | `^` |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//! | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+//! |  1  |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//! |  x  |  x  |  0  | xy  | -zx | xyz |  0  |  0  |  0  |
+//! |  y  |  y  | -xy |  0  |  yz |  0  | xyz |  0  |  0  |
+//! |  z  |  z  |  zx | -yz |  0  |  0  |  0  | xyz |  0  |
+//! |  yz |  yz | xyz |  0  |  0  |  0  |  0  |  0  |  0  |
+//! |  zx |  zx |  0  | xyz |  0  |  0  |  0  |  0  |  0  |
+//! |  xy |  xy |  0  |  0  | xyz |  0  |  0  |  0  |  0  |
+//! | xyz | xyz |  0  |  0  |  0  |  0  |  0  |  0  |  0  |
 
 use std::{
     marker::PhantomData,

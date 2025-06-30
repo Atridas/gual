@@ -1,5 +1,6 @@
 use std::marker::PhantomData;
 
+pub mod canonical;
 pub mod geometry2d;
 pub mod geometry3d;
 pub mod geometry4d;
@@ -294,6 +295,8 @@ pub trait Dual {
     type AntiKVector;
 
     /// The result of applying the metric and the right complement
+    ///
+    ///
     fn right_bulk_dual(&self) -> Self::AntiKVector;
     /// The result of applying the metric and the left complement
     fn left_bulk_dual(&self) -> Self::AntiKVector;
@@ -456,95 +459,6 @@ impl<const D: u32, T, M> GeometricElement for Scalar<D, T, M> {
     type Field = T;
     type Metric = M;
     type Scalar = Self;
-}
-
-/// This is a default implementation of the antiwedge product. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `right_complement( left_complement(lhs) ^ left_complement(rhs) )`
-pub fn canonical_antiwedge<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output as Complement>::Output
-where
-    Lhs: Complement,
-    Rhs: Complement,
-    <Lhs as Complement>::Output: WedgeProduct<<Rhs as Complement>::Output>,
-    <<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output: Complement,
-{
-    lhs.left_complement()
-        .wedge(&rhs.left_complement())
-        .right_complement()
-}
-
-/// This is a default implementation of the weight. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `right_complement( bulk( left_complement(a) ) )`
-pub fn canonical_weight<T>(a: T) -> <<T as Complement>::Output as Complement>::Output
-where
-    T: Complement,
-    <T as Complement>::Output: Metric,
-    <T as Complement>::Output: Complement,
-{
-    a.left_complement().proper_bulk().right_complement()
-}
-
-/// This is a default implementation of the bulk contraction. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
-pub fn canonical_bulk_contraction<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.antiwedge(&rhs.bulk_dual())
-}
-
-/// This is a default implementation of the weight contraction. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `lhs.antiwedge( rhs.weight_dual() )`
-pub fn canonical_weight_contraction<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.antiwedge(&rhs.weight_dual())
-}
-
-/// This is a default implementation of the bulk expansion. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `lhs.wedge( rhs.bulk_dual() )`
-pub fn canonical_bulk_expansion<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.wedge(&rhs.bulk_dual())
-}
-
-/// This is a default implementation of the weight expansion. It will be correct, but not as optimal as the
-/// spetialized implementations
-///
-/// The algorithm for this is: `lhs.wedge( rhs.weight_dual() )`
-pub fn canonical_weight_expansion<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.wedge(&rhs.weight_dual())
 }
 
 #[macro_export]

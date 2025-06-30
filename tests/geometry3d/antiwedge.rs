@@ -1,5 +1,6 @@
 use gual::{
-    AntiwedgeProduct, Complement, Euclidean, Scalar, canonical_antiwedge, geometry3d::Trivector,
+    AntiwedgeProduct, Complement, Euclidean, Scalar, canonical::canonical_antiwedge,
+    geometry3d::Trivector,
 };
 
 use super::ScalarIt;

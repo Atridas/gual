@@ -1,6 +1,8 @@
 use super::{BivectorIt, VectorIt};
 
-use gual::{Contraction, canonical_bulk_contraction, canonical_weight_contraction};
+use gual::{
+    Contraction, canonical::canonical_bulk_contraction, canonical::canonical_weight_contraction,
+};
 
 #[test]
 fn contraction_vector_vector() {

@@ -1,7 +1,8 @@
 use num::Zero;
 
 use gual::{
-    Complement, Euclidean, Metric, Projective, Scalar, canonical_weight,
+    Complement, Euclidean, Metric, Projective, Scalar,
+    canonical::canonical_weight,
     geometry3d::{Bivector, Trivector, Vector},
 };
 

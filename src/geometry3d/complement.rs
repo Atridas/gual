@@ -1,3 +1,8 @@
+//! |                  |  1  | x  | y  | z  | yz | zx | xy | xyz |
+//! | ---------------- | --- | -- | -- | -- | -- | -- | -- | --- |
+//! | right complement | xyz | yz | zx | xy |  x |  y |  z |  1  |
+//! | left complement  | xyz | yz | zx | xy |  x |  y |  z |  1  |
+
 use std::marker::PhantomData;
 
 use num::traits::ConstZero;

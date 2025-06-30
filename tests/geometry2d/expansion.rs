@@ -1,6 +1,6 @@
 use super::{BivectorIt, VectorIt};
 
-use gual::{Expansion, canonical_bulk_expansion, canonical_weight_expansion};
+use gual::{Expansion, canonical::canonical_bulk_expansion, canonical::canonical_weight_expansion};
 
 #[test]
 fn expansion_vector_vector() {

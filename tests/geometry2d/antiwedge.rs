@@ -1,4 +1,6 @@
-use gual::{AntiwedgeProduct, Complement, Scalar, canonical_antiwedge, geometry2d::Bivector};
+use gual::{
+    AntiwedgeProduct, Complement, Scalar, canonical::canonical_antiwedge, geometry2d::Bivector,
+};
 
 use super::{BivectorIt, ScalarIt, VectorIt};
 

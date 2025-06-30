@@ -2,15 +2,15 @@
 //! euclidean geometry and projective geometry (the later will actually create 2D objects!)
 //!
 //! The canonical basis of the algebra is: `x`, `y`, `z`, `yz`, `zx`, `xy`, `xyz`.
-//! 
-//! Complements:
-//! 
+//!
+//! ### Complements ###
+//!
 //! |                  |  1  | x  | y  | z  | yz | zx | xy | xyz |
 //! | ---------------- | --- | -- | -- | -- | -- | -- | -- | --- |
 //! | right complement | xyz | yz | zx | xy |  x |  y |  z |  1  |
 //! | left complement  | xyz | yz | zx | xy |  x |  y |  z |  1  |
 //!
-//! Wedge product:
+//! ### Wedge product ###
 //!
 //! | `^` |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
 //! | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -21,6 +21,25 @@
 //! |  yz |  yz | xyz |  0  |  0  |  0  |  0  |  0  |  0  |
 //! |  zx |  zx |  0  | xyz |  0  |  0  |  0  |  0  |  0  |
 //! |  xy |  xy |  0  |  0  | xyz |  0  |  0  |  0  |  0  |
+//! | xyz | xyz |  0  |  0  |  0  |  0  |  0  |  0  |  0  |
+//!
+//! ### Antiwedge product ###
+//!
+//! | `v` |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//! | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+//! |  1  |  0  |  0  |  0  |  0  |  0  |  0  |  0  |  1  |
+//! |  x  |  0  |  0  |  0  |  0  |  1  |  0  |  0  |  x  |
+//! |  y  |  0  |  0  |  0  |  0  |  0  |  1  |  0  |  y  |
+//! |  z  |  0  |  0  |  0  |  0  |  0  |  0  |  1  |  z  |
+//! |  yz |  0  |  1  |  0  |  0  |  0  |  z  | -y  |  yz |
+//! |  zx |  0  |  0  |  1  |  0  | -z  |  0  |  x  |  zx |
+//! |  xy |  0  |  0  |  0  |  1  |  y  | -x  |  0  |  xy |
+//! | xyz |  1  |  x  |  y  |  z  |  yz |  zx |  xy | xyz |
+//!
+//! ### Projective metric ###
+//!
+//! bulk: 1, x, y, xy
+//! weight: z, yz, zx, xyz
 //!
 
 use std::marker::PhantomData;
