@@ -4,8 +4,10 @@ use gual::geometry3d::*;
 
 mod antiwedge;
 mod complement;
+mod dot;
 mod dual;
 mod metric;
+mod norm;
 mod wedge;
 
 struct ScalarIt {
@@ -154,5 +156,31 @@ impl<M> Iterator for TrivectorIt<M> {
         } else {
             None
         }
+    }
+}
+
+trait ToF32 {
+    type Output;
+    fn to_f32(&self) -> Self::Output;
+}
+
+impl<M> ToF32 for Vector<i32, M> {
+    type Output = Vector<f32, M>;
+    fn to_f32(&self) -> Vector<f32, M> {
+        Vector::new(self.x as f32, self.y as f32, self.z as f32)
+    }
+}
+
+impl<M> ToF32 for Bivector<i32, M> {
+    type Output = Bivector<f32, M>;
+    fn to_f32(&self) -> Bivector<f32, M> {
+        Bivector::new(self.yz as f32, self.zx as f32, self.xy as f32)
+    }
+}
+
+impl<M> ToF32 for Trivector<i32, M> {
+    type Output = Trivector<f32, M>;
+    fn to_f32(&self) -> Trivector<f32, M> {
+        Trivector::new(self.xyz as f32)
     }
 }

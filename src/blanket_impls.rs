@@ -47,7 +47,7 @@ where
     }
 }
 
-impl<T: Float + FromPrimitive + Ord> Epsilon for T {
+impl<T: Float + FromPrimitive + PartialOrd> Epsilon for T {
     #[inline(always)]
     fn eps() -> Self {
         T::from_f32(0.001).expect("expected T to be a floating point type")

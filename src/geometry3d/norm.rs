@@ -150,11 +150,14 @@ where
     }
 
     fn weight_norm_squared(&self) -> Trivector<T, Projective> {
-        Trivector::ZERO
+        Trivector {
+            xyz: self.xyz * self.xyz,
+            _metric: PhantomData,
+        }
     }
 
     fn bulk_norm(&self) -> T {
-        self.xyz.abs()
+        T::ZERO
     }
 
     fn weight_norm(&self) -> Trivector<T, Projective> {

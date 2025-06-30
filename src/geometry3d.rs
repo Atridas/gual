@@ -40,6 +40,8 @@
 //!
 //! bulk: 1, x, y, xy
 //! weight: z, yz, zx, xyz
+//! 
+//! 
 //!
 
 use std::marker::PhantomData;

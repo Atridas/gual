@@ -2,7 +2,7 @@
 //! This implementations are for testing purposes and are not supposed to be anywhere
 //! near optimal implementations, they're just for reference
 
-use crate::{AntiwedgeProduct, Complement, Dot, Dual, Metric, WedgeProduct};
+use crate::{AntiwedgeProduct, Complement, Dual, Metric, WedgeProduct};
 
 /// The algorithm for this is: `right_complement( left_complement(lhs) ^ left_complement(rhs) )`
 pub fn canonical_antiwedge<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output as Complement>::Output
@@ -25,24 +25,6 @@ where
     <T as Complement>::Output: Complement,
 {
     a.left_complement().proper_bulk().right_complement()
-}
-
-/// The algorithm for this is: `right_complement( bulk( left_complement(a) ) )`
-pub fn canonical_bulk_norm<T>(a: T) -> <T as Dot>::Scalar
-where
-    T: Metric,
-    T: Dot,
-{
-    a.proper_bulk().dot(&a.proper_bulk())
-}
-
-/// The algorithm for this is: `right_complement( weight( left_complement(a) ) )`
-pub fn canonical_weight_norm<T>(a: T) -> <T as Dot>::Scalar
-where
-    T: Metric,
-    T: Dot,
-{
-    a.proper_weight().dot(&a.proper_weight())
 }
 
 /// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
