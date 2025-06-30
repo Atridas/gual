@@ -130,10 +130,11 @@ use std::marker::PhantomData;
 
 use crate::Euclidean;
 
-mod angle3d;
+mod angle_legacy;
 mod scalar3d;
 
 mod add;
+mod angle;
 mod antiwedge;
 mod complement;
 mod contraction;

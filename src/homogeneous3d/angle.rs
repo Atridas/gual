@@ -22,7 +22,7 @@ where
 
     fn geometric_cosine(&self, rhs: &HomogeneusLine<T>) -> (Self::Scalar, Self::Antiscalar) {
         let dim3 = self.weight().geometric_cosine(&rhs.weight());
-        (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
+        (d4::Scalar(dim3.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
     fn cosine(&self, rhs: &HomogeneusLine<T>) -> Option<Self::Scalar> {
@@ -62,7 +62,7 @@ where
 
     fn geometric_cosine(&self, rhs: &HomogeneusLine<T>) -> (Self::Scalar, Self::Antiscalar) {
         let dim3 = self.weight().geometric_cosine(&rhs.weight());
-        (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
+        (d4::Scalar(dim3.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
     fn cosine(&self, rhs: &HomogeneusLine<T>) -> Option<Self::Scalar> {
@@ -102,7 +102,7 @@ where
 
     fn geometric_cosine(&self, rhs: &HomogeneusPlane<T>) -> (Self::Scalar, Self::Antiscalar) {
         let dim3 = self.weight().geometric_cosine(&rhs.weight());
-        (d4::Scalar(dim3.0.0), d4::Quadvector { xyzw: dim3.1.xyz })
+        (d4::Scalar(dim3.0), d4::Quadvector { xyzw: dim3.1.xyz })
     }
 
     fn cosine(&self, rhs: &HomogeneusPlane<T>) -> Option<Self::Scalar> {

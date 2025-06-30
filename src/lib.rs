@@ -419,6 +419,15 @@ pub trait GeometricAntiproduct<Rhs> {
 }
 
 /// Computes the angle between 2 primitives
+///
+/// The definition for the geometric cosine is: `bulk_norm(weight_expansion(a, b)) + weight_norm(a) * weight_norm(b)`
+///
+/// This gives an scalar and an antiscalar. The actual cosine can be retrieved by
+/// dividing the scalar by the antiscalar values.
+///
+/// There is a specialization in case both primitives have the same dimension: we "skip" the bulk_norm. This gives us
+/// a signed value, so we can have larger than right angles as a result (wich whould be meaningless in primitives of
+/// different dimensions)
 pub trait Angle<Rhs> {
     type Scalar;
     type Antiscalar;
