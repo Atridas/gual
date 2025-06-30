@@ -7,6 +7,7 @@ mod neg;
 mod norm;
 mod sub;
 mod unitize;
+mod wedge;
 
 pub type DirVector<T> = crate::geometry2d::Vector<T>;
 
