@@ -141,6 +141,7 @@ mod copyclone;
 mod div;
 mod dot;
 mod dual;
+mod expansion;
 mod geometric_product;
 mod initialization;
 mod metric;

@@ -7,6 +7,7 @@ mod complement;
 mod contraction;
 mod dot;
 mod dual;
+mod expansion;
 mod metric;
 mod norm;
 mod wedge;
