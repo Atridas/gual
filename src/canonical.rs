@@ -27,6 +27,42 @@ where
     a.left_complement().proper_bulk().right_complement()
 }
 
+/// The algorithm for this is: `right_complement( bulk(a) )`
+pub fn canonical_right_bulk_dual<T>(a: T) -> <T as Complement>::Output
+where
+    T: Metric,
+    T: Complement,
+{
+    a.proper_bulk().right_complement()
+}
+
+/// The algorithm for this is: `left_complement( bulk(a) )`
+pub fn canonical_left_bulk_dual<T>(a: T) -> <T as Complement>::Output
+where
+    T: Metric,
+    T: Complement,
+{
+    a.proper_bulk().left_complement()
+}
+
+/// The algorithm for this is: `right_complement( weight(a) )`
+pub fn canonical_right_weight_dual<T>(a: T) -> <T as Complement>::Output
+where
+    T: Metric,
+    T: Complement,
+{
+    a.proper_weight().right_complement()
+}
+
+/// The algorithm for this is: `left_complement( weight(a) )`
+pub fn canonical_left_weight_dual<T>(a: T) -> <T as Complement>::Output
+where
+    T: Metric,
+    T: Complement,
+{
+    a.proper_weight().left_complement()
+}
+
 /// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
 pub fn canonical_bulk_contraction<Lhs, Rhs>(
     lhs: Lhs,

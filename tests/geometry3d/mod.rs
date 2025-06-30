@@ -4,6 +4,7 @@ use gual::geometry3d::*;
 
 mod antiwedge;
 mod complement;
+mod contraction;
 mod dot;
 mod dual;
 mod metric;
