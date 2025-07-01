@@ -1,6 +1,4 @@
-use gual::{
-    AntiwedgeProduct, Complement, Scalar, canonical::canonical_antiwedge, geometry2d::Bivector,
-};
+use gual::{AntiwedgeProduct, Complement, Scalar, canonical::Antiwedge, geometry2d::Bivector};
 
 use super::{BivectorIt, ScalarIt, VectorIt};
 
@@ -10,8 +8,8 @@ fn antiwedge_scalar_bivector() {
         let sc: Scalar<2, _> = Scalar::new(s);
         for b in BivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(s.antiwedge(&b), canonical_antiwedge(sc, b));
-            assert_eq!(b.antiwedge(&s), canonical_antiwedge(b, sc));
+            assert_eq!(s.antiwedge(&b), sc.canonical_antiwedge(&b));
+            assert_eq!(b.antiwedge(&s), b.canonical_antiwedge(&sc));
         }
     }
 }
@@ -21,8 +19,8 @@ fn antiwedge_vector_vector() {
     for a in VectorIt::new(50) {
         for b in VectorIt::new(50) {
             // actual implementation matches definition
-            assert_eq!(a.antiwedge(&b), canonical_antiwedge(a, b));
-            assert_eq!(b.antiwedge(&a), canonical_antiwedge(b, a));
+            assert_eq!(a.antiwedge(&b), a.canonical_antiwedge(&b));
+            assert_eq!(b.antiwedge(&a), b.canonical_antiwedge(&a));
         }
     }
 }
@@ -32,8 +30,8 @@ fn antiwedge_vector_bivector() {
     for v in VectorIt::new(50) {
         for b in BivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(&b), canonical_antiwedge(v, b));
-            assert_eq!(b.antiwedge(&v), canonical_antiwedge(b, v));
+            assert_eq!(v.antiwedge(&b), v.canonical_antiwedge(&b));
+            assert_eq!(b.antiwedge(&v), b.canonical_antiwedge(&v));
         }
     }
 }

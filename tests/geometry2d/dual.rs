@@ -1,21 +1,16 @@
-use gual::{
-    Complement, Dual, Metric,
-    canonical::{
-        canonical_left_bulk_dual, canonical_left_weight_dual, canonical_right_bulk_dual,
-        canonical_right_weight_dual,
-    },
-    geometry2d::Bivector,
-};
+use gual::{Complement, Dual, Metric, geometry2d::Bivector};
 
 use super::{BivectorIt, VectorIt};
+
+use gual::canonical::Metric as CanonicalMetric;
 
 #[test]
 fn dual_vector() {
     for v in VectorIt::new(50) {
-        assert_eq!(v.right_bulk_dual(), canonical_right_bulk_dual(v));
-        assert_eq!(v.left_bulk_dual(), canonical_left_bulk_dual(v));
-        assert_eq!(v.right_weight_dual(), canonical_right_weight_dual(v));
-        assert_eq!(v.left_weight_dual(), canonical_left_weight_dual(v));
+        assert_eq!(v.right_bulk_dual(), v.canonical_right_bulk_dual());
+        assert_eq!(v.left_bulk_dual(), v.canonical_left_bulk_dual());
+        assert_eq!(v.right_weight_dual(), v.canonical_right_weight_dual());
+        assert_eq!(v.left_weight_dual(), v.canonical_left_weight_dual());
     }
 }
 

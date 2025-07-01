@@ -1,6 +1,5 @@
 use gual::{
-    AntiwedgeProduct, Complement, Euclidean, Scalar, canonical::canonical_antiwedge,
-    geometry3d::Trivector,
+    AntiwedgeProduct, Complement, Euclidean, Scalar, canonical::Antiwedge, geometry3d::Trivector,
 };
 
 use super::ScalarIt;
@@ -14,8 +13,8 @@ fn antiwedge_vector_bivector() {
     for v in VectorIt::new(20) {
         for b in BivectorIt::new(20) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(&b), canonical_antiwedge(v, b));
-            assert_eq!(b.antiwedge(&v), canonical_antiwedge(b, v));
+            assert_eq!(v.antiwedge(&b), v.canonical_antiwedge(&b));
+            assert_eq!(b.antiwedge(&v), b.canonical_antiwedge(&v));
         }
     }
 }
@@ -25,8 +24,8 @@ fn antiwedge_vector_trivector() {
     for v in VectorIt::new(20) {
         for t in TrivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(v.antiwedge(&t), canonical_antiwedge(v, t));
-            assert_eq!(t.antiwedge(&v), canonical_antiwedge(t, v));
+            assert_eq!(v.antiwedge(&t), v.canonical_antiwedge(&t));
+            assert_eq!(t.antiwedge(&v), t.canonical_antiwedge(&v));
         }
     }
 }
@@ -36,8 +35,8 @@ fn antiwedge_bivector_bivector() {
     for b1 in BivectorIt::new(20) {
         for b2 in BivectorIt::new(20) {
             // actual implementation matches definition
-            assert_eq!(b1.antiwedge(&b2), canonical_antiwedge(b1, b2));
-            assert_eq!(b2.antiwedge(&b1), canonical_antiwedge(b2, b1));
+            assert_eq!(b1.antiwedge(&b2), b1.canonical_antiwedge(&b2));
+            assert_eq!(b2.antiwedge(&b1), b2.canonical_antiwedge(&b1));
         }
     }
 }
@@ -47,8 +46,8 @@ fn antiwedge_bivector_trivector() {
     for b in BivectorIt::new(20) {
         for t in TrivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(b.antiwedge(&t), canonical_antiwedge(b, t));
-            assert_eq!(t.antiwedge(&b), canonical_antiwedge(t, b));
+            assert_eq!(b.antiwedge(&t), b.canonical_antiwedge(&t));
+            assert_eq!(t.antiwedge(&b), t.canonical_antiwedge(&b));
         }
     }
 }
@@ -75,8 +74,8 @@ fn antiwedge_scalar_trivector() {
         let sc: Scalar<3, _> = Scalar::new(s);
         for t in TrivectorIt::new(100) {
             // actual implementation matches definition
-            assert_eq!(s.antiwedge(&t), canonical_antiwedge(sc, t));
-            assert_eq!(t.antiwedge(&s), canonical_antiwedge(t, sc));
+            assert_eq!(s.antiwedge(&t), sc.canonical_antiwedge(&t));
+            assert_eq!(t.antiwedge(&s), t.canonical_antiwedge(&sc));
         }
     }
 }

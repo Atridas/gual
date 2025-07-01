@@ -4,209 +4,204 @@
 
 use std::ops::{Div, Mul};
 
-use crate::{
-    Antiscalar, AntiwedgeProduct, Complement, Dual, Epsilon, Expansion, Metric, Norm, WedgeProduct,
-};
+use crate::{Antiscalar, AntiwedgeProduct, Complement, Dual, Epsilon, Norm, WedgeProduct};
+
+use crate::Expansion as CrateExpansion;
+use crate::Metric as CrateMetric;
 
 /// The algorithm for this is: `right_complement( left_complement(lhs) ^ left_complement(rhs) )`
-pub fn canonical_antiwedge<Lhs, Rhs>(lhs: Lhs, rhs: Rhs) -> <<<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output as Complement>::Output
-where
-    Lhs: Complement,
-    Rhs: Complement,
-    <Lhs as Complement>::Output: WedgeProduct<<Rhs as Complement>::Output>,
-    <<Lhs as Complement>::Output as WedgeProduct<<Rhs as Complement>::Output>>::Output: Complement,
-{
-    lhs.left_complement()
-        .wedge(&rhs.left_complement())
-        .right_complement()
+pub trait Antiwedge<Rht> {
+    type Output;
+    fn canonical_antiwedge(&self, rhs: &Rht) -> Self::Output;
 }
 
-/// The algorithm for this is: `right_complement( bulk( left_complement(a) ) )`
-pub fn canonical_weight<T>(a: T) -> <<T as Complement>::Output as Complement>::Output
+impl<Lht, Rht> Antiwedge<Rht> for Lht
+where
+    Lht: Complement,
+    Rht: Complement,
+    <Lht as Complement>::Output: WedgeProduct<<Rht as Complement>::Output>,
+    <<Lht as Complement>::Output as WedgeProduct<<Rht as Complement>::Output>>::Output: Complement,
+{
+    type Output = <<<Lht as Complement>::Output as WedgeProduct<<Rht as Complement>::Output>>::Output as Complement>::Output;
+
+    fn canonical_antiwedge(&self, rhs: &Rht) -> Self::Output {
+        self.left_complement()
+            .wedge(&rhs.left_complement())
+            .right_complement()
+    }
+}
+
+pub trait Metric {
+    type DualOutput;
+
+    /// The algorithm for this is: `right_complement( bulk( left_complement(a) ) )`
+    fn canonical_weight(&self) -> Self;
+
+    /// The algorithm for this is: `right_complement( bulk(a) )`
+    fn canonical_right_bulk_dual(&self) -> Self::DualOutput;
+    /// The algorithm for this is: `right_complement( weight(a) )`
+    fn canonical_right_weight_dual(&self) -> Self::DualOutput;
+    /// The algorithm for this is: `left_complement( bulk(a) )`
+    fn canonical_left_bulk_dual(&self) -> Self::DualOutput;
+    /// The algorithm for this is: `left_complement( weight(a) )`
+    fn canonical_left_weight_dual(&self) -> Self::DualOutput;
+}
+
+impl<T> Metric for T
 where
     T: Complement,
-    <T as Complement>::Output: Metric,
-    <T as Complement>::Output: Complement,
+    T: CrateMetric,
+    <T as Complement>::Output: CrateMetric,
+    <T as Complement>::Output: Complement<Output = T>,
 {
-    a.left_complement().proper_bulk().right_complement()
+    type DualOutput = <T as Complement>::Output;
+
+    fn canonical_weight(&self) -> Self {
+        self.left_complement().proper_bulk().right_complement()
+    }
+
+    fn canonical_right_bulk_dual(&self) -> Self::DualOutput {
+        self.proper_bulk().right_complement()
+    }
+
+    fn canonical_left_bulk_dual(&self) -> Self::DualOutput {
+        self.proper_bulk().left_complement()
+    }
+
+    fn canonical_right_weight_dual(&self) -> Self::DualOutput {
+        self.proper_weight().right_complement()
+    }
+
+    fn canonical_left_weight_dual(&self) -> Self::DualOutput {
+        self.proper_weight().left_complement()
+    }
 }
 
-/// The algorithm for this is: `right_complement( bulk(a) )`
-pub fn canonical_right_bulk_dual<T>(a: T) -> <T as Complement>::Output
-where
-    T: Metric,
-    T: Complement,
-{
-    a.proper_bulk().right_complement()
+pub trait Contraction<Rht> {
+    type Output;
+
+    /// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
+    fn canonical_bulk_contraction(&self, rhs: &Rht) -> Self::Output;
+    /// The algorithm for this is: `lhs.antiwedge( rhs.weight_dual() )`
+    fn canonical_weight_contraction(&self, rhs: &Rht) -> Self::Output;
 }
 
-/// The algorithm for this is: `left_complement( bulk(a) )`
-pub fn canonical_left_bulk_dual<T>(a: T) -> <T as Complement>::Output
-where
-    T: Metric,
-    T: Complement,
-{
-    a.proper_bulk().left_complement()
+pub trait Expansion<Rht> {
+    type Output;
+
+    /// The algorithm for this is: `lhs.wedge( rhs.bulk_dual() )`
+    fn canonical_bulk_expansion(&self, rhs: &Rht) -> Self::Output;
+    /// The algorithm for this is: `lhs.wedge( rhs.weight_dual() )`
+    fn canonical_weight_expansion(&self, rhs: &Rht) -> Self::Output;
 }
 
-/// The algorithm for this is: `right_complement( weight(a) )`
-pub fn canonical_right_weight_dual<T>(a: T) -> <T as Complement>::Output
+impl<Lht, Rht> Contraction<Rht> for Lht
 where
-    T: Metric,
-    T: Complement,
+    Rht: Dual,
+    Lht: AntiwedgeProduct<<Rht as Dual>::AntiKVector>,
 {
-    a.proper_weight().right_complement()
+    type Output = <Lht as AntiwedgeProduct<<Rht as Dual>::AntiKVector>>::Output;
+    fn canonical_bulk_contraction(&self, rhs: &Rht) -> Self::Output {
+        self.antiwedge(&rhs.bulk_dual())
+    }
+    fn canonical_weight_contraction(&self, rhs: &Rht) -> Self::Output {
+        self.antiwedge(&rhs.weight_dual())
+    }
 }
 
-/// The algorithm for this is: `left_complement( weight(a) )`
-pub fn canonical_left_weight_dual<T>(a: T) -> <T as Complement>::Output
+impl<Lht, Rht> Expansion<Rht> for Lht
 where
-    T: Metric,
-    T: Complement,
+    Rht: Dual,
+    Lht: WedgeProduct<<Rht as Dual>::AntiKVector>,
 {
-    a.proper_weight().left_complement()
+    type Output = <Lht as WedgeProduct<<Rht as Dual>::AntiKVector>>::Output;
+    fn canonical_bulk_expansion(&self, rhs: &Rht) -> Self::Output {
+        self.wedge(&rhs.bulk_dual())
+    }
+    fn canonical_weight_expansion(&self, rhs: &Rht) -> Self::Output {
+        self.wedge(&rhs.weight_dual())
+    }
 }
 
-/// The algorithm for this is: `lhs.antiwedge( rhs.bulk_dual() )`
-pub fn canonical_bulk_contraction<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.antiwedge(&rhs.bulk_dual())
+pub trait Angle<Rht> {
+    type Scalar;
+    type Antiscalar;
+
+    fn canonical_geometric_cosine(&self, rhs: &Rht) -> (Self::Scalar, Self::Antiscalar);
+    fn canonical_cosine(&self, rhs: &Rht) -> Option<Self::Scalar>;
 }
 
-/// The algorithm for this is: `lhs.antiwedge( rhs.weight_dual() )`
-pub fn canonical_weight_contraction<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as AntiwedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+impl<Lht, Rht> Angle<Rht> for Lht
 where
-    Rhs: Dual,
-    Lhs: AntiwedgeProduct<<Rhs as Dual>::AntiKVector>,
+    Lht: CrateExpansion<Rht>,
+    Lht: Norm,
+    Rht: Norm,
+    <Lht as CrateExpansion<Rht>>::WeightOutput: Norm<Scalar = <Lht as Norm>::Scalar>,
+    <Lht as Norm>::Antiscalar: Antiscalar<T = <Lht as Norm>::Scalar>,
+    <Rht as Norm>::Antiscalar: Antiscalar<T = <Lht as Norm>::Scalar>,
+    <Lht as Norm>::Scalar: Epsilon,
+    <Lht as Norm>::Scalar: Mul<<Lht as Norm>::Scalar, Output = <Lht as Norm>::Scalar>,
+    <Lht as Norm>::Scalar: Div<<Lht as Norm>::Scalar, Output = <Lht as Norm>::Scalar>,
 {
-    lhs.antiwedge(&rhs.weight_dual())
+    type Scalar = <<Lht as CrateExpansion<Rht>>::WeightOutput as Norm>::Scalar;
+    type Antiscalar = <Lht as Norm>::Antiscalar;
+
+    fn canonical_geometric_cosine(&self, rhs: &Rht) -> (Self::Scalar, Self::Antiscalar) {
+        (
+            self.weight_expansion(&rhs).bulk_norm(),
+            <<Lht as Norm>::Antiscalar as Antiscalar>::from_volume(
+                self.weight_norm().volume() * rhs.weight_norm().volume(),
+            ),
+        )
+    }
+
+    fn canonical_cosine(&self, rhs: &Rht) -> Option<Self::Scalar> {
+        let geometric_cosine = self.canonical_geometric_cosine(&rhs);
+
+        if geometric_cosine.1.volume().is_near_zero() {
+            None
+        } else {
+            Some(geometric_cosine.0 / geometric_cosine.1.volume())
+        }
+    }
 }
 
-/// The algorithm for this is: `lhs.wedge( rhs.bulk_dual() )`
-pub fn canonical_bulk_expansion<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
-where
-    Rhs: Dual,
-    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.wedge(&rhs.bulk_dual())
+pub trait SymetricAngle {
+    type Scalar;
+    type Antiscalar;
+
+    fn canonical_geometric_cosine_symetric(&self, rhs: &Self) -> (Self::Scalar, Self::Antiscalar);
+    fn canonical_cosine_symetric(&self, rhs: &Self) -> Option<Self::Scalar>;
 }
 
-/// The algorithm for this is: `lhs.wedge( rhs.weight_dual() )`
-pub fn canonical_weight_expansion<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> <Lhs as WedgeProduct<<Rhs as Dual>::AntiKVector>>::Output
+impl<T> SymetricAngle for T
 where
-    Rhs: Dual,
-    Lhs: WedgeProduct<<Rhs as Dual>::AntiKVector>,
-{
-    lhs.wedge(&rhs.weight_dual())
-}
-
-pub fn canonical_geometric_cosine<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> (
-    <<Lhs as Expansion<Rhs>>::WeightOutput as Norm>::Scalar,
-    <Lhs as Norm>::Antiscalar,
-)
-where
-    Lhs: Expansion<Rhs>,
-    Lhs: Norm,
-    Rhs: Norm,
-    <Lhs as Expansion<Rhs>>::WeightOutput: Norm,
-    <Lhs as Norm>::Antiscalar: Antiscalar,
-    <Rhs as Norm>::Antiscalar: Antiscalar,
-    <<Lhs as Norm>::Antiscalar as Antiscalar>::T: Mul<
-            <<Rhs as Norm>::Antiscalar as Antiscalar>::T,
-            Output = <<Lhs as Norm>::Antiscalar as Antiscalar>::T,
-        >,
-{
-    (
-        lhs.weight_expansion(&rhs).bulk_norm(),
-        <<Lhs as Norm>::Antiscalar as Antiscalar>::from_volume(
-            lhs.weight_norm().volume() * rhs.weight_norm().volume(),
-        ),
-    )
-}
-
-pub fn canonical_cosine<Lhs, Rhs>(
-    lhs: Lhs,
-    rhs: Rhs,
-) -> Option<<<Lhs as Norm>::Antiscalar as Antiscalar>::T>
-where
-    Lhs: Expansion<Rhs>,
-    Lhs: Norm,
-    Rhs: Norm,
-    <Lhs as Expansion<Rhs>>::WeightOutput: Norm,
-    <Lhs as Norm>::Antiscalar: Antiscalar,
-    <Rhs as Norm>::Antiscalar: Antiscalar,
-    <<Lhs as Norm>::Antiscalar as Antiscalar>::T: Mul<
-            <<Rhs as Norm>::Antiscalar as Antiscalar>::T,
-            Output = <<Lhs as Norm>::Antiscalar as Antiscalar>::T,
-        >,
-    <<Lhs as Norm>::Antiscalar as Antiscalar>::T: Epsilon,
-    <<Lhs as Expansion<Rhs>>::WeightOutput as Norm>::Scalar: Div<
-            <<Lhs as Norm>::Antiscalar as Antiscalar>::T,
-            Output = <<Lhs as Norm>::Antiscalar as Antiscalar>::T,
-        >,
-{
-    let a = lhs.weight_expansion(&rhs).bulk_norm();
-    let b = lhs.weight_norm().volume() * rhs.weight_norm().volume();
-
-    if b.is_near_zero() { None } else { Some(a / b) }
-}
-
-pub fn canonical_geometric_cosine_symetric<T>(
-    lhs: T,
-    rhs: T,
-) -> (
-    <<T as Norm>::Antiscalar as Antiscalar>::T,
-    <T as Norm>::Antiscalar,
-)
-where
-    T: Expansion<T, WeightOutput = <T as Norm>::Antiscalar>,
+    T: CrateExpansion<T, WeightOutput = <T as Norm>::Antiscalar>,
     T: Norm,
-    <T as Norm>::Antiscalar: Antiscalar,
-    <<T as Norm>::Antiscalar as Antiscalar>::T:
-        Mul<Output = <<T as Norm>::Antiscalar as Antiscalar>::T>,
+    <T as Norm>::Antiscalar: Antiscalar<T = <T as Norm>::Scalar>,
+    <T as Norm>::Scalar: Epsilon,
+    <T as Norm>::Scalar: Mul<Output = <T as Norm>::Scalar>,
+    <T as Norm>::Scalar: Div<Output = <T as Norm>::Scalar>,
 {
-    (
-        lhs.weight_expansion(&rhs).volume(),
-        <<T as Norm>::Antiscalar as Antiscalar>::from_volume(
-            lhs.weight_norm().volume() * rhs.weight_norm().volume(),
-        ),
-    )
-}
+    type Scalar = <<T as Norm>::Antiscalar as Antiscalar>::T;
+    type Antiscalar = <T as Norm>::Antiscalar;
 
-pub fn canonical_cosine_symetric<T>(
-    lhs: T,
-    rhs: T,
-) -> Option<<<T as Norm>::Antiscalar as Antiscalar>::T>
-where
-    T: Expansion<T, WeightOutput = <T as Norm>::Antiscalar>,
-    T: Norm,
-    <T as Norm>::Antiscalar: Antiscalar,
-    <<T as Norm>::Antiscalar as Antiscalar>::T:
-        Mul<Output = <<T as Norm>::Antiscalar as Antiscalar>::T>,
-    <<T as Norm>::Antiscalar as Antiscalar>::T: Epsilon,
-    <<T as Norm>::Antiscalar as Antiscalar>::T:
-        Div<Output = <<T as Norm>::Antiscalar as Antiscalar>::T>,
-{
-    let a = lhs.weight_expansion(&rhs).volume();
-    let b = lhs.weight_norm().volume() * rhs.weight_norm().volume();
+    fn canonical_geometric_cosine_symetric(&self, rhs: &Self) -> (Self::Scalar, Self::Antiscalar) {
+        (
+            self.weight_expansion(&rhs).volume(),
+            <<T as Norm>::Antiscalar as Antiscalar>::from_volume(
+                self.weight_norm().volume() * rhs.weight_norm().volume(),
+            ),
+        )
+    }
 
-    if b.is_near_zero() { None } else { Some(a / b) }
+    fn canonical_cosine_symetric(&self, rhs: &Self) -> Option<Self::Scalar> {
+        let geometric_cosine = self.canonical_geometric_cosine_symetric(&rhs);
+
+        if geometric_cosine.1.volume().is_near_zero() {
+            None
+        } else {
+            Some(geometric_cosine.0 / geometric_cosine.1.volume())
+        }
+    }
 }

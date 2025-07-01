@@ -1,7 +1,5 @@
-use gual::{
-    Contraction, Euclidean, Projective,
-    canonical::{canonical_bulk_contraction, canonical_weight_contraction},
-};
+use gual::canonical::Contraction as CanonicalContraction;
+use gual::{Contraction, Euclidean, Projective};
 
 use crate::geometry3d::{BivectorIt, TrivectorIt, VectorIt};
 
@@ -9,10 +7,10 @@ use crate::geometry3d::{BivectorIt, TrivectorIt, VectorIt};
 fn euclidean_bulk_contraction_vector_vector() {
     for v1 in VectorIt::<Euclidean>::new(20) {
         for v2 in VectorIt::<Euclidean>::new(20) {
-            assert_eq!(v1.bulk_contraction(&v2), canonical_bulk_contraction(v1, v2));
+            assert_eq!(v1.bulk_contraction(&v2), v1.canonical_bulk_contraction(&v2));
             assert_eq!(
                 v1.weight_contraction(&v2),
-                canonical_weight_contraction(v1, v2)
+                v1.canonical_weight_contraction(&v2)
             );
         }
     }
@@ -22,8 +20,8 @@ fn euclidean_bulk_contraction_vector_vector() {
 fn euclidean_bulk_contraction_bivector_vector() {
     for b in BivectorIt::<Euclidean>::new(20) {
         for v in VectorIt::<Euclidean>::new(20) {
-            assert_eq!(b.bulk_contraction(&v), canonical_bulk_contraction(b, v));
-            assert_eq!(b.weight_contraction(&v), canonical_weight_contraction(b, v));
+            assert_eq!(b.bulk_contraction(&v), b.canonical_bulk_contraction(&v));
+            assert_eq!(b.weight_contraction(&v), b.canonical_weight_contraction(&v));
         }
     }
 }
@@ -32,10 +30,10 @@ fn euclidean_bulk_contraction_bivector_vector() {
 fn euclidean_bulk_contraction_bivector_bivector() {
     for b1 in BivectorIt::<Euclidean>::new(20) {
         for b2 in BivectorIt::<Euclidean>::new(20) {
-            assert_eq!(b1.bulk_contraction(&b2), canonical_bulk_contraction(b1, b2));
+            assert_eq!(b1.bulk_contraction(&b2), b1.canonical_bulk_contraction(&b2));
             assert_eq!(
                 b1.weight_contraction(&b2),
-                canonical_weight_contraction(b1, b2)
+                b1.canonical_weight_contraction(&b2)
             );
         }
     }
@@ -45,8 +43,8 @@ fn euclidean_bulk_contraction_bivector_bivector() {
 fn euclidean_bulk_contraction_trivector_vector() {
     for t in TrivectorIt::<Euclidean>::new(20) {
         for v in VectorIt::<Euclidean>::new(20) {
-            assert_eq!(t.bulk_contraction(&v), canonical_bulk_contraction(t, v));
-            assert_eq!(t.weight_contraction(&v), canonical_weight_contraction(t, v));
+            assert_eq!(t.bulk_contraction(&v), t.canonical_bulk_contraction(&v));
+            assert_eq!(t.weight_contraction(&v), t.canonical_weight_contraction(&v));
         }
     }
 }
@@ -55,8 +53,8 @@ fn euclidean_bulk_contraction_trivector_vector() {
 fn euclidean_bulk_contraction_trivector_bivector() {
     for t in TrivectorIt::<Euclidean>::new(20) {
         for b in BivectorIt::<Euclidean>::new(20) {
-            assert_eq!(t.bulk_contraction(&b), canonical_bulk_contraction(t, b));
-            assert_eq!(t.weight_contraction(&b), canonical_weight_contraction(t, b));
+            assert_eq!(t.bulk_contraction(&b), t.canonical_bulk_contraction(&b));
+            assert_eq!(t.weight_contraction(&b), t.canonical_weight_contraction(&b));
         }
     }
 }
@@ -65,10 +63,10 @@ fn euclidean_bulk_contraction_trivector_bivector() {
 fn euclidean_bulk_contraction_trivector_trivector() {
     for t1 in TrivectorIt::<Euclidean>::new(20) {
         for t2 in TrivectorIt::<Euclidean>::new(20) {
-            assert_eq!(t1.bulk_contraction(&t2), canonical_bulk_contraction(t1, t2));
+            assert_eq!(t1.bulk_contraction(&t2), t1.canonical_bulk_contraction(&t2));
             assert_eq!(
                 t1.weight_contraction(&t2),
-                canonical_weight_contraction(t1, t2)
+                t1.canonical_weight_contraction(&t2)
             );
         }
     }
@@ -78,10 +76,10 @@ fn euclidean_bulk_contraction_trivector_trivector() {
 fn projective_bulk_contraction_vector_vector() {
     for v1 in VectorIt::<Projective>::new(20) {
         for v2 in VectorIt::<Projective>::new(20) {
-            assert_eq!(v1.bulk_contraction(&v2), canonical_bulk_contraction(v1, v2));
+            assert_eq!(v1.bulk_contraction(&v2), v1.canonical_bulk_contraction(&v2));
             assert_eq!(
                 v1.weight_contraction(&v2),
-                canonical_weight_contraction(v1, v2)
+                v1.canonical_weight_contraction(&v2)
             );
         }
     }
@@ -91,8 +89,8 @@ fn projective_bulk_contraction_vector_vector() {
 fn projective_bulk_contraction_bivector_vector() {
     for b in BivectorIt::<Projective>::new(20) {
         for v in VectorIt::<Projective>::new(20) {
-            assert_eq!(b.bulk_contraction(&v), canonical_bulk_contraction(b, v));
-            assert_eq!(b.weight_contraction(&v), canonical_weight_contraction(b, v));
+            assert_eq!(b.bulk_contraction(&v), b.canonical_bulk_contraction(&v));
+            assert_eq!(b.weight_contraction(&v), b.canonical_weight_contraction(&v));
         }
     }
 }
@@ -101,10 +99,10 @@ fn projective_bulk_contraction_bivector_vector() {
 fn projective_bulk_contraction_bivector_bivector() {
     for b1 in BivectorIt::<Projective>::new(20) {
         for b2 in BivectorIt::<Projective>::new(20) {
-            assert_eq!(b1.bulk_contraction(&b2), canonical_bulk_contraction(b1, b2));
+            assert_eq!(b1.bulk_contraction(&b2), b1.canonical_bulk_contraction(&b2));
             assert_eq!(
                 b1.weight_contraction(&b2),
-                canonical_weight_contraction(b1, b2)
+                b1.canonical_weight_contraction(&b2)
             );
         }
     }
@@ -114,8 +112,8 @@ fn projective_bulk_contraction_bivector_bivector() {
 fn projective_bulk_contraction_trivector_vector() {
     for t in TrivectorIt::<Projective>::new(20) {
         for v in VectorIt::<Projective>::new(20) {
-            assert_eq!(t.bulk_contraction(&v), canonical_bulk_contraction(t, v));
-            assert_eq!(t.weight_contraction(&v), canonical_weight_contraction(t, v));
+            assert_eq!(t.bulk_contraction(&v), t.canonical_bulk_contraction(&v));
+            assert_eq!(t.weight_contraction(&v), t.canonical_weight_contraction(&v));
         }
     }
 }
@@ -124,8 +122,8 @@ fn projective_bulk_contraction_trivector_vector() {
 fn projective_bulk_contraction_trivector_bivector() {
     for t in TrivectorIt::<Projective>::new(20) {
         for b in BivectorIt::<Projective>::new(20) {
-            assert_eq!(t.bulk_contraction(&b), canonical_bulk_contraction(t, b));
-            assert_eq!(t.weight_contraction(&b), canonical_weight_contraction(t, b));
+            assert_eq!(t.bulk_contraction(&b), t.canonical_bulk_contraction(&b));
+            assert_eq!(t.weight_contraction(&b), t.canonical_weight_contraction(&b));
         }
     }
 }
@@ -134,10 +132,10 @@ fn projective_bulk_contraction_trivector_bivector() {
 fn projective_bulk_contraction_trivector_trivector() {
     for t1 in TrivectorIt::<Projective>::new(20) {
         for t2 in TrivectorIt::<Projective>::new(20) {
-            assert_eq!(t1.bulk_contraction(&t2), canonical_bulk_contraction(t1, t2));
+            assert_eq!(t1.bulk_contraction(&t2), t1.canonical_bulk_contraction(&t2));
             assert_eq!(
                 t1.weight_contraction(&t2),
-                canonical_weight_contraction(t1, t2)
+                t1.canonical_weight_contraction(&t2)
             );
         }
     }

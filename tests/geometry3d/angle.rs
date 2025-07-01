@@ -1,9 +1,6 @@
 use gual::{
     Angle, Epsilon, Euclidean, Projective,
-    canonical::{
-        canonical_cosine, canonical_cosine_symetric, canonical_geometric_cosine,
-        canonical_geometric_cosine_symetric,
-    },
+    canonical::{Angle as CanonicalAngle, SymetricAngle},
 };
 
 use crate::geometry3d::{BivectorIt, ToF32, VectorIt};
@@ -16,13 +13,13 @@ fn euclidean_angle_vector_vector() {
             let b = b.to_f32();
 
             let v = a.geometric_cosine(&b);
-            let r = canonical_geometric_cosine_symetric(a, b);
+            let r = a.canonical_geometric_cosine_symetric(&b);
 
             assert!((v.0 - r.0).is_near_zero());
             assert!((v.1.xyz - r.1.xyz).is_near_zero());
 
             let v = a.cosine(&b);
-            let r = canonical_cosine_symetric(a, b);
+            let r = a.canonical_cosine_symetric(&b);
 
             match (v, r) {
                 (Some(v), Some(r)) => assert!((v - r).is_near_zero()),
@@ -42,13 +39,13 @@ fn euclidean_angle_vector_bivector() {
             let b = b.to_f32();
 
             let v = a.geometric_cosine(&b);
-            let r = canonical_geometric_cosine(a, b);
+            let r = a.canonical_geometric_cosine(&b);
 
             assert!((v.0 - r.0).is_near_zero());
             assert!((v.1.xyz - r.1.xyz).is_near_zero());
 
             let v = a.cosine(&b);
-            let r = canonical_cosine(a, b);
+            let r = a.canonical_cosine(&b);
 
             match (v, r) {
                 (Some(v), Some(r)) => assert!((v - r).is_near_zero()),
@@ -68,13 +65,13 @@ fn euclidean_angle_bivector_vector() {
             let b = b.to_f32();
 
             let v = a.geometric_cosine(&b);
-            let r = canonical_geometric_cosine(b, a);
+            let r = a.canonical_geometric_cosine(&a);
 
             assert!((v.0 - r.0).is_near_zero());
             assert!((v.1.xyz - r.1.xyz).is_near_zero());
 
             let v = a.cosine(&b);
-            let r = canonical_cosine(b, a);
+            let r = a.canonical_cosine(&a);
 
             match (v, r) {
                 (Some(v), Some(r)) => assert!((v - r).is_near_zero()),
@@ -94,13 +91,13 @@ fn euclidean_angle_bivector_bivector() {
             let b = b.to_f32();
 
             let v = a.geometric_cosine(&b);
-            let r = canonical_geometric_cosine_symetric(a, b);
+            let r = a.canonical_geometric_cosine_symetric(&b);
 
             assert!((v.0 - r.0).is_near_zero());
             assert!((v.1.xyz - r.1.xyz).is_near_zero());
 
             let v = a.cosine(&b);
-            let r = canonical_cosine_symetric(a, b);
+            let r = a.canonical_cosine_symetric(&b);
 
             match (v, r) {
                 (Some(v), Some(r)) => assert!((v - r).is_near_zero()),
@@ -120,13 +117,13 @@ fn projective_angle_bivector_bivector() {
             let b = b.to_f32();
 
             let v = a.geometric_cosine(&b);
-            let r = canonical_geometric_cosine_symetric(a, b);
+            let r = a.canonical_geometric_cosine_symetric(&b);
 
             assert!((v.0 - r.0).is_near_zero());
             assert!((v.1.xyz - r.1.xyz).is_near_zero());
 
             let v = a.cosine(&b);
-            let r = canonical_cosine_symetric(a, b);
+            let r = a.canonical_cosine_symetric(&b);
 
             match (v, r) {
                 (Some(v), Some(r)) => assert!((v - r).is_near_zero()),

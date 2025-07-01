@@ -1,4 +1,5 @@
-use gual::{Complement, Metric, Scalar, canonical::canonical_weight};
+use gual::canonical::Metric as CanonicalMetric;
+use gual::{Complement, Metric, Scalar};
 
 use super::{BivectorIt, VectorIt};
 
@@ -8,7 +9,7 @@ fn metric_vector() {
         assert_eq!(v.proper_bulk(), v.bulk());
         assert_eq!(v.proper_weight(), v.weight());
 
-        assert_eq!(v.proper_weight(), canonical_weight(v));
+        assert_eq!(v.proper_weight(), v.canonical_weight());
     }
 }
 

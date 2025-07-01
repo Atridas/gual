@@ -1,8 +1,8 @@
 use num::Zero;
 
+use gual::canonical::Metric as CanonicalMetric;
 use gual::{
     Complement, Euclidean, Metric, Projective, Scalar,
-    canonical::canonical_weight,
     geometry3d::{Bivector, Trivector, Vector},
 };
 
@@ -16,7 +16,7 @@ fn euclidean_metric_vector() {
         assert_eq!(v.proper_bulk(), v.bulk());
         assert_eq!(v.proper_weight(), v.weight());
 
-        assert_eq!(v.proper_weight(), canonical_weight(v));
+        assert_eq!(v.proper_weight(), v.canonical_weight());
     }
 }
 
@@ -26,7 +26,7 @@ fn euclidean_metric_bivector() {
         assert_eq!(b.proper_bulk(), b.bulk());
         assert_eq!(b.proper_weight(), b.weight());
 
-        assert_eq!(b.proper_weight(), canonical_weight(b));
+        assert_eq!(b.proper_weight(), b.canonical_weight());
     }
 }
 
@@ -54,7 +54,7 @@ fn projective_metric_vector() {
         assert_eq!(v.proper_bulk(), Vector::new(bulk.x, bulk.y, 0));
         assert_eq!(v.proper_weight(), Vector::new(0, 0, weight));
 
-        assert_eq!(v.proper_weight(), canonical_weight(v));
+        assert_eq!(v.proper_weight(), v.canonical_weight());
     }
 }
 
@@ -67,7 +67,7 @@ fn projective_metric_bivector() {
         assert_eq!(b.proper_bulk(), Bivector::new(0, 0, bulk.xy));
         assert_eq!(b.proper_weight(), Bivector::new(weight.x, weight.y, 0));
 
-        assert_eq!(b.proper_weight(), canonical_weight(b));
+        assert_eq!(b.proper_weight(), b.canonical_weight());
     }
 }
 
