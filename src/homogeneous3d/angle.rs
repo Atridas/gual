@@ -3,6 +3,7 @@ use num::traits::ConstOne;
 
 use crate::Angle;
 
+use crate::Epsilon;
 use crate::Metric;
 use crate::geometry3d as d3;
 use crate::geometry4d as d4;
@@ -15,6 +16,7 @@ use super::Plane;
 impl<T> Angle<HomogeneusLine<T>> for HomogeneusLine<T>
 where
     T: Float,
+    T: Epsilon,
     HomogeneusLine<T>: Metric<Weight = d3::Vector<T>>,
 {
     type Scalar = d4::Scalar<T>;
@@ -54,6 +56,7 @@ where
 impl<T> Angle<HomogeneusLine<T>> for HomogeneusPlane<T>
 where
     T: Float,
+    T: Epsilon,
     HomogeneusLine<T>: Metric<Weight = d3::Vector<T>>,
     HomogeneusPlane<T>: Metric<Weight = d3::Bivector<T>>,
 {
@@ -95,6 +98,7 @@ where
 impl<T> Angle<HomogeneusPlane<T>> for HomogeneusPlane<T>
 where
     T: Float,
+    T: Epsilon,
     HomogeneusPlane<T>: Metric<Weight = d3::Bivector<T>>,
 {
     type Scalar = d4::Scalar<T>;

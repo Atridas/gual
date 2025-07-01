@@ -273,3 +273,81 @@ macro_rules! reverse_geometric_anticommute_metric {
         }
     };
 }
+
+#[macro_export]
+macro_rules! reverse_angle {
+    ($lht:ident<T>, $rht:ident<T>) => {
+        impl<T> Angle<$rht<T>> for $lht<T>
+        where
+            $rht<T>: Angle<$lht<T>>,
+        {
+            type Scalar = <$rht<T> as Angle<$lht<T>>>::Scalar;
+            type Antiscalar = <$rht<T> as Angle<$lht<T>>>::Antiscalar;
+
+            fn geometric_cosine(&self, rhs: &$rht<T>) -> (Self::Scalar, Self::Antiscalar) {
+                rhs.geometric_cosine(self)
+            }
+
+            fn cosine(&self, rhs: &$rht<T>) -> Option<Self::Scalar> {
+                rhs.cosine(self)
+            }
+        }
+    };
+
+    ($lht:ident<T, $metric:ident>, $rht:ident<T>) => {
+        impl<T> Angle<$rht<T>> for $lht<T, $metric>
+        where
+            $rht<T>: Angle<$lht<T, $metric>>,
+        {
+            type Scalar = <$rht<T> as Angle<$lht<T, $metric>>>::Scalar;
+            type Antiscalar = <$rht<T> as Angle<$lht<T, $metric>>>::Antiscalar;
+
+            fn geometric_cosine(&self, rhs: &$rht<T>) -> (Self::Scalar, Self::Antiscalar) {
+                rhs.geometric_cosine(self)
+            }
+
+            fn cosine(&self, rhs: &$rht<T>) -> Option<Self::Scalar> {
+                rhs.cosine(self)
+            }
+        }
+    };
+
+    ($lht:ident<T>, $rht:ident<T, $metric:ident>) => {
+        impl<T> Angle<$rht<T, $metric>> for $lht<T>
+        where
+            $rht<T, $metric>: Angle<$lht<T>>,
+        {
+            type Scalar = <$rht<T, $metric> as Angle<$lht<T>>>::Scalar;
+            type Antiscalar = <$rht<T, $metric> as Angle<$lht<T>>>::Antiscalar;
+
+            fn geometric_cosine(&self, rhs: &$rht<T, $metric>) -> (Self::Scalar, Self::Antiscalar) {
+                rhs.geometric_cosine(self)
+            }
+
+            fn cosine(&self, rhs: &$rht<T, $metric>) -> Option<Self::Scalar> {
+                rhs.cosine(self)
+            }
+        }
+    };
+
+    ($lht:ident<T, $lhmetric:ident>, $rht:ident<T, $rhmetric:ident>) => {
+        impl<T> Angle<$rht<T, $rhmetric>> for $lht<T, $lhmetric>
+        where
+            $rht<T, $rhmetric>: Angle<$lht<T, $lhmetric>>,
+        {
+            type Scalar = <$rht<T, $rhmetric> as Angle<$lht<T, $lhmetric>>>::Scalar;
+            type Antiscalar = <$rht<T, $rhmetric> as Angle<$lht<T, $lhmetric>>>::Antiscalar;
+
+            fn geometric_cosine(
+                &self,
+                rhs: &$rht<T, $rhmetric>,
+            ) -> (Self::Scalar, Self::Antiscalar) {
+                rhs.geometric_cosine(self)
+            }
+
+            fn cosine(&self, rhs: &$rht<T, $rhmetric>) -> Option<Self::Scalar> {
+                rhs.cosine(self)
+            }
+        }
+    };
+}

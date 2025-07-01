@@ -2,13 +2,14 @@ use std::marker::PhantomData;
 
 use num::{Float, Zero, traits::ConstOne};
 
-use crate::{Angle, Projective};
+use crate::{Angle, Epsilon, Projective, reverse_angle};
 
 use super::{Bivector, Trivector, Vector};
 
 impl<T> Angle<Vector<T>> for Vector<T>
 where
     T: Float,
+    T: Epsilon,
 {
     type Scalar = T;
     type Antiscalar = Trivector<T>;
@@ -27,13 +28,18 @@ where
 
     fn cosine(&self, rhs: &Vector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Some(geometric.0 / geometric.1.xyz)
+        if geometric.1.xyz.is_near_zero() {
+            None
+        } else {
+            Some(geometric.0 / geometric.1.xyz)
+        }
     }
 }
 
 impl<T> Angle<Vector<T>> for Bivector<T>
 where
     T: Float,
+    T: Epsilon,
 {
     type Scalar = T;
     type Antiscalar = Trivector<T>;
@@ -44,7 +50,7 @@ where
         let z = self.zx * rhs.x - self.yz * rhs.y;
 
         (
-            x * x + y * y + z * z,
+            (x * x + y * y + z * z).sqrt(),
             Trivector {
                 xyz: ((self.yz * self.yz + self.zx * self.zx + self.xy * self.xy)
                     * (rhs.x * rhs.x + rhs.y * rhs.y + rhs.z * rhs.z))
@@ -56,29 +62,20 @@ where
 
     fn cosine(&self, rhs: &Vector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Some(geometric.0 / geometric.1.xyz)
+        if geometric.1.xyz.is_near_zero() {
+            None
+        } else {
+            Some(geometric.0 / geometric.1.xyz)
+        }
     }
 }
 
-impl<T> Angle<Bivector<T>> for Vector<T>
-where
-    T: Float,
-{
-    type Scalar = T;
-    type Antiscalar = Trivector<T>;
-
-    fn geometric_cosine(&self, rhs: &Bivector<T>) -> (Self::Scalar, Self::Antiscalar) {
-        rhs.geometric_cosine(self)
-    }
-
-    fn cosine(&self, rhs: &Bivector<T>) -> Option<Self::Scalar> {
-        rhs.cosine(self)
-    }
-}
+reverse_angle!(Vector<T>, Bivector<T>);
 
 impl<T> Angle<Bivector<T>> for Bivector<T>
 where
     T: Float,
+    T: Epsilon,
 {
     type Scalar = T;
     type Antiscalar = Trivector<T>;
@@ -97,7 +94,11 @@ where
 
     fn cosine(&self, rhs: &Bivector<T>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Some(geometric.0 / geometric.1.xyz)
+        if geometric.1.xyz.is_near_zero() {
+            None
+        } else {
+            Some(geometric.0 / geometric.1.xyz)
+        }
     }
 }
 
@@ -139,6 +140,7 @@ where
 impl<T> Angle<Vector<T, Projective>> for Bivector<T, Projective>
 where
     T: Float,
+    T: Epsilon,
 {
     type Scalar = T;
     type Antiscalar = Trivector<T, Projective>;
@@ -148,7 +150,7 @@ where
         let y = self.yz * rhs.z;
 
         (
-            x * x + y * y,
+            (x * x + y * y).sqrt(),
             Trivector {
                 xyz: ((self.yz * self.yz + self.zx * self.zx).sqrt() * rhs.z.abs()),
                 _metric: PhantomData,
@@ -158,32 +160,23 @@ where
 
     fn cosine(&self, rhs: &Vector<T, Projective>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Some(geometric.0 / geometric.1.xyz)
+        if geometric.1.xyz.is_near_zero() {
+            None
+        } else {
+            Some(geometric.0 / geometric.1.xyz)
+        }
     }
 }
 
-impl<T> Angle<Bivector<T, Projective>> for Vector<T, Projective>
-where
-    T: Float,
-{
-    type Scalar = T;
-    type Antiscalar = Trivector<T, Projective>;
-
-    fn geometric_cosine(&self, rhs: &Bivector<T, Projective>) -> (Self::Scalar, Self::Antiscalar) {
-        rhs.geometric_cosine(self)
-    }
-
-    fn cosine(&self, rhs: &Bivector<T, Projective>) -> Option<Self::Scalar> {
-        rhs.cosine(self)
-    }
-}
+reverse_angle!(Vector<T, Projective>, Bivector<T, Projective>);
 
 impl<T> Angle<Bivector<T, Projective>> for Bivector<T, Projective>
 where
     T: Float,
+    T: Epsilon,
 {
     type Scalar = T;
-    type Antiscalar = Trivector<T>;
+    type Antiscalar = Trivector<T, Projective>;
 
     fn geometric_cosine(&self, rhs: &Bivector<T, Projective>) -> (Self::Scalar, Self::Antiscalar) {
         (
@@ -199,6 +192,10 @@ where
 
     fn cosine(&self, rhs: &Bivector<T, Projective>) -> Option<Self::Scalar> {
         let geometric = self.geometric_cosine(rhs);
-        Some(geometric.0 / geometric.1.xyz)
+        if geometric.1.xyz.is_near_zero() {
+            None
+        } else {
+            Some(geometric.0 / geometric.1.xyz)
+        }
     }
 }

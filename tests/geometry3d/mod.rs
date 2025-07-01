@@ -2,6 +2,7 @@ use std::marker::PhantomData;
 
 use gual::geometry3d::*;
 
+mod angle;
 mod antiwedge;
 mod complement;
 mod contraction;
