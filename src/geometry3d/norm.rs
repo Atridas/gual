@@ -16,6 +16,7 @@ use super::{Bivector, Trivector, UnitVector, Vector};
 impl<T, M> Norm for Vector<T, M>
 where
     T: Float,
+    T: ConstOne,
     Vector<T, M>: Dot<Scalar = T, Antiscalar = Trivector<T, M>>,
 {
     type Scalar = T;
@@ -44,6 +45,7 @@ where
 impl<T, M> Norm for Bivector<T, M>
 where
     T: Float,
+    T: ConstOne,
     Bivector<T, M>: Dot<Scalar = T, Antiscalar = Trivector<T, M>>,
 {
     type Scalar = T;
@@ -75,6 +77,7 @@ where
 
 impl<T> Norm for UnitVector<T>
 where
+    T: Clone,
     T: ConstOne,
 {
     type Scalar = T;
@@ -106,6 +109,7 @@ where
 impl<T> Norm for Trivector<T>
 where
     T: Float,
+    T: ConstOne,
 {
     type Scalar = T;
     type Antiscalar = Trivector<T>;
@@ -140,6 +144,7 @@ where
 impl<T> Norm for Trivector<T, Projective>
 where
     T: ConstZero,
+    T: ConstOne,
     T: Float,
 {
     type Scalar = T;

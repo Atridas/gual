@@ -233,7 +233,7 @@ pub trait Norm {
     type Scalar;
 
     /// Type that represents the full space in the algebra
-    type Antiscalar;
+    type Antiscalar: Antiscalar<T = Self::Scalar>;
 
     /// square of the [`Norm::bulk_norm`]
     fn bulk_norm_squared(&self) -> Self::Scalar;

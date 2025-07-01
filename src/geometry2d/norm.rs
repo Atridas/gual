@@ -1,6 +1,6 @@
 use std::marker::PhantomData;
 
-use num::Float;
+use num::{Float, traits::ConstOne};
 
 use crate::{Dot, Norm};
 
@@ -9,6 +9,7 @@ use super::{Bivector, Vector};
 impl<T> Norm for Vector<T>
 where
     T: Float,
+    T: ConstOne,
     Vector<T>: Dot<Scalar = T, Antiscalar = Bivector<T>>,
 {
     type Scalar = T;
@@ -37,6 +38,7 @@ where
 impl<T> Norm for Bivector<T>
 where
     T: Float,
+    T: ConstOne,
 {
     type Scalar = T;
     type Antiscalar = Bivector<T>;
